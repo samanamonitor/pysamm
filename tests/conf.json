@@ -1,0 +1,5 @@
+{
+    "resource_file": "resources.json",
+    "object_files":[ "objects/objects1.json", "objects/objects2.json" ],
+    "object_dirs": []
+}
