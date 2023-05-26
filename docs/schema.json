@@ -1,0 +1,272 @@
+[
+    {
+        "type": "object",
+        "name": "instance",
+        "required": [ ],
+        "properties": {
+            "name": { "type": "string" },
+            "register": { "type": "boolean" },
+            "host_name": { "type": "string" },
+            "alias": { "type": "string" },
+            "address": { "type": "string" },
+            "display_name": { "type": "string" },
+            "parents": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "instancegroups": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "check_command": { "type": "string" },
+            "initial_state": { "type": "char" },
+            "max_check_attempts": { "type": "int" },
+            "check_interval": { "type": "int" },
+            "retry_interval": { "type": "int" },
+            "active_checks_enabled": { "type": "boolean" },
+            "passive_checks_enabled": { "type": "boolean" },
+            "check_period": { "type": "string" },
+            "obsess_over_host": { "type": "boolean" },
+            "check_freshness": { "type": "boolean" },
+            "freshness_threshold": { "type": "int" },
+            "event_handler": { "type": "string" },
+            "event_handler_enabled": { "type": "boolean" },
+            "low_flap_threshold": { "type": "int" },
+            "high_flap_threshold": { "type": "int" },
+            "flap_detection_enabled": { "type": "boolean" },
+            "flap_detection_options": {
+                "type": "list",
+                "elements": { "type": "char" }
+            },
+            "process_perf_data": { "type": "boolean" },
+            "retain_status_information": { "type": "boolean" },
+            "retain_nonstatus_information": { "type": "boolean" },
+            "contacts": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "contact_groups": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "notification_interval": { "type": "int" },
+            "first_notification_delay": { "type": "int" },
+            "notification_period": { "type": "string" },
+            "notification_options": {
+                "type": "list",
+                "elements": { "type": "char" }
+            },
+            "notifications_enabled": { "type": "boolean" },
+            "stalking_options": {
+                "type": "list",
+                "elements": { "type": "char" }
+            },
+            "notes": { "type": "string" },
+            "notes_url": { "type": "string" },
+            "action_url": { "type": "string" },
+            "icon_image": { "type": "string" },
+            "icon_image_alt": { "type": "string" },
+            "vrml_image": { "type": "string" },
+            "statusmap_image": { "type": "string" },
+            "2d_coords":  { "type": "tuple" },
+            "3d_coords":  { "type": "tuple" },
+        }
+    },
+    {
+        "type": "object",
+        "name": "instancegroup",
+        "required": [],
+        "properties": {
+            "hostgroup_name": { "type": "string" },
+            "alias": { "type": "string" },
+            "members": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "hostgroup_members": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "notes": { "type": "string" },
+            "notes_url": { "type": "string" },
+            "action_url": { "type": "string" }
+        }
+    },
+    {
+        "type": "object",
+        "name": "service",
+        "required": [],
+        "properties": {
+            "name": { "type": "string" },
+            "register": { "type": "boolean" },
+            "host_name": { "type": "string" },
+            "hostgroup_name": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "service_description": { "type": "string" },
+            "display_name": { "type": "string" },
+            "servicegroups": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "is_volatile": { "type": "boolean" },
+            "check_command": { "type": "string" },
+            "initial_state": { "type": "char" },
+            "max_check_attempts": { "type": "int" },
+            "check_interval": { "type": "int" },
+            "retry_interval": { "type": "int" },
+            "active_checks_enabled": { "type": "boolean" },
+            "passive_checks_enabled": { "type": "boolean" },
+            "check_period": { "type": "string" },
+            "obsess_over_service": { "type": "boolean" },
+            "check_freshness": { "type": "boolean" },
+            "freshness_threshold": { "type": "int" },
+            "event_handler": { "type": "string" },
+            "event_handler_enabled": { "type": "boolean" },
+            "low_flap_threshold": { "type": "int" },
+            "high_flap_threshold": { "type": "int" },
+            "flap_detection_enabled": { "type": "boolean" },
+            "flap_detection_options": {
+                "type": "list",
+                "elements": { "type": "char" }
+            },
+            "process_perf_data": { "type": "boolean" },
+            "retain_status_information": { "type": "boolean" },
+            "retain_nonstatus_information": { "type": "boolean" },
+            "notification_interval": { "type": "int" },
+            "first_notification_delay": { "type": "int" },
+            "notification_period": { "type": "string" },
+            "notification_options": {
+                "type": "list",
+                "elements": { "type": "char" }
+            },
+            "notifications_enabled": { "type": "boolean" },
+            "contacts": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "contact_groups": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "stalking_options": {
+                "type": "list",
+                "elements": { "type": "char" }
+            },
+            "notes": { "type": "string" },
+            "notes_url": { "type": "string" },
+            "action_url": { "type": "string" },
+            "icon_image": { "type": "string" },
+            "icon_image_alt": { "type": "string" },
+        }
+    },
+    {
+        "type": "object",
+        "name": "servicegroup",
+        "required": [],
+        "properties": {
+            "servicegroup_name": { "type": "string" },
+            "alias": { "type": "string" },
+            "members": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "servicegroup_members": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "notes": { "type": "string" },
+            "notes_url": { "type": "string" },
+            "action_url": { "type": "string" },
+        }
+    },
+    {
+        "type": "object",
+        "name": "contact",
+        "required": [],
+        "properties": {
+            "contact_name": { "type": "string" },
+            "alias": { "type": "string" },
+            "contactgroups": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "host_notifications_enabled": { "type": "boolean" },
+            "service_notifications_enabled": { "type": "boolean" },
+            "host_notification_period": { "type": "string" },
+            "service_notification_period": { "type": "string" },
+            "host_notification_options": {
+                "type": "list",
+                "elements": { "type": "char" }
+            },
+            "service_notification_options": {
+                "type": "list",
+                "elements": { "type": "char" }
+            },
+            "host_notification_commands": { "type": "string" },
+            "service_notification_commands": { "type": "string" },
+            "email": { "type": "string" },
+            "pager": { "type": "string" },
+            "addressx": { "type": "string" },
+            "can_submit_commands": { "type": "boolean" },
+            "retain_status_information": { "type": "boolean" },
+            "retain_nonstatus_information": { "type": "boolean" }
+        }
+    },
+    {
+        "type": "object",
+        "name": "contactgroup",
+        "required": [],
+        "properties": {
+            "contactgroup_name": { "type": "string" },
+            "alias": { "type": "string" },
+            "members": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+            "contactgroup_members": {
+                "type": "list",
+                "elements": { "type": "string" }
+            },
+        }
+    },
+    {
+        "type": "object",
+        "name": "timeperiod",
+        "required": [],
+        "properties": {
+            "timeperiod_name": { "type": "string" },
+            "alias": { "type": "string" },
+            "periods": {
+                "type": "list",
+                "elements": { 
+                    "type": "tuple",
+                    "elements": "string",
+                    "size": 2
+                }
+            },
+            "exclude": {
+                "type": "list",
+                "elements": { "type": "string" }
+            }
+        }
+    },
+    {
+        "type": "object",
+        "name": "command",
+        "required": [],
+        "properties": {
+            "command_name": { "type": "string" },
+            "command_class": { "type": "string" },
+            "command_properties": {
+                "type": "list",
+                "elements": {
+                    "type": "tuple",
+                    "elements": "string",
+                    "count": 2
+                }
+            }
+        }
+    }
+]
