@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 from sys import argv
 sys.path.append("..")
@@ -40,16 +41,10 @@ def process_loop(s):
         for c in c_read:
             if c == s:
                 connection, client_address = c.accept()
-                inputs += [ connection ]
-            else:
-                data=c.recv(16)
-                if data == b"get\n":
-                    for k in metric_data:
-                        c.sendall(("%s %s\n" % (k, metric_data[k])).encode('ascii'))
-                    c.close()
-                    inputs.remove(c)
-                else:
-                    inputs.remove(c)
+                for i in metric_data:
+                    for k in metric_data[i]:
+                        connection.sendall(("%s\n" % (metric_data[i][k])).encode('ascii'))
+                connection.close()
 
 def main(config_file):
     init_config(config_file)
