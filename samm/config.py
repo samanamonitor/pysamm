@@ -12,13 +12,15 @@ class Config():
             self._config = json.load(f)
         if "resource_file" not in self._config:
             raise TypeError("missing resource_file")
-        with open(self._config['resource_file']) as f:
+        self.resource_file_path = self._config['base_dir'] + "/" + self._config['config_dir'] + "/" + self._config['resource_file']
+        with open(self.resource_file_path) as f:
             self._config["resources"] = json.load(f)
         self._config["commands"] = {}
         self._config["checks"] = {}
         self._config["instances"] = {}
         for c in self._config['object_files']:
-            self.load(c)
+            object_file_path = self._config['base_dir'] + "/" + self._config['config_dir'] + "/" + c
+            self.load(object_file_path)
 
     def load(self, filename):
         c=""
@@ -39,20 +41,34 @@ class Config():
                 self._config["checks"][o["name"]] = o
             elif o["object_type"] == "instance":
                 self._config["instances"][o["name"]] = Instance(o)
+            elif o["object_type"] == "check_group":
+                self._config["check_groups"][o["name"]] = o
 
-    def get(self, s, instance_name=None, check_name=None, resolve_vars=False):
-        path = s.split(".")
+    def get(self, in_data, instance_name=None, check_name=None, resolve_vars=False, default=None):
+        if isinstance(in_data, str):
+            path = tuple(in_data.split("."))
+        elif isinstance(in_data, list):
+            path = tuple(in_data)
+        elif isinstance(in_data, tuple):
+            path = in_data
+        else:
+            raise TypeError(in_data)
         if path[0] == "instance":
-            path = [ "instances", instance_name ] + path[1:]
+            path = ( "instances", instance_name ) + path[1:]
         if path[0] == "check":
-            path = [ "checks", check_name ] + path[1:]
+            path = ( "checks", check_name ) + path[1:]
         curconfig=self._config
+
         for p in path:
             curconfig = curconfig.get(p, None)
             if curconfig is None:
                 break
+
         if resolve_vars == False:
+            if curconfig is None and default is not None:
+                return default
             return curconfig
+
         return self.replace_vars(curconfig, instance_name=instance_name, check_name=check_name)
 
     def replace_vars(self, o, instance_name=None, check_name=None):
