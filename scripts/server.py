@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import sys
 from sys import argv
-sys.path.append("..")
 from samm.service import Service
 
 svc = None
