@@ -13,11 +13,11 @@ def set_control_version():
 if __name__ == "__main__":
     set_control_version()
     setup(
-        name='samm-prometheus',
+        name='samm',
         version=__version__,
         packages=find_packages(include=['samm', 'samm.*']),
         scripts=['scripts/server.py'],
         data_files=[('/usr/local/samm/etc', ['tests/conf.json.example', 'tests/resources.json.example']),
-            ('/usr/local/samm/etc/objects', ['tests/objects.json.example'])],
+            ('/usr/local/samm/etc/objects', ['tests/objects/objects.json.example'])],
         install_requires=[ ]
     )
