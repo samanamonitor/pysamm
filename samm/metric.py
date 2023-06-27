@@ -34,7 +34,7 @@ class Attempt:
         self.next_run = 0
         self.instance_name=instance_name
         self.check_name = check_name
-        self.alias = self.check['alias']
+        self.alias = self.check.get('alias', check_name)
         if self.alias is None:
             self.alias = check_name
         self.tag_property = config.get(("checks", check_name, "tag_property"))
