@@ -30,6 +30,8 @@ class InstanceMetric:
 class Attempt:
     def __init__(self, config, instance_name, check_name):
         self.check=config.get(("checks", check_name))
+        if self.check is None:
+            raise TypeError("Check %s not found" % check_name)
         self.instance=config.get(("instances", instance_name))
         self.next_run = 0
         self.instance_name=instance_name
@@ -68,7 +70,7 @@ class Attempt:
                 for m in self.metrics:
                     im = InstanceMetric(m.lower(), d[m], base_tags, prefix=self.alias.lower())
                     for t in self.tag_property:
-                        im.add_tag(Tag(t.lower(), d[t].lower()))
+                        im.add_tag(Tag(t.lower(), str(d[t]).lower()))
                     instance_metric[im.key] = im
         except Exception as e:
             im_up.value = 0

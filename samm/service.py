@@ -1,7 +1,7 @@
 from .config import Config
 from .metric import Attempt, InstanceMetric, Tag
 from time import sleep, process_time, time
-import socket, select, os, signal
+import socket, select, os, signal, sys
 from random import Random
 from threading import Thread
 
@@ -18,6 +18,7 @@ class Service:
     host_count   = InstanceMetric("host_count", 0, base_tags)
     scheduled_attempts = InstanceMetric("scheduled_attempts_count", 0, base_tags)
     running_time = InstanceMetric("running_time_seconds_count", 0, base_tags)
+    metric_data_bytes = InstanceMetric("metric_data_bytes", 0, base_tags)
     pt = InstanceMetric("process_time_seconds_count", 0, base_tags)
     metric_data = { 
         "samm": {
@@ -27,6 +28,7 @@ class Service:
             scheduled_attempts.key: scheduled_attempts,
             running_time.key: running_time,
             pt.key: pt
+            metric_data_bytes.key: metric_data_bytes
         }
     }
     running_config = None
@@ -75,6 +77,7 @@ class Service:
         if os.path.exists(sock_file):
             os.unlink(sock_file)
         self.sock.bind(sock_file)
+        os.chmod(sock_file, 0x0777)
         self.sock.listen(1)
 
     def process_loop(self):
@@ -91,6 +94,7 @@ class Service:
             self.log("Sleeping... process_time=%f attempt_count=%d host_count=%d" % 
                 (process_time(), len(self.attempt_list), self.host_count.value), INFO)
             c_read, c_write, in_error = select.select([self.sock], [], [], self.polltime)
+            self.metric_data_bytes.value = sys.getsizeof(self.metric_data_bytes)
             self.running_time.value = time() - self.startup_time.value
             self.pt.value = process_time()
             for c in c_read:
