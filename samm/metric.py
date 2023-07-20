@@ -43,7 +43,7 @@ class InstanceMetric:
         return False
 
 class Attempt:
-    tags = []
+    base_tags = []
     def __init__(self, config, instance_name, check_name):
         self.check=config.get(("checks", check_name))
         if self.check is None:
@@ -64,8 +64,14 @@ class Attempt:
         self.thread = None
         self.instance_stale_timeout = config.get(("instances", instance_name, "stale_timeout"))
         self.check_stale_timeout = config.get(("checks", check_name, "stale_timeout"))
-        self.tags += config.get(("instances", instance_name, "tags"), default=[])
-        self.tags += config.get(("checks", check_name, "tags"), default=[])
+        self.add_base_tags(config.get(("tags"), {}))
+        self.add_base_tags(config.get(("instances", instance_name, "tags"), default={}))
+        self.add_base_tags(config.get(("checks", check_name, "tags"), default={}))
+        self.add_base_tags({ "instance": self.instance_name })
+
+    def add_base_tags(self, tags):
+        for key in tags:
+            self.base_tags += [ Tag(key, tags[key]) ]
 
     def due(self):
         if self.next_run == 0:
@@ -80,17 +86,14 @@ class Attempt:
 
     def run(self, metric_data, schedule_next=True):
         instance_name=self.instance_name.lower()
-        base_tags = [ Tag("instance", instance_name), Tag("job", "samm") ]
-        if instance_name not in metric_data:
-            metric_data[instance_name] = {}
+        instance_metric = metric_data.setdefault(instance_name, {})
 
-        instance_metric = metric_data[instance_name]
-        im_up = InstanceMetric("up", 1, base_tags, stale_timeout=self.instance_stale_timeout)
+        im_up = InstanceMetric("up", 1, self.base_tags, stale_timeout=self.instance_stale_timeout)
         try:
             instance_metric[im_up.key] = im_up
             for d in self.data:
                 for m in self.metrics:
-                    im = InstanceMetric(m.lower(), d[m], base_tags, prefix=self.alias.lower(), stale_timeout=self.check_stale_timeout)
+                    im = InstanceMetric(m.lower(), d[m], self.base_tags, prefix=self.alias.lower(), stale_timeout=self.check_stale_timeout)
                     for t in self.tag_property:
                         im.add_tag(Tag(t.lower(), str(d[t]).lower()))
                     instance_metric[im.key] = im
