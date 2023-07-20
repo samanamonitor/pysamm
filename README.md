@@ -1,5 +1,8 @@
 # Build DEB package
-`docker run -it -v $(pwd):/usr/src/build -w /usr/src/build --rm ubuntu:jammy support/build-deb.sh`
+`docker run -it --rm -v $(pwd):/usr/src samm-repo /usr/local/bin/build-deb.sh`
+
+# Upload to repo
+docker run --rm -it -v $(pwd):/usr/src -w /usr/src samm-repo /usr/local/bin/add-file-repo.sh samm-pysamm_0.0.8-1_amd64.deb jammy
 
 # Build SAMM container image
 `cd support
