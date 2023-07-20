@@ -13,7 +13,7 @@ def main(config_file):
         svc.process_loop()
     except Exception as e:
         print(e)
-        time.sleep(600)
+        time.sleep(60)
         raise
 
 if __name__ == "__main__":
