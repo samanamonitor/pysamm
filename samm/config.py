@@ -21,6 +21,7 @@ class Config():
         for c in self._config['object_files']:
             object_file_path = self._config['base_dir'] + "/" + self._config['config_dir'] + "/" + c
             self.load(object_file_path)
+        _ = self._config.setdefault("tags", [ {"job": "samm"} ])
 
     def load(self, filename):
         c=""
@@ -89,7 +90,7 @@ class Config():
             '''
             We need to process recursively for each item in the list
             '''
-            out = [None] + len(o)
+            out = [None] * len(o)
             for i in range(len(o)):
                 out[i] = self.replace_vars(o[i], instance_name=instance_name, check_name=check_name, default=default)
         elif isinstance(o, dict):
