@@ -44,7 +44,7 @@ class Config():
             elif o["object_type"] == "check_group":
                 self._config["check_groups"][o["name"]] = o
 
-    def get(self, in_data, instance_name=None, check_name=None, resolve_vars=False, default=None):
+    def get(self, in_data, instance_name=None, check_name=None, resolve_vars=False, default=None, default_variable=""):
         if isinstance(in_data, str):
             path = tuple(in_data.split("."))
         elif isinstance(in_data, list):
@@ -69,25 +69,38 @@ class Config():
                 return default
             return curconfig
 
-        return self.replace_vars(curconfig, instance_name=instance_name, check_name=check_name)
+        return self.replace_vars(curconfig, instance_name=instance_name, check_name=check_name, default=default, default_variable=default_variable)
 
-    def replace_vars(self, o, instance_name=None, check_name=None):
+    def replace_vars(self, o, instance_name=None, check_name=None, default=None, default_variable=""):
         out=None
         if isinstance(o, str):
+            '''
+            We don't need to continue recursion. Just find variables and replace them
+            '''
             variables=self._get_variables(o)
             out=o
+            if not isinstance(default, str):
+                defaut = ""
             for v in variables:
-                var_value=self.get(v, instance_name=instance_name, check_name=check_name, resolve_vars=True)
+                var_value=self.get(v, instance_name=instance_name, check_name=check_name, resolve_vars=True, default=default)
                 if isinstance(o, str) and isinstance(var_value, str):
                     out=o.replace("$(%s)" % v, var_value)
         elif isinstance(o, list):
+            '''
+            We need to process recursively for each item in the list
+            '''
             out = [None] + len(o)
             for i in range(len(o)):
-                out[i] = self.replace_vars(o[i], instance_name=instance_name, check_name=check_name)
+                out[i] = self.replace_vars(o[i], instance_name=instance_name, check_name=check_name, default=default)
         elif isinstance(o, dict):
+            '''
+            We need to process recursively for each item in the dict
+            '''
             out = {}
             for i in o:
                 out[i] = self.replace_vars(o[i], instance_name=instance_name, check_name=check_name)
+        else:
+            out = default
         return out
 
     def _get_variables(self, s):
