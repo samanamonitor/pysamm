@@ -3,7 +3,6 @@ from .metric import Attempt, InstanceMetric, Tag
 from time import sleep, process_time, time
 import socket, select, os, signal, sys
 from random import Random
-from threading import Thread
 import threading
 
 ERROR=0
@@ -142,7 +141,7 @@ class Service:
             instance_list = _c_read[0].recv(1024).decode('ascii').strip().split(" ")
 
         for instance_name in instance_list:
-            if instance_name not in metric_data:
+            if instance_name not in self.metric_data:
                 connection.sendall(("up{job=\"samm\",instance=\"%s\"} 0\n" % 
                     (instance_name)).encode('ascii'))
             for metric_key in self.metric_data[instance_name]:
