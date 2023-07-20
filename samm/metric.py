@@ -1,4 +1,5 @@
 import time
+from threading import Thread
 
 class Tag:
     def __init__(self, key, value):
@@ -43,7 +44,6 @@ class InstanceMetric:
         return False
 
 class Attempt:
-    base_tags = []
     def __init__(self, config, instance_name, check_name):
         self.check=config.get(("checks", check_name))
         if self.check is None:
@@ -64,6 +64,7 @@ class Attempt:
         self.thread = None
         self.instance_stale_timeout = config.get(("instances", instance_name, "stale_timeout"))
         self.check_stale_timeout = config.get(("checks", check_name, "stale_timeout"))
+        self.base_tags = []
         self.add_base_tags(config.get(("tags"), {}))
         self.add_base_tags(config.get(("instances", instance_name, "tags"), default={}))
         self.add_base_tags(config.get(("checks", check_name, "tags"), default={}))
