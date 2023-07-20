@@ -43,6 +43,7 @@ class InstanceMetric:
         return False
 
 class Attempt:
+    tags = []
     def __init__(self, config, instance_name, check_name):
         self.check=config.get(("checks", check_name))
         if self.check is None:
@@ -53,7 +54,6 @@ class Attempt:
         self.check_name = check_name
         self.alias = self.check.get('alias', check_name)
         self.tag_property = config.get(("checks", check_name, "tag_property"), resolve_vars=True, default=[])
-        self.tag_property += config.get(("instances", instance_name, "tag_property"), resolve_vars=True, default=[])
         self.command="commands", config.get(("checks", check_name, "command"), resolve_vars=True)
         self.command_args=config.get(self.command + ("args",), 
             instance_name=instance_name, check_name=check_name, resolve_vars=True)
@@ -64,6 +64,8 @@ class Attempt:
         self.thread = None
         self.instance_stale_timeout = config.get(("instances", instance_name, "stale_timeout"))
         self.check_stale_timeout = config.get(("checks", check_name, "stale_timeout"))
+        self.tags += config.get(("instances", instance_name, "tags"), default=[])
+        self.tags += config.get(("checks", check_name, "tags"), default=[])
 
     def due(self):
         if self.next_run == 0:
