@@ -1,3 +1,10 @@
+build/*
+debian/control
+dist/*
+*.private
+*.deb
+samm-pysamm_*_amd64/*
+samm.egg-info
 __pycache__
 *.json
 support/prometheus.yml
