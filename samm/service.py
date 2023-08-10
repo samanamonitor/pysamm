@@ -68,11 +68,14 @@ class Service:
             if instance.register:
                 self.host_count.val(self.host_count.val() + 1)
                 for check_name in instance.checks:
-                    a = Attempt(self.running_config, instance_name, check_name)
-                    a.schedule(self.scheduled_attempts.val() * self.initial_spread
-                        + int(self.rand.gauss(5, 5)))
-                    self.attempt_list += [ a ]
-                    self.scheduled_attempts.val(self.scheduled_attempts.val() + 1)
+                    try:
+                        a = Attempt(self.running_config, instance_name, check_name)
+                        a.schedule(self.scheduled_attempts.val() * self.initial_spread
+                            + int(self.rand.gauss(5, 5)))
+                        self.attempt_list += [ a ]
+                        self.scheduled_attempts.val(self.scheduled_attempts.val() + 1)
+                    except Exception as e:
+                        self.log("Unable to create attempt for %s-%s. %s" % (instance_name, check_name, str(e)))
 
     def init_sock(self):
         self.sock=socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -86,11 +89,12 @@ class Service:
     def process_attempts(self):
         for attempt in self.attempt_list:
             try:
-                attempt.process(self.metric_data)
-                self.log("Running attempt alias=%s instance_name=%s check_name=%s." 
-                    % (attempt.alias, attempt.instance_name, attempt.check_name), INFO)
+                if attempt.process(self.metric_data):
+                    self.log("Running attempt alias=%s instance_name=%s check_name=%s." 
+                        % (attempt.alias, attempt.instance_name, attempt.check_name), INFO)
             except Exception as e:
-                self.log("Got error from Attempt.run() : %s" % str(e), ERROR)
+                self.log("Got error from Attempt.run() : %s - instance=%s check=%s" 
+                    % (str(e), attempt.instance_name, attempt.check_name), ERROR)
 
     def process_loop(self):
         while self.keep_running:
@@ -110,9 +114,15 @@ class Service:
         self.thread_count.val(threading.active_count())
         mc = 0
         stale_list = []
-        for instance_name in self.metric_data:
-            for metric_key in self.metric_data[instance_name]:
-                if self.metric_data[instance_name][metric_key].is_stale():
+        instance_name_list = list(self.metric_data.keys())
+        for instance_name in instance_name_list:
+            instance_metrics = self.metric_data.get(instance_name, None)
+            if instance_metrics is None: continue
+            metric_key_list = list(instance_metrics.keys())
+            for metric_key in metric_key_list:
+                metric = instance_metrics.get(metric_key, None)
+                if metric is None: continue
+                if metric.is_stale():
                     stale_list += [(instance_name, metric_key)]
                     continue
                 mc += 1
@@ -128,6 +138,7 @@ class Service:
             (process_time(), len(self.attempt_list), self.host_count.val()), INFO)
         c_read, _, _ = select.select([self.sock], [], [], self.polltime)
         for _sock in c_read:
+            self.log("Connection received. Sending data.")
             if _sock == self.sock:
                 self.send_data(_sock)
 
@@ -140,13 +151,22 @@ class Service:
         else:
             instance_list = _c_read[0].recv(1024).decode('ascii').strip().split(" ")
 
-        for instance_name in instance_list:
-            if instance_name not in self.metric_data:
-                connection.sendall(("up{job=\"samm\",instance=\"%s\"} 0\n" % 
-                    (instance_name)).encode('ascii'))
-            for metric_key in self.metric_data[instance_name]:
-                connection.sendall(str(self.metric_data[instance_name][metric_key]).encode('ascii'))
-        connection.close()
+        _, _c_write, _ = select.select([], [connection], [], 2)
+        if len(_c_write) < 1:
+            connection.close()
+            return
+
+        try:
+            for instance_name in instance_list:
+                if instance_name not in self.metric_data:
+                    _c_write[0].sendall(("up{job=\"samm\",instance=\"%s\"} 0\n" % 
+                        (instance_name)).encode('ascii'))
+                for metric_key in self.metric_data[instance_name]:
+                    _c_write[0].sendall(str(self.metric_data[instance_name][metric_key]).encode('ascii'))
+            _c_write[0].close()
+        except Exception as e:
+            self.log("Error sending data")
+            connection.close()
 
     def signal_handler(self, signum, frame):
         if signum == signal.SIGHUP:
