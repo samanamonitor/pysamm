@@ -81,9 +81,10 @@ class Attempt:
 
     def process(self, metric_data):
         if not self.due() or (self.thread is not None and self.thread.is_alive()):
-            return
+            return False
         self.thread = Thread(target=self.run, args=[metric_data])
-        self.thread.run()
+        self.thread.start()
+        return True
 
     def run(self, metric_data, schedule_next=True):
         instance_name=self.instance_name.lower()
@@ -94,6 +95,8 @@ class Attempt:
             instance_metric[im_up.key] = im_up
             for d in self.data:
                 for m in self.metrics:
+                    if m not in d:
+                        continue
                     im = InstanceMetric(m.lower(), d[m], self.base_tags, prefix=self.alias.lower(), stale_timeout=self.check_stale_timeout)
                     for t in self.tag_property:
                         im.add_tag(Tag(t.lower(), str(d[t]).lower()))
