@@ -85,8 +85,12 @@ class Config():
                 defaut = ""
             for v in variables:
                 var_value=self.get(v, instance_name=instance_name, check_name=check_name, resolve_vars=True, default=default)
-                if isinstance(o, str) and isinstance(var_value, str):
+                if isinstance(var_value, str):
                     out=o.replace("$(%s)" % v, var_value)
+                elif o == "$(%s)" % v:
+                    out=var_value
+                else:
+                    raise TypeError("Unable to parse variable %s." % o)
         elif isinstance(o, list):
             '''
             We need to process recursively for each item in the list
