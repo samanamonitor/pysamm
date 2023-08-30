@@ -8,9 +8,10 @@ apt upgrade -y
 apt install -y ca-certificates wget
 mkdir -p ${KEYPATH}
 wget -O ${KEYPATH}/${KEYFILE} https://samm-repo.s3.amazonaws.com/${KEYFILE}
-echo "deb [arch=amd64 signed-by=${KEYPATH}/${KEYFILE}] https://samm-repo.s3.amazonaws.com jammy main" \
+echo "deb [arch=arm64 signed-by=${KEYPATH}/${KEYFILE}] https://samm-repo.s3.amazonaws.com jammy main" \
     > /etc/apt/sources.list.d/samm.list
 apt update
-apt install -y samm-pysamm samm-pysammwr
+apt install -y samm-pysamm python3-flask
+mkdir -p /usr/local/samm/var
 EOF
 ENTRYPOINT [ "/usr/local/bin/server.py" ]
