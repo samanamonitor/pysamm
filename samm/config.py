@@ -3,6 +3,7 @@ from .instance import Instance
 
 class Config():
     def __init__(self, config_file):
+        self._valid_config = False
         self.config_file = config_file
         self.modules = {}
         self.reload()
@@ -22,6 +23,7 @@ class Config():
             object_file_path = self._config['base_dir'] + "/" + self._config['config_dir'] + "/" + c
             self.load(object_file_path)
         _ = self._config.setdefault("tags", {}).setdefault("job", "samm")
+        self._valid_config = True
 
 
     def load(self, filename):
@@ -45,6 +47,9 @@ class Config():
                 self._config["instances"][o["name"]] = Instance(o)
             elif o["object_type"] == "check_group":
                 self._config["check_groups"][o["name"]] = o
+
+    def setdefault(self, key, value):
+        return self._config.setdefault(key, value)
 
     def get(self, in_data, instance_name=None, check_name=None, resolve_vars=False, default=None, default_variable=""):
         if isinstance(in_data, str):
