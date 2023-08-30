@@ -10,46 +10,54 @@ WARNING=1
 INFO=2
 
 class Service:
-    _stale_timeout = 600
-    polltime = 5
-    attempt_list = []
-    base_tags = [ Tag("instance", "samm"), Tag("job", "samm") ]
-    startup_time = InstanceMetric("startup_time", time(), base_tags)
-    metric_count = InstanceMetric("metric_count", 0, base_tags)
-    host_count   = InstanceMetric("host_count", 0, base_tags)
-    scheduled_attempts = InstanceMetric("scheduled_attempts_count", 0, base_tags)
-    running_time = InstanceMetric("running_time_seconds_count", 0, base_tags)
-    metric_data_bytes = InstanceMetric("metric_data_bytes", 0, base_tags)
-    thread_count = InstanceMetric("thread_count", 0, base_tags)
-    pt = InstanceMetric("process_time_seconds_count", 0, base_tags)
-    metric_data = { 
-        "samm": {
-            startup_time.key: startup_time,
-            metric_count.key: metric_count,
-            host_count.key: host_count,
-            scheduled_attempts.key: scheduled_attempts,
-            running_time.key: running_time,
-            pt.key: pt,
-            metric_data_bytes.key: metric_data_bytes,
-            thread_count.key: thread_count
-        }
-    }
-    running_config = None
-    rand = Random()
-    sock = None
-    debug = 0
-    config_path = ""
-    config_file = ""
-    keep_running = True
-    reload_config = False
-    stop_loop = True
-    initial_spread = 1
 
     def __init__(self, config_file):
+        self.running_config = None
+        self.keep_running = False
+        self.rand = Random()
+        self.sock = None
+        self.debug = 0
+        self.config_path = ""
+        self.config_file = ""
+        self.keep_running = True
+        self.reload_config = False
+        self.stop_loop = True
+        self.initial_spread = 1
         self.abs_config_file = os.path.abspath(config_file)
         self.config_path, sep, self.config_file = config_file.rpartition("/")
         self.load_config()
+        if self.running_config._valid_config:
+            self.keep_running = True
         os.chdir(self.running_config.get("base_dir"))
+
+        self._stale_timeout = self.running_config.get("stale_timeout", 600)
+        self.polltime = self.running_config.get("polltime", 5)
+        self.attempt_list = []
+        self.base_tags = [ 
+            Tag("instance", self.running_config.setdefault("base_tags", {}).setdefault("instance", "samm")), 
+            Tag("job", self.running_config.setdefault("base_tags", {}).setdefault("job", "samm"))
+            ]
+        self.startup_time = InstanceMetric("startup_time", time(), self.base_tags)
+        self.metric_count = InstanceMetric("metric_count", 0, self.base_tags)
+        self.host_count   = InstanceMetric("host_count", 0, self.base_tags)
+        self.scheduled_attempts = InstanceMetric("scheduled_attempts_count", 0, self.base_tags)
+        self.running_time = InstanceMetric("running_time_seconds_count", 0, self.base_tags)
+        self.metric_data_bytes = InstanceMetric("metric_data_bytes", 0, self.base_tags)
+        self.thread_count = InstanceMetric("thread_count", 0, self.base_tags)
+        self.pt = InstanceMetric("process_time_seconds_count", 0, self.base_tags)
+        self.metric_data = { 
+            "samm": {
+                self.startup_time.key: self.startup_time,
+                self.metric_count.key: self.metric_count,
+                self.host_count.key: self.host_count,
+                self.scheduled_attempts.key: self.scheduled_attempts,
+                self.running_time.key: self.running_time,
+                self.pt.key: self.pt,
+                self.metric_data_bytes.key: self.metric_data_bytes,
+                self.thread_count.key: self.thread_count
+            }
+        }
+
         self.init_attempts()
         self.init_sock()
         signal.signal(signal.SIGHUP, self.signal_handler)
