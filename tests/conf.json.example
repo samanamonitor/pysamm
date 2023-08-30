@@ -4,5 +4,14 @@
     "config_dir": "etc",
     "sock_file": "var/samm.sock",
     "resource_file": "resources.json",
-    "object_files":[ "objects/objects1.json", "objects/objects2.json" ]
+    "object_files":[ "objects/objects1.json", "objects/objects2.json" ],
+    "webserver": true,
+    "webserver_port": 5000,
+    "wait_on_error": 60,
+    "base_tags": {
+        "job": "samm",
+        "instance": "samm",
+    },
+    "poll_time": 5,
+    "stale_timeout": 600
 }
