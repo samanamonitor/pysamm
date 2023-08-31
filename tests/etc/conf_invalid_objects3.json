@@ -1,0 +1,6 @@
+{
+    "base_dir": "tests",
+    "config_dir": "etc",
+    "resource_file": "resources.json",
+    "object_files": [ "objects/objects_invalid3.json" ]
+}

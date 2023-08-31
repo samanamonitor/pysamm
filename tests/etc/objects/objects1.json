@@ -1,0 +1,32 @@
+[
+	{
+		"object_type": "command",
+		"name": "test_command",
+		"type": "no_type",
+		"args": {
+			"address": "$(instance.address)",
+			"metrics": "$(check.metrics)"
+		}
+	},
+	{
+		"object_type": "check",
+		"name": "test_check",
+		"command": "test_command",
+		"tag_property": [ "tag1" ],
+		"alias": "test_alias",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"metrics": [
+			"metric1",
+			"metric2"
+		]
+	},
+	{
+		"object_type": "instance",
+		"name": "test_instance",
+		"alias": "test_instance_alias",
+		"tags": [ "instancetag1" ],
+		"address": "test_address",
+		"checks": [ "test_check" ]
+	}
+]

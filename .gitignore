@@ -6,5 +6,5 @@ dist/*
 samm-pysamm_*_amd64/*
 samm.egg-info
 __pycache__
-*.json
+test1/*
 support/prometheus.yml
