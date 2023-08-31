@@ -1,0 +1,12 @@
+[
+	{"text": "simple text", "eval": "[]"},
+	{"text": "$(single_variable)", "eval": "['single_variable']"},
+	{"text": "$(var1)$(var2)", "eval": "['var1', 'var2']"},
+	{"text": "text $(variable_after_text)", "eval": "['variable_after_text']"},
+	{"text": "$(variable_before_text) text", "eval": "['variable_before_text']"},
+	{"text": "text $(variable_mid_text) text", "eval": "['variable_mid_text']"},
+	{"text": "text \\$() novariable", "eval": "[]"},
+	{"text": "$()", "eval": "[]"},
+	{"text": "$\\(test", "eval": "[]"},
+	{"text": "$(test\\))", "eval": "['test\\\\']"}
+]
