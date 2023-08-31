@@ -65,6 +65,7 @@ class Service:
 
     def load_config(self):
         self.running_config=Config(self.abs_config_file)
+        self.running_config.reload()
         self.debug = self.running_config.get("debug", default=ERROR)
 
     def init_attempts(self):
