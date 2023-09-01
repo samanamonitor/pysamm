@@ -81,7 +81,7 @@ class Config():
         self._config["checks"] = {}
         self._config["instances"] = {}
 
-        object_files = self._config.get('object_files', [])
+        object_files = self._config.get('object_files', default=[])
         if not isinstance(object_files, list):
             raise TypeError("object_files must be a list")
         for c in self._config['object_files']:
