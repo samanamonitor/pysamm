@@ -1,5 +1,6 @@
 from .config import Config
-from .metric import Attempt, InstanceMetric, Tag
+from .attempt import Attempt
+from .metric import InstanceMetric
 from time import sleep, process_time, time
 import socket, select, os, signal, sys
 from random import Random
@@ -24,29 +25,28 @@ class Service:
         self.stop_loop = True
         self.initial_spread = 1
         self.abs_config_file = os.path.abspath(config_file)
+        self.attempt_list = []
         self.config_path, sep, self.config_file = config_file.rpartition("/")
         self.load_config()
-        if self.running_config._valid_config:
-            self.keep_running = True
-        os.chdir(self.running_config.get("base_dir"))
+        self.keep_running = self.running_config._valid_config
 
-        self._stale_timeout = self.running_config.get("stale_timeout", 600)
-        self.polltime = self.running_config.get("polltime", 5)
-        self.attempt_list = []
-        self.base_tags = [ 
-            Tag("instance", self.running_config.setdefault("base_tags", {}).setdefault("instance", "samm")), 
-            Tag("job", self.running_config.setdefault("base_tags", {}).setdefault("job", "samm"))
-            ]
-        self.startup_time = InstanceMetric("startup_time", time(), self.base_tags)
-        self.metric_count = InstanceMetric("metric_count", 0, self.base_tags)
-        self.host_count   = InstanceMetric("host_count", 0, self.base_tags)
-        self.scheduled_attempts = InstanceMetric("scheduled_attempts_count", 0, self.base_tags)
-        self.running_time = InstanceMetric("running_time_seconds_count", 0, self.base_tags)
-        self.metric_data_bytes = InstanceMetric("metric_data_bytes", 0, self.base_tags)
-        self.thread_count = InstanceMetric("thread_count", 0, self.base_tags)
-        self.pt = InstanceMetric("process_time_seconds_count", 0, self.base_tags)
+        self.init_local_metrics()
+        self.init_attempts()
+        self.init_sock()
+        signal.signal(signal.SIGHUP, self.signal_handler)
+        signal.signal(signal.SIGINT, self.signal_handler)
+
+    def init_local_metrics(self):
+        self.startup_time = InstanceMetric("startup_time", time(), self.tags)
+        self.metric_count = InstanceMetric("metric_count", 0, self.tags)
+        self.host_count   = InstanceMetric("host_count", 0, self.tags)
+        self.scheduled_attempts = InstanceMetric("scheduled_attempts_count", 0, self.tags)
+        self.running_time = InstanceMetric("running_time_seconds_count", 0, self.tags)
+        self.metric_data_bytes = InstanceMetric("metric_data_bytes", 0, self.tags)
+        self.thread_count = InstanceMetric("thread_count", 0, self.tags)
+        self.pt = InstanceMetric("process_time_seconds_count", 0, self.tags)
         self.metric_data = { 
-            "samm": {
+            self.tags.get('instance', 'samm'): {
                 self.startup_time.key: self.startup_time,
                 self.metric_count.key: self.metric_count,
                 self.host_count.key: self.host_count,
@@ -58,15 +58,14 @@ class Service:
             }
         }
 
-        self.init_attempts()
-        self.init_sock()
-        signal.signal(signal.SIGHUP, self.signal_handler)
-        signal.signal(signal.SIGINT, self.signal_handler)
-
     def load_config(self):
         self.running_config=Config(self.abs_config_file)
         self.running_config.reload()
         self.debug = self.running_config.get("debug", default=ERROR)
+        self._stale_timeout = self.running_config.get("stale_timeout", 600)
+        self.polltime = self.running_config.get("polltime", 5)
+        self.tags = self.running_config.get('service_tags', {}).copy()
+        self.tags.update(self.running_config.get('tags'))
 
     def init_attempts(self):
         self.attempt_list = []
@@ -88,7 +87,11 @@ class Service:
 
     def init_sock(self):
         self.sock=socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        sock_file=self.running_config.get("sock_file")
+        conf_sock_file = self.running_config.get("sock_file")
+        if not os.path.isabs(self.running_config.get("sock_file")):
+            sock_file = os.path.join(self.running_config.get('base_dir'), conf_sock_file)
+        else:
+            sock_file = conf_sock_file
         if os.path.exists(sock_file):
             os.unlink(sock_file)
         self.sock.bind(sock_file)
@@ -168,13 +171,16 @@ class Service:
         try:
             for instance_name in instance_list:
                 if instance_name not in self.metric_data:
-                    _c_write[0].sendall(("up{job=\"samm\",instance=\"%s\"} 0\n" % 
-                        (instance_name)).encode('ascii'))
+                    instance_tags = self.running_config.get("tags").copy()
+                    instance_tags.update(self.running_time.get(("instances", instance_name, "tags")))
+                    instance_down = InstanceMetric("up", 0, tags=instance_tags)
+                    _c_write[0].sendall(str(instance_down).encode('ascii'))
+                    continue
                 for metric_key in self.metric_data[instance_name]:
                     _c_write[0].sendall(str(self.metric_data[instance_name][metric_key]).encode('ascii'))
             _c_write[0].close()
         except Exception as e:
-            self.log("Error sending data")
+            self.log("Error sending data. %s" % str(e))
             connection.close()
 
     def signal_handler(self, signum, frame):
