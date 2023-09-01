@@ -8,9 +8,11 @@
     "webserver": true,
     "webserver_port": 5000,
     "wait_on_error": 60,
-    "base_tags": {
-        "job": "samm",
-        "instance": "samm"
+    "tags": {
+        "job": "samm_job"
+    },
+    "service_tags": {
+        "instance": "samm_service"
     },
     "poll_time": 5,
     "stale_timeout": 600
