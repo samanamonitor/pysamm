@@ -16,11 +16,11 @@ def test_03_get_types():
     assert isinstance(config.get("webserver_port"), int)
     assert isinstance(config.get("resource_file"), str)
     assert isinstance(config.get("object_files"), list)
-    assert isinstance(config.get("base_tags"), dict)
+    assert isinstance(config.get("tags"), dict)
 
 
 def test_04_get_recurrent():
-    assert config.get("base_tags.job") == "samm"
+    assert config.get("tags.job") == "samm_job"
     assert config.get("instances.test_instance.alias") == "test_instance_alias"
     assert config.get(("instances", "test_instance", "alias")) == "test_instance_alias"
 
@@ -31,7 +31,7 @@ def test_05_get_variables():
         assert get_variables(t['text']) == eval(t['eval'])
 
 def test_06_replace_vars():
-    assert "test_address" == config.get('commands.test_command.args.address', \
-        instance_name="test_instance", check_name="test_check", resolve_vars=True)
-    assert ['metric1', 'metric2'] == config.get('commands.test_command.args.metrics', \
-        instance_name="test_instance", check_name="test_check", resolve_vars=True)
+    assert "test_address" == config.get('commands.test_command_up.args.address', \
+        instance_name="test_instance", check_name="test_check_up", resolve_vars=True)
+    assert ['metric1', 'metric2'] == config.get('commands.test_command_up.args.metrics', \
+        instance_name="test_instance", check_name="test_check_up", resolve_vars=True)
