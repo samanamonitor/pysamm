@@ -1,8 +1,17 @@
 [
 	{
 		"object_type": "command",
-		"name": "test_command",
-		"type": "no_type",
+		"name": "test_command_up",
+		"type": "samm.dummymodule.DummyModuleUp",
+		"args": {
+			"address": "$(instance.address)",
+			"metrics": "$(check.metrics)"
+		}
+	},
+	{
+		"object_type": "command",
+		"name": "test_command_down",
+		"type": "samm.dummymodule.DummyModuleDown",
 		"args": {
 			"address": "$(instance.address)",
 			"metrics": "$(check.metrics)"
@@ -10,10 +19,23 @@
 	},
 	{
 		"object_type": "check",
-		"name": "test_check",
-		"command": "test_command",
-		"tag_property": [ "tag1" ],
-		"alias": "test_alias",
+		"name": "test_check_up",
+		"command": "test_command_up",
+		"tag_properties": [ "name" ],
+		"alias": "test_check_alias",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"metrics": [
+			"metric1",
+			"metric2"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "test_check_down",
+		"command": "test_command_down",
+		"tag_properties": [ "name" ],
+		"alias": "test_check_alias",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
@@ -25,8 +47,8 @@
 		"object_type": "instance",
 		"name": "test_instance",
 		"alias": "test_instance_alias",
-		"tags": [ "instancetag1" ],
+		"tags": {"tagname": "instancetag1"},
 		"address": "test_address",
-		"checks": [ "test_check" ]
+		"checks": [ "test_check_up", "test_check_down" ]
 	}
 ]
