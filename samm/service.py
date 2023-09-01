@@ -62,9 +62,9 @@ class Service:
         self.running_config=Config(self.abs_config_file)
         self.running_config.reload()
         self.debug = self.running_config.get("debug", default=ERROR)
-        self._stale_timeout = self.running_config.get("stale_timeout", 600)
-        self.polltime = self.running_config.get("polltime", 5)
-        self.tags = self.running_config.get('service_tags', {}).copy()
+        self._stale_timeout = self.running_config.get("stale_timeout", default=600)
+        self.poll_time = self.running_config.get("poll_time", default=5)
+        self.tags = self.running_config.get('service_tags', default={}).copy()
         self.tags.update(self.running_config.get('tags'))
 
     def init_attempts(self):
@@ -72,7 +72,7 @@ class Service:
         self.host_count.val(0)
         self.scheduled_attempts.val(0)
         for instance_name in self.running_config.get("instances"):
-            instance = self.running_config.get("instances")[instance_name]
+            instance = self.running_config.get(("instances", instance_name))
             if instance.register:
                 self.host_count.val(self.host_count.val() + 1)
                 for check_name in instance.checks:
@@ -148,7 +148,7 @@ class Service:
     def process_prompt_request(self):
         self.log("Sleeping... process_time=%f attempt_count=%d host_count=%d" % 
             (process_time(), len(self.attempt_list), self.host_count.val()), INFO)
-        c_read, _, _ = select.select([self.sock], [], [], self.polltime)
+        c_read, _, _ = select.select([self.sock], [], [], self.poll_time)
         for _sock in c_read:
             self.log("Connection received. Sending data.")
             if _sock == self.sock:
@@ -172,7 +172,7 @@ class Service:
             for instance_name in instance_list:
                 if instance_name not in self.metric_data:
                     instance_tags = self.running_config.get("tags").copy()
-                    instance_tags.update(self.running_time.get(("instances", instance_name, "tags")))
+                    instance_tags.update(self.running_config.get(("instances", instance_name, "tags")))
                     instance_down = InstanceMetric("up", 0, tags=instance_tags)
                     _c_write[0].sendall(str(instance_down).encode('ascii'))
                     continue
