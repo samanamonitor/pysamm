@@ -1,0 +1,7 @@
+up{job="samm_job",tagname="instancetag1",instance="test_instance"} 1
+test_check_alias_metric1{job="samm_job",tagname="instancetag1",instance="test_instance",name="item1"} 1
+test_check_alias_metric2{job="samm_job",tagname="instancetag1",instance="test_instance",name="item1"} 10
+test_check_alias_metric1{job="samm_job",tagname="instancetag1",instance="test_instance",name="item2"} 2
+test_check_alias_metric2{job="samm_job",tagname="instancetag1",instance="test_instance",name="item2"} 20
+test_check_alias_metric1{job="samm_job",tagname="instancetag1",instance="test_instance",name="item3"} 3
+test_check_alias_metric2{job="samm_job",tagname="instancetag1",instance="test_instance",name="item3"} 30
