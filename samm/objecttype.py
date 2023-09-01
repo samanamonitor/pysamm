@@ -19,10 +19,7 @@ class SammObject:
         return self._attributes[key]
 
     def get(self, key, default=None):
-        try:
-            return self._attributes[key]
-        except AttributeError:
-            return default
+        return self._attributes.get(key, default)
 
     def __repr__(self):
         return "<%s %s>" % (self.__class__.__name__, str(self._attributes))
@@ -36,7 +33,7 @@ class Instance(SammObject):
         _ = self._attributes.setdefault("display_name", self.name)
         _ = self._attributes.setdefault("address", None)
         _ = self._attributes.setdefault("max_check_attempts", 3)
-        _ = self._attributes.setdefault("check_interval", 5)
+        _ = self._attributes.setdefault("check_interval", 300)
         _ = self._attributes.setdefault("retry_interval", self.check_interval)
         _ = self._attributes.setdefault("active_checks_enabled", True)
         _ = self._attributes.setdefault("checks", [])
