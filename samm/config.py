@@ -62,6 +62,7 @@ class Config():
             raise KeyError("missing base_dir")
         if not os.path.exists(self._config['base_dir']):
             raise FileNotFoundError("Directory not found. base_dir=%s" % self._config['base_dir'])
+        self._config['base_dir'] = os.path.abspath(self._config['base_dir'])
 
         if "config_dir" not in self._config:
             raise KeyError("missing config_dir")
