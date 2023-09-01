@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import sys
+import sys, os
 from sys import argv
 from samm.service import Service
 import time
@@ -14,7 +14,7 @@ svc = None
 @app.route('/metrics')
 def metrics():
     global svc
-    address = svc.running_config.get("sock_file")
+    address = os.path.join(svc.running_config.get('base_dir'), svc.running_config.get("sock_file"))
     s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     s.connect(address)
     s.send(b'\n')
