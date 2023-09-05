@@ -2,7 +2,7 @@ import time
 
 class Tag:
     def __init__(self, key, value):
-        self.key=key
+        self.key=key.replace(".", "_")
         self.value=value
     def __str__(self):
         return "%s=\"%s\"" % (self.key, self.value)
@@ -10,6 +10,7 @@ class Tag:
 
 class InstanceMetric:
     def __init__(self, name, value, tags=None, prefix=None, stale_timeout=-1):
+        name = name.replace(".", "_")
         if isinstance(prefix, str):
             self._name = "%s_%s" % (prefix, name)
         else:
