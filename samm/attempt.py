@@ -58,10 +58,13 @@ class Attempt:
                 for tag_property in self.tag_properties:
                     metric_tags.update({tag_property.lower(): str(metric_data.get(tag_property, "none")).lower()})
 
-                for metric_name in self.metrics:
-                    im = InstanceMetric(metric_name.lower(), metric_data.get(metric_name, -1), metric_tags, \
-                        prefix=self.alias.lower(), stale_timeout=self.check_stale_timeout)
-                    instance_metric[im.key] = im
+                try:
+                    for metric_name in self.metrics:
+                        im = InstanceMetric(metric_name.lower(), metric_data.get(metric_name, -1), metric_tags, \
+                            prefix=self.alias.lower(), stale_timeout=self.check_stale_timeout)
+                        instance_metric[im.key] = im
+                except:
+                    pass
             im_up.val(metric_received)
         except Exception as e:
             pass

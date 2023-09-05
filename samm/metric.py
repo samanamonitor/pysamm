@@ -15,14 +15,16 @@ class InstanceMetric:
             self._name = "%s_%s" % (prefix, name)
         else:
             self._name=name
+
         if isinstance(value, bool):
             self.value = int(value)
         elif isinstance(value, str) and value.replace('.', '').isnumeric():
             self.value = float(value)
         elif value is None:
-            raise TypeError("Ivalid value")
+            raise TypeError("Invalid value")
         else:
             self.value = value
+
         if isinstance(tags, list):
             self._tags=tags.copy()
         elif isinstance(tags, dict):
@@ -33,6 +35,7 @@ class InstanceMetric:
             self._tags = []
         else:
             raise TypeError("Invalid type for tags")
+
         self._last_update = time.time()
         self._stale_timeout = stale_timeout
 
