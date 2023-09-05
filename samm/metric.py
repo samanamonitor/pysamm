@@ -15,7 +15,12 @@ class InstanceMetric:
             self._name = "%s_%s" % (prefix, name)
         else:
             self._name=name
-        self.value=value
+        if isinstance(value, bool):
+            self.value = int(value)
+        elif isinstance(value, str):
+            self.value = float(value)
+        else:
+            self.value = value
         if isinstance(tags, list):
             self._tags=tags.copy()
         elif isinstance(tags, dict):
