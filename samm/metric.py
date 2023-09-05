@@ -17,8 +17,10 @@ class InstanceMetric:
             self._name=name
         if isinstance(value, bool):
             self.value = int(value)
-        elif isinstance(value, str):
+        elif isinstance(value, str) and value.replace('.', '').isnumeric():
             self.value = float(value)
+        elif value is None:
+            raise TypeError("Ivalid value")
         else:
             self.value = value
         if isinstance(tags, list):
