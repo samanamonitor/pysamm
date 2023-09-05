@@ -56,7 +56,7 @@ class Attempt:
                 metric_received = 1
                 metric_tags = self.base_tags.copy()
                 for tag_property in self.tag_properties:
-                    metric_tags.update({tag_property.lower(): str(metric_data.get(tag_property, "none").lower())})
+                    metric_tags.update({tag_property.lower(): str(metric_data.get(tag_property, "none")).lower()})
 
                 for metric_name in self.metrics:
                     im = InstanceMetric(metric_name.lower(), metric_data.get(metric_name, -1), metric_tags, \
