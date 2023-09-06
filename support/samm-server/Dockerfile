@@ -11,7 +11,7 @@ wget -O ${KEYPATH}/${KEYFILE} https://samm-repo.s3.amazonaws.com/${KEYFILE}
 echo "deb [arch=amd64 signed-by=${KEYPATH}/${KEYFILE}] https://samm-repo.s3.amazonaws.com jammy main" \
     > /etc/apt/sources.list.d/samm.list
 apt update
-apt install -y samm-pysamm python3-flask samm-pysammsnmp samm-pysammwr
+apt install -y samm-pysamm python3-flask samm-pysammsnmp samm-pysammwr samm-pysammodata
 mkdir -p /usr/local/samm/var
 EOF
 ENTRYPOINT [ "/usr/local/bin/server.py" ]
