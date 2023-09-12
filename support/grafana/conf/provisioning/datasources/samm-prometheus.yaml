@@ -1,0 +1,15 @@
+apiVersion: 1
+
+datasources:
+  - name: SAMM-Prometheus
+    type: prometheus
+    url: http://<replace with IP address of the server>:9090
+    access: proxy
+    jsonData:
+    httpMethod: POST
+    manageAlerts: true
+    prometheusType: Prometheus
+    prometheusVersion: 2.44.0
+    cacheLevel: 'High'
+    disableRecordingRules: false
+    incrementalQueryOverlapWindow: 10m

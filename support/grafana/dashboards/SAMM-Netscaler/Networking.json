@@ -1,0 +1,312 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 5,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": "SAMM-Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "SAMM-Prometheus",
+          "editorMode": "builder",
+          "expr": "rate(ifstats_ifinoctets{ifdescr=~\"$ifacedesc\", instance=~\"$instance\"}[5m])",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{instance}}-{{ifdescr}}-rx",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": "SAMM-Prometheus",
+          "editorMode": "code",
+          "expr": "- rate(ifstats_ifoutoctets{instance=\"$instance\", ifdescr=~\"$ifacedesc\"}[5m])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{instance}}-{{ifdescr}}-tx",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Panel Title",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "SAMM-Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "SAMM-Prometheus",
+          "editorMode": "builder",
+          "expr": "rate(ifstats_ifinerrors{instance=\"$instance\", ifdescr=~\"$ifacedesc\"}[$__rate_interval])",
+          "instant": false,
+          "legendFormat": "InErrors-{{ifdescr}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": "SAMM-Prometheus",
+          "editorMode": "builder",
+          "expr": "rate(ifstats_ifouterrors{instance=\"$instance\", ifdescr=~\"$ifacedesc\"}[$__rate_interval])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "OutErrors-{{ifdescr}}",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": "SAMM-Prometheus",
+          "editorMode": "builder",
+          "expr": "rate(ifstats_ifindiscards{instance=\"$instance\", ifdescr=~\"$ifacedesc\"}[$__rate_interval])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "InDiscards-{{ifdescr}}",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": "SAMM-Prometheus",
+          "editorMode": "builder",
+          "expr": "rate(ifstats_ifoutdiscards{instance=\"$instance\", ifdescr=~\"$ifacedesc\"}[$__rate_interval])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "OutDiscards-{{ifdescr}}",
+          "range": true,
+          "refId": "D"
+        }
+      ],
+      "title": "Errors/Discards",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "nexus1",
+          "value": "nexus1"
+        },
+        "datasource": "SAMM-Prometheus",
+        "definition": "label_values(ifstats_ifinoctets,instance)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Instance",
+        "multi": false,
+        "name": "instance",
+        "options": [],
+        "query": {
+          "query": "label_values(ifstats_ifinoctets,instance)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "ethernet1/2"
+          ],
+          "value": [
+            "ethernet1/2"
+          ]
+        },
+        "datasource": "SAMM-Prometheus",
+        "definition": "query_result(ifstats_ifinoctets{ifdescr=~\".*\",instance=\"$instance\"})",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Interface",
+        "multi": true,
+        "name": "ifacedesc",
+        "options": [],
+        "query": {
+          "query": "query_result(ifstats_ifinoctets{ifdescr=~\".*\",instance=\"$instance\"})",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": ".*ifdescr=\"([^\"]+)\".*",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Networking",
+  "uid": "ba4f3dac-4534-4978-a7f9-8b7c050ba3bd",
+  "version": 9,
+  "weekStart": ""
+}
