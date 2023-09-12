@@ -17,7 +17,7 @@ sudo mkdir -p /usr/local/samm/etc/objects
 sudo cp tests/objects/objects.json.example /usr/local/samm/etc/objects/objects.json
 sudo mkdir -p /usr/local/samm/var`
 ## Run the container
-`docker run -idt -v /usr/local/samm:/usr/local/samm --name samm-server samm-server /usr/local/samm/etc/conf.json`
+`docker run -idt -v /usr/local/samm/samm1:/usr/local/samm/etc --name samm-server -p 9091:5000 samm-server /usr/local/samm/etc/conf.json`
 
 # Run SAMM with flask
 `export FLASK_APP=/usr/local/bin/metrics`
