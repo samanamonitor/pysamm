@@ -25,6 +25,10 @@ sudo mkdir -p /usr/local/samm/var`
 `export FLASK_APP=/usr/local/bin/metrics`
 `flask run --host 0.0.0.0`
 
+# To run unit tests
+## python3-pytest must be installed
+`python3 -m pytest`
+
 # TODO
 * procedure to install new MIB
 * check MIB integrity
