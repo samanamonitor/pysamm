@@ -30,6 +30,7 @@ class Attempt:
         self.base_tags.update(config.get(("instances", instance_name, "tags"), default={}))
         self.base_tags.update(config.get(("checks", check_name, "tags"), default={}))
         self.base_tags['instance'] = self.instance_name
+        self.value_mappings = self.check.get('value_mappings')
 
     def due(self):
         if self.next_run == 0:
@@ -61,7 +62,8 @@ class Attempt:
                 try:
                     for metric_name in self.metrics:
                         im = InstanceMetric(metric_name.lower(), metric_data.get(metric_name, -1), metric_tags, \
-                            prefix=self.alias.lower(), stale_timeout=self.check_stale_timeout)
+                            prefix=self.alias.lower(), stale_timeout=self.check_stale_timeout, 
+                            value_mapping=self.value_mappings.get(metric_name))
                         instance_metric[im.key] = im
                 except:
                     pass
