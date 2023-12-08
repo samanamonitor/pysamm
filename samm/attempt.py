@@ -30,7 +30,7 @@ class Attempt:
         self.base_tags.update(config.get(("instances", instance_name, "tags"), default={}))
         self.base_tags.update(config.get(("checks", check_name, "tags"), default={}))
         self.base_tags['instance'] = self.instance_name
-        self.value_mappings = self.check.get('value_mappings')
+        self.value_mappings = self.check.get('value_mappings', {})
 
     def due(self):
         if self.next_run == 0:
