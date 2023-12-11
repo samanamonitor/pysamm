@@ -12,4 +12,4 @@ class DummyModuleUp(DummyModule):
 
 class DummyModuleDown(DummyModule):
 	def __init__(self, *args, **kwargs):
-		self.data = None
+		self.data = []

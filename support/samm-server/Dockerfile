@@ -1,4 +1,5 @@
-FROM ubuntu:jammy
+FROM python:3.10
+ENV PYTHONPATH="/usr/local/lib/python3.10/dist-packages"
 RUN <<EOF
 KEYPATH=/var/lib/samana
 KEYFILE=pgp-samm-key.public
@@ -8,7 +9,7 @@ apt upgrade -y
 apt install -y ca-certificates wget
 mkdir -p ${KEYPATH}
 wget -O ${KEYPATH}/${KEYFILE} https://samm-repo.s3.amazonaws.com/${KEYFILE}
-echo "deb [arch=amd64 signed-by=${KEYPATH}/${KEYFILE}] https://samm-repo.s3.amazonaws.com jammy main" \
+echo "deb [arch=arm64 signed-by=${KEYPATH}/${KEYFILE}] https://samm-repo.s3.amazonaws.com jammy main" \
     > /etc/apt/sources.list.d/samm.list
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y samm-pysamm python3-flask samm-pysammsnmp samm-pysammwr samm-pysammodata

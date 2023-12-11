@@ -1,5 +1,8 @@
 import re, os, json, sys
 from .objecttype import Instance, Command, Check
+import logging
+
+log = logging.getLogger(__name__)
 
 def get_variables(s):
     '''This function receives a string containing text and variables in the form $(variable_name)
@@ -53,10 +56,16 @@ class Config():
         self.config_file = config_file
         self.modules = {}
         self._config = None
+        log.debug("Config object created with file %s", config_file)
 
     def reload(self):
         with open(self.config_file) as f:
-            self._config = json.load(f)
+            log.debug("Config file %s opened for loading.", self.config_file)
+            try:
+                self._config = json.load(f)
+            except Exception as e:
+                log.exception("Unable to load config file %s.", self.config_file)
+                raise
 
         if "base_dir" not in self._config:
             raise KeyError("missing base_dir")
@@ -75,7 +84,11 @@ class Config():
 
         self.resource_file_path = os.path.join(self._config['config_dir'], self._config['resource_file'])
         with open(self.resource_file_path) as f:
-            self._config["resources"] = json.load(f)
+            try:
+                self._config["resources"] = json.load(f)
+            except Exception as e:
+                log.exception("Unable to load config file %s.", self._config["resources"])
+                raise
 
         self._config["commands"] = {}
         self._config["checks"] = {}
@@ -86,6 +99,7 @@ class Config():
             raise TypeError("object_files must be a list")
         for c in self._config['object_files']:
             object_file_path = os.path.join(self._config['config_dir'], c)
+            log.debug("Loading config file %s", object_file_path)
             self.load(object_file_path)
 
         _ = self._config.setdefault("tags", {}).setdefault("job", "samm")
@@ -96,7 +110,12 @@ class Config():
     def load(self, filename):
         c=None
         with open(filename) as f:
-            c=json.load(f)
+            try:
+                c=json.load(f)
+            except Exception as e:
+                log.exception("Unable to load config file %s.", filename)
+                raise
+
         if not isinstance(c, list):
             raise TypeError("Invalid config type. Must be list")
         for o in c:
@@ -106,11 +125,15 @@ class Config():
                 raise KeyError("Mandatory \'object_type\' missing. data=%s" % str(o))
             if "name" not in o:
                 raise KeyError("Mandatory \'name\' missing. data=%s" % str(o))
+
             if o["object_type"] == "command":
+                log.debug("Creating new command name=%s", o["name"])
                 self._config["commands"][o["name"]] = Command(o, self._config)
             elif o["object_type"] == "check":
+                log.debug("Creating new check name=%s", o["name"])
                 self._config["checks"][o["name"]] = Check(o, self._config)
             elif o["object_type"] == "instance":
+                log.debug("Creating new instance name=%s", o["name"])
                 self._config["instances"][o["name"]] = Instance(o, self._config)
 
     def setdefault(self, key, value):
@@ -145,6 +168,7 @@ class Config():
 
     def run_module(self, module_str, **kwargs):
         if module_str not in self.modules:
+            log.debug("Loading module %s", module_str)
             self.import_class(module_str)
         return self.modules[module_str](**kwargs)
 

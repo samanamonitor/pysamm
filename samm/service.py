@@ -5,10 +5,9 @@ from time import sleep, process_time, time
 import socket, select, os, signal, sys
 from random import Random
 import threading
+import logging
 
-ERROR=0
-WARNING=1
-INFO=2
+log = logging.getLogger(__name__)
 
 class Service:
 
@@ -61,7 +60,8 @@ class Service:
     def load_config(self):
         self.running_config=Config(self.abs_config_file)
         self.running_config.reload()
-        self.debug = self.running_config.get("debug", default=ERROR)
+        self.debug = self.running_config.get("debug", 0)
+        logging.basicConfig(stream=sys.stdout, level=self.debug)
         self._stale_timeout = self.running_config.get("stale_timeout", default=600)
         self.poll_time = self.running_config.get("poll_time", default=5)
         self.tags = self.running_config.get('service_tags', default={}).copy()
@@ -83,7 +83,7 @@ class Service:
                         self.attempt_list += [ a ]
                         self.scheduled_attempts.val(self.scheduled_attempts.val() + 1)
                     except Exception as e:
-                        self.log("Unable to create attempt for %s-%s. %s" % (instance_name, check_name, str(e)))
+                        log.exception("Unable to create attempt for %s-%s. %s", instance_name, check_name, str(e))
 
     def init_sock(self):
         self.sock=socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -102,11 +102,11 @@ class Service:
         for attempt in self.attempt_list:
             try:
                 if attempt.process(self.metric_data):
-                    self.log("Running attempt alias=%s instance_name=%s check_name=%s." 
+                    log.debug("Running attempt alias=%s instance_name=%s check_name=%s."
                         % (attempt.alias, attempt.instance_name, attempt.check_name), INFO)
             except Exception as e:
-                self.log("Got error from Attempt.run() : %s - instance=%s check=%s" 
-                    % (str(e), attempt.instance_name, attempt.check_name), ERROR)
+                log.exception("Got error from Attempt.run() : %s - instance=%s check=%s",
+                    str(e), attempt.instance_name, attempt.check_name)
 
     def process_loop(self):
         while self.keep_running:
@@ -140,17 +140,17 @@ class Service:
                 mc += 1
         for s in stale_list:
             self.metric_data[s[0]].pop(s[1])
-            self.log("Cleanup metric %s.%s" % s)
+            log.debug("Cleanup metric %s.%s", *s)
 
         self.metric_count.val(mc)
         return len(stale_list)
 
     def process_prompt_request(self):
-        self.log("Sleeping... process_time=%f attempt_count=%d host_count=%d" % 
-            (process_time(), len(self.attempt_list), self.host_count.val()), INFO)
+        log.debug("Sleeping... process_time=%f attempt_count=%d host_count=%d",
+            process_time(), len(self.attempt_list), self.host_count.val())
         c_read, _, _ = select.select([self.sock], [], [], self.poll_time)
         for _sock in c_read:
-            self.log("Connection received. Sending data.")
+            log.debug("Connection received. Sending data.")
             if _sock == self.sock:
                 self.send_data(_sock)
 
@@ -180,20 +180,17 @@ class Service:
                     _c_write[0].sendall(str(self.metric_data[instance_name][metric_key]).encode('ascii'))
             _c_write[0].close()
         except Exception as e:
-            self.log("Error sending data. %s" % str(e))
+            log.exception("Error sending data. %s" % str(e))
             connection.close()
 
     def signal_handler(self, signum, frame):
         if signum == signal.SIGHUP:
             self.reload_config = True
             self.keep_running = True
-            self.log("HUP signal received. Reloading config", ERROR)
+            log.info("HUP signal received. Reloading config", ERROR)
             return
         if signum == signal.SIGINT:
             self.keep_running = False
-            self.log("INT signal received. Stopping process", ERROR)
+            log.info("INT signal received. Stopping process", ERROR)
             return
 
-    def log(self, msg, level=INFO):
-        if self.debug >= level:
-            print("%d - (%d) - %s" % (time(), self.debug, msg))

@@ -1,6 +1,9 @@
 from threading import Thread
 from .metric import InstanceMetric
 import time
+import logging
+
+log = logging.getLogger(__name__)
 
 class Attempt:
     def __init__(self, config, instance_name, check_name):
@@ -31,10 +34,12 @@ class Attempt:
         self.base_tags.update(config.get(("checks", check_name, "tags"), default={}))
         self.base_tags['instance'] = self.instance_name
         self.value_mappings = self.check.get('value_mappings', {})
+        log.debug("Attempt created. %s:%s", instance_name, check_name)
 
     def due(self):
         if self.next_run == 0:
             return False
+        log.debug("Attempt %s:%s due for execution.", self.instance_name, self.check_name)
         return time.time() > self.next_run
 
     def process(self, metric_data):
@@ -65,10 +70,12 @@ class Attempt:
                             prefix=self.alias.lower(), stale_timeout=self.check_stale_timeout,
                             value_mapping=self.value_mappings.get(metric_name))
                         instance_metric[im.key] = im
-                except:
+                except Exception as e:
+                    log.exception("An error occurred processing metrics. %s", e)
                     pass
             im_up.val(metric_received)
         except Exception as e:
+            log.exception("An error occurred processing self.metric_data. %s", e)
             pass
 
         if schedule_next:
@@ -81,3 +88,4 @@ class Attempt:
 
     def schedule(self, seconds):
         self.next_run = time.time() + seconds
+        log.debug("Scheduling %s:%s to %s", self.instance_name, self.check_name, str(self.next_run))

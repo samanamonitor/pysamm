@@ -1,5 +1,5 @@
 {
-    "debug": 2,
+    "debug": "DEBUG",
     "base_dir": "tests",
     "config_dir": "etc",
     "sock_file": "var/samm.sock",
