@@ -1,5 +1,4 @@
-FROM python:3.10
-ENV PYTHONPATH="/usr/local/lib/python3.10/dist-packages"
+FROM ubuntu:jammy
 RUN <<EOF
 KEYPATH=/var/lib/samana
 KEYFILE=pgp-samm-key.public

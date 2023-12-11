@@ -102,8 +102,8 @@ class Service:
         for attempt in self.attempt_list:
             try:
                 if attempt.process(self.metric_data):
-                    log.debug("Running attempt alias=%s instance_name=%s check_name=%s."
-                        % (attempt.alias, attempt.instance_name, attempt.check_name), INFO)
+                    log.debug("Running attempt alias=%s instance_name=%s check_name=%s.",
+                        attempt.alias, attempt.instance_name, attempt.check_name)
             except Exception as e:
                 log.exception("Got error from Attempt.run() : %s - instance=%s check=%s",
                     str(e), attempt.instance_name, attempt.check_name)

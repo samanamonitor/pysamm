@@ -71,11 +71,12 @@ class Attempt:
                             value_mapping=self.value_mappings.get(metric_name))
                         instance_metric[im.key] = im
                 except Exception as e:
-                    log.exception("An error occurred processing metrics. %s", e)
+                    log.exception("An error occurred processing (%s:%s).metrics\nmetric_data=%s. %s",
+                        self.instance_name, self.check_name, metric_data, e)
                     pass
             im_up.val(metric_received)
         except Exception as e:
-            log.exception("An error occurred processing self.metric_data. %s", e)
+            log.exception("An error occurred processing (%s:%s).metric_data. %s", self.instance_name, self.check_name, e)
             pass
 
         if schedule_next:
