@@ -187,10 +187,10 @@ class Service:
         if signum == signal.SIGHUP:
             self.reload_config = True
             self.keep_running = True
-            log.info("HUP signal received. Reloading config", ERROR)
+            log.info("HUP signal received. Reloading config")
             return
         if signum == signal.SIGINT:
             self.keep_running = False
-            log.info("INT signal received. Stopping process", ERROR)
+            log.info("INT signal received. Stopping process")
             return
 
