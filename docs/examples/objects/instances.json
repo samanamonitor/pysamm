@@ -1,0 +1,46 @@
+[
+	{
+		"object_type": "instance",
+		"name": "<name of windows instance>",
+		"alias": "<alias of windows instance>",
+		"tags": { 
+			"layer": "control"
+		},
+		"address": "<IP or name of windows instance>",
+		"checks": [
+			"cim_os",
+			"cim_disk",
+			"cim_cpu",
+			"cim_pagefile",
+			"cim_perfdisk",
+			"cim_perfnic",
+			"cim_perftssession",
+			"cim_perfprocess",
+			"cim_perfcpu",
+			"cim_certificates",
+			"cim_computer"
+		],
+		"stale_timeout": 432000,
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "<name of snmp instance>",
+		"alias": "<alias of snmp instance>",
+		"address": "<IP or name of snmp instance>",
+		"tags": { 
+			"layer": "access" 
+		},
+		"community": "N4g1osS4m4n4",
+		"checks": [ 
+			"snmp_ipstats", 
+			"snmp_ifstats", 
+			"snmp_vserver", 
+			"snmp_certkey", 
+			"snmp_ns", 
+			"snmp_appfw" 
+		],
+		"stale_timeout": 432000,
+		"register": false
+	}
+]
