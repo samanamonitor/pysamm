@@ -146,7 +146,7 @@ class Service:
         return len(stale_list)
 
     def process_prompt_request(self):
-        log.debug("Sleeping... process_time=%f attempt_count=%d host_count=%d",
+        log.info("Sleeping... process_time=%f attempt_count=%d host_count=%d",
             process_time(), len(self.attempt_list), self.host_count.val())
         c_read, _, _ = select.select([self.sock], [], [], self.poll_time)
         for _sock in c_read:

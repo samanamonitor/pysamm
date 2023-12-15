@@ -45,6 +45,8 @@ def replace_vars(o, config, instance_name=None, check_name=None, default=None, d
         out = {}
         for i in o:
             out[i] = replace_vars(o[i], config, instance_name=instance_name, check_name=check_name)
+    elif isinstance(o, (int, float)):
+        out = o
     else:
         out = default
     return out

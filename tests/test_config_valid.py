@@ -35,3 +35,5 @@ def test_06_replace_vars():
         instance_name="test_instance", check_name="test_check_up", resolve_vars=True)
     assert ['metric1', 'metric2'] == config.get('commands.test_command_up.args.metrics', \
         instance_name="test_instance", check_name="test_check_up", resolve_vars=True)
+    assert 2 == config.get('commands.test_command_up.args.numeric', \
+        instance_name="test_instance", check_name="test_check_up", resolve_vars=True)

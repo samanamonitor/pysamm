@@ -5,7 +5,8 @@
 		"type": "samm.dummymodule.DummyModuleUp",
 		"args": {
 			"address": "$(instance.address)",
-			"metrics": "$(check.metrics)"
+			"metrics": "$(check.metrics)",
+			"numeric": 2
 		}
 	},
 	{
@@ -14,7 +15,8 @@
 		"type": "samm.dummymodule.DummyModuleDown",
 		"args": {
 			"address": "$(instance.address)",
-			"metrics": "$(check.metrics)"
+			"metrics": "$(check.metrics)",
+			"numeric": 1
 		}
 	},
 	{
