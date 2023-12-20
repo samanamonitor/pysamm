@@ -323,7 +323,7 @@
 		"logfile": "System",
 		"event_type": 3,
 		"time_property": "TimeGenerated",
-		"alias": "cim_events",
+		"alias": "cim_system_events",
 		"check_interval": 600,
 		"stale_timeout": 1200,
 		"tag_properties": [
@@ -340,7 +340,7 @@
 		"logfile": "Application",
 		"event_type": 3,
 		"time_property": "TimeGenerated",
-		"alias": "cim_events",
+		"alias": "cim_application_events",
 		"check_interval": 600,
 		"stale_timeout": 1200,
 		"tag_properties": [

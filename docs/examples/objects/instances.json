@@ -18,7 +18,9 @@
 			"cim_perfprocess",
 			"cim_perfcpu",
 			"cim_certificates",
-			"cim_computer"
+			"cim_computer",
+			"cim_system_events",
+			"cim_application_events"
 		],
 		"stale_timeout": 432000,
 		"register": false
