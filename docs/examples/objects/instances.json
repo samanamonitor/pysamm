@@ -10,7 +10,6 @@
 		"checks": [
 			"cim_os",
 			"cim_disk",
-			"cim_cpu",
 			"cim_pagefile",
 			"cim_perfdisk",
 			"cim_perfnic",
@@ -20,7 +19,8 @@
 			"cim_certificates",
 			"cim_computer",
 			"cim_system_events",
-			"cim_application_events"
+			"cim_application_events",
+			"cim_service"
 		],
 		"stale_timeout": 432000,
 		"register": false
