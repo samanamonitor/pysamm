@@ -1,0 +1,23 @@
+[
+	{
+		"object_type": "check",
+		"name": "ping",
+		"command": "ping",
+		"check_interval": 30,
+		"stale_timeout": 45,
+		"count": 2,
+		"timeout": 1,
+		"tag_properties": [
+			"hostaddress",
+			"address"
+		],
+		"metrics": [
+			"min_rtt",
+			"avg_rtt",
+			"max_rtt",
+			"packets_sent",
+			"packets_received",
+			"is_alive"
+		]
+	}
+]
