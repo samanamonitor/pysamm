@@ -1,6 +1,16 @@
 [
 	{
 		"object_type": "command",
+		"name": "ping",
+		"type": "samm.pingmodule.PingModule",
+		"args": {
+			"hostaddress": "$(instance.address)",
+			"count": "$(check.count)",
+			"timeout": "$(check.timeout)"
+		}
+	},
+	{
+		"object_type": "command",
 		"name": "wmi",
 		"type": "sammwr.wmi.WMIQuery",
 		"args": {
