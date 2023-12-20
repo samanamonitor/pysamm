@@ -315,5 +315,39 @@
 		"metrics": [
 			"ssldaystoexpire"
 		]
+	},
+	{
+		"object_type": "check",
+		"name": "cim_system_events",
+		"command": "cim_logs",
+		"logfile": "System",
+		"event_type": 3,
+		"time_property": "TimeGenerated",
+		"alias": "cim_events",
+		"check_interval": 600,
+		"stale_timeout": 1200,
+		"tag_properties": [
+			"logfile"
+		],
+		"metrics": [
+			"ls_events"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "cim_application_events",
+		"command": "cim_logs",
+		"logfile": "Application",
+		"event_type": 3,
+		"time_property": "TimeGenerated",
+		"alias": "cim_events",
+		"check_interval": 600,
+		"stale_timeout": 1200,
+		"tag_properties": [
+			"logfile"
+		],
+		"metrics": [
+			"ls_events"
+		]
 	}
 ]

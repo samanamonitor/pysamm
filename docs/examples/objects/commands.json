@@ -41,5 +41,27 @@
 			"username": "$(resources.cim_username)",
 			"password": "$(resources.cim_password)"
 		}
+	},
+	{
+		"object_type": "command",
+		"name": "cim_logs",
+		"type": "samm.utils.LokiStream",
+		"args": {
+			"submodule_str": "sammwr.event.CIMEvent",
+			"loki_url": "$(resources.loki_url)",
+			"endpoint": "http://$(instance.address):5985/wsman",
+			"username": "$(resources.cim_username)",
+			"password": "$(resources.cim_password)",
+			"logfile": "$(check.logfile)",
+			"event_type": "$(check.event_type)",
+			"time_property": "$(check.time_property)",
+			"tag_property": {
+				"logfile": "Logfile",
+				"instance": "ComputerName"
+			},
+			"tags": {
+				"job": "$(tags.job)"
+			}
+		}
 	}
 ]
