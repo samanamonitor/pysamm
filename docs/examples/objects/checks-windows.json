@@ -16,8 +16,7 @@
 		"metrics": [
 			"NumberOfProcessors",
 			"NumberOfLogicalProcessors"
-		],
-		"register": true
+		]
 	},
 	{
 		"object_type": "check",
@@ -44,8 +43,7 @@
 			"NumberOfUsers",
 			"TotalVirtualMemorySize",
 			"TotalVisibleMemorySize"
-		],
-		"register": true
+		]
 	},
 	{
 		"object_type": "check",
@@ -61,8 +59,7 @@
 		"metrics": [
 			"FreeSpace",
 			"Size"
-		],
-		"register": true
+		]
 	},
 	{
 		"object_type": "check",
@@ -94,8 +91,7 @@
 			"Timestamp_PerfTime",
 			"Timestamp_Sys100NS",
 			"Timestamp_Object"
-		],
-		"register": true
+		]
 	},
 	{
 		"object_type": "check",
@@ -124,8 +120,7 @@
 			"PercentPrivilegedTime",
 			"PercentProcessorTime",
 			"PercentUserTime"
-		],
-		"register": true
+		]
 	},
 	{
 		"object_type": "check",
@@ -142,8 +137,7 @@
 			"AllocatedBaseSize",
 			"CurrentUsage",
 			"PeakUsage"
-		],
-		"register": true
+		]
 	},
 	{
 		"object_type": "check",
@@ -189,8 +183,7 @@
 			"PercentIdleTime_Base",
 			"SplitIOPerSec",
 			"Timestamp_Object"
-		],
-		"register": true
+		]
 	},
 	{
 		"object_type": "check",
@@ -227,8 +220,7 @@
 			"TCPRSCCoalescedPacketsPersec",
 			"TCPRSCExceptionsPersec",
 			"Timestamp_Object"
-		],
-		"register": true
+		]
 	},
 	{
 		"object_type": "check",
@@ -268,8 +260,7 @@
 			"WorkingSetPeak",
 			"WorkingSetPrivate",
 			"Timestamp_PerfTime"
-		],
-		"register": true
+		]
 	},
 	{
 		"object_type": "check",
@@ -299,8 +290,7 @@
 			"WorkingSet",
 			"WorkingSetPeak",
 			"Timestamp_PerfTime"
-		],
-		"register": true
+		]
 	},
 	{
 		"object_type": "check",
@@ -349,5 +339,33 @@
 		"metrics": [
 			"ls_events"
 		]
+	},
+	{
+		"object_type": "check",
+		"name": "cim_service",
+		"command": "wmi",
+		"class_name": "Win32_Service",
+		"alias": "cim_service",
+		"check_interval": 300,
+		"stale_timeout": 900,
+		"tag_properties": [
+			"Caption",
+			"DisplayName",
+			"ServiceType"
+		],
+		"metrics": [
+			"State",
+			"Status"
+		],
+		"value_mappings": {
+			"State": {
+				"Running": 1,
+				"*": 0
+			},
+			"Status": {
+				"OK": 1,
+				"*": 0
+			}
+		}
 	}
 ]
