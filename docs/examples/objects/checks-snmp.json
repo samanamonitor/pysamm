@@ -1,7 +1,6 @@
 [
 	{
 		"object_type": "check",
-		"register": true,
 		"name": "snmp_ifstats",
 		"command": "snmp_vars",
 		"mib_module_name": "IF-MIB",
