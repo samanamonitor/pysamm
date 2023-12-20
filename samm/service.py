@@ -28,6 +28,7 @@ class Service:
         self.config_path, sep, self.config_file = config_file.rpartition("/")
         self.load_config()
         self.keep_running = self.running_config._valid_config
+        self.attempts_run_in_loop = 0
 
         self.init_local_metrics()
         self.init_attempts()
@@ -60,8 +61,8 @@ class Service:
     def load_config(self):
         self.running_config=Config(self.abs_config_file)
         self.running_config.reload()
-        self.debug = self.running_config.get("debug", 0)
-        logging.basicConfig(stream=sys.stdout, level=self.debug)
+        self.debug = self.running_config.get("debug", 'WARNING')
+        logging.basicConfig(stream=sys.stdout, level=self.debug, force=True)
         self._stale_timeout = self.running_config.get("stale_timeout", default=600)
         self.poll_time = self.running_config.get("poll_time", default=5)
         self.tags = self.running_config.get('service_tags', default={}).copy()
@@ -99,9 +100,11 @@ class Service:
         self.sock.listen(1)
 
     def process_attempts(self):
+        self.attempts_run_in_loop = 0
         for attempt in self.attempt_list:
             try:
                 if attempt.process(self.metric_data):
+                    self.attempts_run_in_loop += 1
                     log.debug("Running attempt alias=%s instance_name=%s check_name=%s.",
                         attempt.alias, attempt.instance_name, attempt.check_name)
             except Exception as e:
@@ -146,8 +149,8 @@ class Service:
         return len(stale_list)
 
     def process_prompt_request(self):
-        log.info("Sleeping... process_time=%f attempt_count=%d host_count=%d",
-            process_time(), len(self.attempt_list), self.host_count.val())
+        log.info("Sleeping... process_time=%f attempt_count=%d host_count=%d attempts_run_in_loop=%d",
+            process_time(), len(self.attempt_list), self.host_count.val(), self.attempts_run_in_loop)
         c_read, _, _ = select.select([self.sock], [], [], self.poll_time)
         for _sock in c_read:
             log.debug("Connection received. Sending data.")
