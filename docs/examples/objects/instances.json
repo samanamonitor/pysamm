@@ -31,7 +31,7 @@
 		"tags": { 
 			"layer": "access" 
 		},
-		"community": "N4g1osS4m4n4",
+		"community": "<community>",
 		"checks": [ 
 			"snmp_ipstats", 
 			"snmp_ifstats", 
