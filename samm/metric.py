@@ -61,6 +61,10 @@ class InstanceMetric:
         return "%s %s\n" % (
             self.key, self.val())
 
+    def __repr__(self):
+        return "<%s name=%s value=%s>" % (
+            self.__class__.__name__, self._name, self.val())
+
     def val(self, *value):
         if len(value) > 0:
             self.value = value[0]
