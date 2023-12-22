@@ -38,7 +38,7 @@ class Instance(SammObject):
         _ = self._attributes.setdefault("active_checks_enabled", True)
         _ = self._attributes.setdefault("checks", [])
         _ = self._attributes.setdefault("tags", [])
-        _ = self._attributes.setdefault("check_if_down", False)
+        _ = self._attributes.setdefault("check_if_down", True)
         _ = self._attributes.setdefault("up_check", None)
         self.up_check_name = None
         self.up_metric_name = None

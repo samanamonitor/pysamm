@@ -52,6 +52,7 @@ class Attempt:
                 self.check_name != self.instance.up_check_name:
             log.info("Instance is down. Skipping attemp %s:%s.", \
                 self.instance_name, self.check_name)
+            self.schedule_next()
             return False
         self.thread = Thread(target=self.run, args=[metric_data])
         self.thread.start()
