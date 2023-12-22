@@ -6,7 +6,7 @@ import logging
 log = logging.getLogger(__name__)
 
 class Attempt:
-    def __init__(self, config, instance_name, check_name):
+    def __init__(self, config, instance_name, check_name, instance_metric_data):
         self.check=config.get(("checks", check_name))
         if self.check is None:
             raise TypeError("Check %s not found" % check_name)
@@ -34,6 +34,7 @@ class Attempt:
         self.base_tags.update(config.get(("checks", check_name, "tags"), default={}))
         self.base_tags['instance'] = self.instance_name
         self.value_mappings = self.check.get('value_mappings', {})
+        self.instance_metric_data = instance_metric_data
         log.debug("Attempt created. %s:%s", instance_name, check_name)
 
     def due(self):
@@ -42,7 +43,7 @@ class Attempt:
         log.debug("Attempt %s:%s due for execution.", self.instance_name, self.check_name)
         return time.time() > self.next_run
 
-    def process(self, metric_data):
+    def process(self):
         if not self.due():
             return False
         if self.thread is not None and self.thread.is_alive():
@@ -50,18 +51,16 @@ class Attempt:
             return False
         if self.instance.check_if_down is False and not self.instance.is_alive and \
                 self.check_name != self.instance.up_check_name:
-            log.info("Instance is down. Skipping attemp %s:%s.", \
+            log.info("Instance is down. Skipping attempt %s:%s.", \
                 self.instance_name, self.check_name)
             self.schedule_next()
             return False
-        self.thread = Thread(target=self.run, args=[metric_data])
+        self.thread = Thread(target=self.run)
         self.thread.start()
         return True
 
-    def run(self, metric_data, schedule_next=True):
+    def run(self, schedule_next=True):
         self.next_run = 0
-        instance_name=self.instance_name.lower()
-        instance_metric = metric_data.setdefault(instance_name, {})
 
         try:
             metric_received = 0
@@ -88,7 +87,7 @@ class Attempt:
                                 prefix=self.alias.lower(), stale_timeout=self.check_stale_timeout,
                                 value_mapping=self.value_mappings.get(metric_name))
 
-                        instance_metric[im.key] = im
+                        self.metric_data[im.key] = im
 
                 except Exception as e:
                     log.exception("An error occurred processing (%s:%s).metrics\nmetric_data=%s. %s",

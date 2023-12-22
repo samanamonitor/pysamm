@@ -5,17 +5,15 @@ from time import time
 def test_attempt_up():
 	config = Config('tests/etc/conf_valid.json')
 	assert config.reload()
-	a=Attempt(config, 'test_instance', 'test_check_up')
+	instance_metric_data={}
+	a=Attempt(config, 'test_instance', 'test_check_up', instance_metric_data)
 	a.schedule(0)
-	b={}
 	assert a.due()
-	assert a.process(b)
-	assert "test_instance" in b
-	test_instance = b['test_instance']
+	assert a.process()
 	with open('tests/expected_attempt_metrics_up.txt', "r") as f:
-		for metric_key in test_instance:
+		for metric_key, metric_value in instance_metric_data.items():
 			expected_line = f.readline()
-			assert expected_line == str(test_instance[metric_key])
+			assert expected_line == str(metric_value)
 	assert a.next_run > 0
 	assert not a.due()
 	a.schedule(-1)
@@ -26,17 +24,15 @@ def test_attempt_up():
 def test_attempt_down():
 	config = Config('tests/etc/conf_valid.json')
 	assert config.reload()
-	a=Attempt(config, 'test_instance', 'test_check_down')
+	instance_metric_data={}
+	a=Attempt(config, 'test_instance', 'test_check_down', instance_metric_data)
 	a.schedule(0)
-	b={}
 	assert a.due()
-	assert a.process(b)
-	assert "test_instance" in b
-	test_instance = b['test_instance']
+	assert a.process()
 	with open('tests/expected_attempt_metrics_down.txt', "r") as f:
-		for metric_key in test_instance:
+		for metric_key, metric_value in instance_metric_data.items():
 			expected_line = f.readline()
-			assert expected_line == str(test_instance[metric_key])
+			assert expected_line == str(metric_value)
 	assert a.next_run > 0
 	assert not a.due()
 	a.schedule(-1)
@@ -47,17 +43,15 @@ def test_attempt_down():
 def test_attempt_check_up():
 	config = Config('tests/etc/conf_valid.json')
 	assert config.reload()
-	a=Attempt(config, 'test_instance2', 'test_check_up')
+	instance_metric_data={}
+	a=Attempt(config, 'test_instance2', 'test_check_up', instance_metric_data)
 	a.schedule(0)
-	b={}
 	assert a.due()
-	assert a.process(b)
-	assert "test_instance2" in b
-	test_instance2 = b['test_instance2']
+	assert a.process()
 	with open('tests/expected_attempt_metrics_check_up.txt', "r") as f:
-		for metric_key in test_instance2:
+		for metric_key, metric_value in instance_metric_data.items():
 			expected_line = f.readline()
-			assert expected_line == str(test_instance2[metric_key])
+			assert expected_line == str(metric_value)
 	assert a.next_run > 0
 	assert not a.due()
 	a.schedule(-1)

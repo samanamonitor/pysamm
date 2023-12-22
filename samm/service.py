@@ -73,12 +73,13 @@ class Service:
         self.host_count.val(0)
         self.scheduled_attempts.val(0)
         for instance_name in self.running_config.get("instances"):
+            instance_metric_data = self.metric_data.setdefault(instance_name, {})
             instance = self.running_config.get(("instances", instance_name))
             if instance.register:
                 self.host_count.val(self.host_count.val() + 1)
                 for check_name in instance.checks:
                     try:
-                        a = Attempt(self.running_config, instance_name, check_name)
+                        a = Attempt(self.running_config, instance_name, check_name, instance_metric_data)
                         a.schedule(self.scheduled_attempts.val() * self.initial_spread
                             + int(self.rand.gauss(5, 5)))
                         self.attempt_list += [ a ]
