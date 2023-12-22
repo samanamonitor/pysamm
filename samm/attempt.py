@@ -43,7 +43,15 @@ class Attempt:
         return time.time() > self.next_run
 
     def process(self, metric_data):
-        if not self.due() or (self.thread is not None and self.thread.is_alive()):
+        if not self.due():
+            return False
+        if self.thread is not None and self.thread.is_alive():
+            log.warning("Last attempt is still running. (%s:%s)", self.instance_name, self.check_name)
+            return False
+        if self.instance.check_if_down is False and not self.instance.is_alive and \
+                self.check_name != self.instance.up_check_name:
+            log.info("Instance is down. Skipping attemp %s:%s.", \
+                self.instance_name, self.check_name)
             return False
         self.thread = Thread(target=self.run, args=[metric_data])
         self.thread.start()
@@ -54,27 +62,37 @@ class Attempt:
         instance_name=self.instance_name.lower()
         instance_metric = metric_data.setdefault(instance_name, {})
 
-        im_up = InstanceMetric("up", 0, self.base_tags, stale_timeout=self.instance_stale_timeout)
-        instance_metric[im_up.key] = im_up
         try:
             metric_received = 0
             for metric_data in self.data:
                 metric_received = 1
                 metric_tags = self.base_tags.copy()
                 for tag_property in self.tag_properties:
-                    metric_tags.update({tag_property.lower(): str(metric_data.get(tag_property, "none")).lower()})
+                    key = tag_property.lower()
+                    value = str(metric_data.get(tag_property, "none")).lower()
+                    metric_tags.update({ key: value })
 
                 try:
                     for metric_name in self.metrics:
-                        im = InstanceMetric(metric_name.lower(), metric_data.get(metric_name, -1), metric_tags, \
-                            prefix=self.alias.lower(), stale_timeout=self.check_stale_timeout,
-                            value_mapping=self.value_mappings.get(metric_name))
+                        if self.check_name == self.instance.up_check_name and \
+                                metric_name == self.instance.up_metric_name:
+                            value = metric_data.get(metric_name, 0)
+                            self.instance.is_alive = value
+                            im = InstanceMetric("up", value, metric_tags, \
+                                stale_timeout=self.instance_stale_timeout)
+
+                        else:
+                            value = metric_data.get(metric_name, -1)
+                            im = InstanceMetric(metric_name.lower(), value, metric_tags, \
+                                prefix=self.alias.lower(), stale_timeout=self.check_stale_timeout,
+                                value_mapping=self.value_mappings.get(metric_name))
+
                         instance_metric[im.key] = im
+
                 except Exception as e:
                     log.exception("An error occurred processing (%s:%s).metrics\nmetric_data=%s. %s",
                         self.instance_name, self.check_name, metric_data, e)
-                    pass
-            im_up.val(metric_received)
+
         except Exception as e:
             log.exception("An error occurred processing (%s:%s).metric_data. %s", self.instance_name, self.check_name, e)
             pass

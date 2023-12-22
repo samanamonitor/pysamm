@@ -38,6 +38,13 @@ class Instance(SammObject):
         _ = self._attributes.setdefault("active_checks_enabled", True)
         _ = self._attributes.setdefault("checks", [])
         _ = self._attributes.setdefault("tags", [])
+        _ = self._attributes.setdefault("check_if_down", False)
+        _ = self._attributes.setdefault("up_check", None)
+        self.up_check_name = None
+        self.up_metric_name = None
+        if isinstance(self.up_check, str):
+            self.up_check_name, _sep, self.up_metric_name = self.up_check.rpartition('.')
+        self.is_alive = 0
 
 
 class Command(SammObject):

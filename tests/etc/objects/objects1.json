@@ -49,8 +49,18 @@
 		"object_type": "instance",
 		"name": "test_instance",
 		"alias": "test_instance_alias",
+		"check_if_down": 1,
 		"tags": {"tagname": "instancetag1"},
 		"address": "test_address",
+		"checks": [ "test_check_up", "test_check_down" ]
+	},
+	{
+		"object_type": "instance",
+		"name": "test_instance2",
+		"alias": "test_instance_alias2",
+		"up_check": "test_check_up.metric1",
+		"tags": {"tagname": "instancetag2"},
+		"address": "test_address2",
 		"checks": [ "test_check_up", "test_check_down" ]
 	}
 ]
