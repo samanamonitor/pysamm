@@ -87,14 +87,14 @@ class Attempt:
                                 prefix=self.alias.lower(), stale_timeout=self.check_stale_timeout,
                                 value_mapping=self.value_mappings.get(metric_name))
 
-                        self.metric_data[im.key] = im
+                        self.instance_metric_data[im.key] = im
 
                 except Exception as e:
                     log.exception("An error occurred processing (%s:%s).metrics\nmetric_data=%s. %s",
                         self.instance_name, self.check_name, metric_data, e)
 
         except Exception as e:
-            log.exception("An error occurred processing (%s:%s).metric_data. %s", self.instance_name, self.check_name, e)
+            log.exception("An error occurred processing (%s:%s).instance_metric_data. %s", self.instance_name, self.check_name, e)
             pass
 
         if schedule_next:
