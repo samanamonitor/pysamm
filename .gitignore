@@ -8,3 +8,5 @@ samm.egg-info
 __pycache__
 test1/*
 support/prometheus.yml
+samm1
+sammdisc
