@@ -27,6 +27,7 @@ class Service:
         self.attempt_list = []
         self.config_path, sep, self.config_file = config_file.rpartition("/")
         self.load_config()
+        log.debug("Service startup. %d" % ( int(time()) ))
         self.keep_running = self.running_config._valid_config
         self.attempts_run_in_loop = 0
 
@@ -68,24 +69,35 @@ class Service:
         self.tags = self.running_config.get('service_tags', default={}).copy()
         self.tags.update(self.running_config.get('tags'))
 
+    def init_instance_attempts(self, instance):
+        instance_name = instance.name
+        instance_metric_data = self.metric_data.setdefault(instance_name, {})
+        if instance.register:
+            self.host_count.val(self.host_count.val() + 1)
+            for check_name in instance.checks:
+                try:
+                    a = Attempt(self.running_config, instance_name, check_name, instance_metric_data, rand=self.rand)
+                    log.debug("Created attempt %s:%s", instance_name, check_name)
+                    a.schedule(self.scheduled_attempts.val() * self.initial_spread
+                        + int(self.rand.gauss(10, 5)))
+                    self.attempt_list += [ a ]
+                    self.scheduled_attempts.val(self.scheduled_attempts.val() + 1)
+                except Exception as e:
+                    log.exception("Unable to create attempt for %s-%s. %s", instance_name, check_name, str(e))
+
     def init_attempts(self):
         self.attempt_list = []
         self.host_count.val(0)
         self.scheduled_attempts.val(0)
-        for instance_name in self.running_config.get("instances"):
-            instance_metric_data = self.metric_data.setdefault(instance_name, {})
+        for instance_name in self.running_config.get("instances", default={}):
             instance = self.running_config.get(("instances", instance_name))
-            if instance.register:
-                self.host_count.val(self.host_count.val() + 1)
-                for check_name in instance.checks:
-                    try:
-                        a = Attempt(self.running_config, instance_name, check_name, instance_metric_data)
-                        a.schedule(self.scheduled_attempts.val() * self.initial_spread
-                            + int(self.rand.gauss(5, 5)))
-                        self.attempt_list += [ a ]
-                        self.scheduled_attempts.val(self.scheduled_attempts.val() + 1)
-                    except Exception as e:
-                        log.exception("Unable to create attempt for %s-%s. %s", instance_name, check_name, str(e))
+            self.init_instance_attempts(instance)
+
+    def discover(self):
+        do=self.running_config.discover_objects()
+        dobj=self.running_config.process_objects(do)
+        for obj in dobj:
+            self.init_instance_attempts(obj)
 
     def init_sock(self):
         self.sock=socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -117,6 +129,7 @@ class Service:
             self.process_attempts()
             self.maintain_metric_data()
             self.process_prompt_request()
+            self.discover()
             if self.reload_config:
                 self.load_config()
                 self.reload_config = False
