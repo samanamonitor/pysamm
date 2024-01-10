@@ -6,7 +6,7 @@ import logging
 log = logging.getLogger(__name__)
 
 class Attempt:
-    def __init__(self, config, instance_name, check_name, instance_metric_data):
+    def __init__(self, config, instance_name, check_name, instance_metric_data, rand=None):
         self.check=config.get(("checks", check_name))
         if self.check is None:
             raise TypeError("Check %s not found" % check_name)
@@ -36,16 +36,17 @@ class Attempt:
         self.value_mappings = self.check.get('value_mappings', {})
         self.instance_metric_data = instance_metric_data
         log.debug("Attempt created. %s:%s", instance_name, check_name)
+        self.rand = rand
 
     def due(self):
         if self.next_run == 0:
             return False
-        log.debug("Attempt %s:%s due for execution.", self.instance_name, self.check_name)
         return time.time() > self.next_run
 
     def process(self):
         if not self.due():
             return False
+        log.debug("Attempt %s:%s due for execution.", self.instance_name, self.check_name)
         if self.thread is not None and self.thread.is_alive():
             log.warning("Last attempt is still running. (%s:%s)", self.instance_name, self.check_name)
             return False
@@ -106,5 +107,9 @@ class Attempt:
         self.schedule(self.check.get("check_interval"))
 
     def schedule(self, seconds):
-        self.next_run = time.time() + seconds
+        if self.rand is not None:
+            r = self.rand.gauss(10, 5)
+        else:
+            r = 0
+        self.next_run = time.time() + seconds + r
         log.debug("Scheduling %s:%s to %s", self.instance_name, self.check_name, str(self.next_run))
