@@ -1,0 +1,72 @@
+[
+	{
+		"object_type": "check",
+		"name": "ctxmon_machines",
+		"command": "ctxmonitor",
+		"tag_properties": [ 
+			"Catalog.Name",
+			"DesktopGroup.Name",
+			"DnsName"
+		],
+		"alias": "ctxmachine",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"entity": "Machines",
+		"expand": "Catalog,DesktopGroup,CurrentLoadIndex",
+		"filter": "Name ne null",
+		"metrics": [
+			"CurrentLoadIndex.EffectiveLoadIndex",
+			"CurrentLoadIndex.Cpu",
+			"CurrentLoadIndex.Memory",
+			"CurrentLoadIndex.Disk",
+			"CurrentLoadIndex.Network",
+			"CurrentLoadIndex.SessionCount",
+			"CurrentSessionCount",
+			"CurrentRegistrationState",
+			"RegistrationStateChangeDate",
+			"PowerStateChangeDate",
+			"CurrentPowerState",
+			"IsInMaintenanceMode"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "ctxmon_sessions",
+		"command": "ctxmonitor",
+		"tag_properties": [ 
+			"User.Upn",
+			"Machine.DnsName"
+		],
+		"alias": "ctxsession",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"entity": "Sessions",
+		"expand": "User,CurrentConnection,Machine",
+		"filter": "ConnectionState ne 3",
+		"metrics": [
+			"ConnectionState",
+			"ConnectionStateChangeDate",
+			"CreatedDate",
+			"CurrentConnection.LogOnStartDate",
+			"CurrentConnection.LogOnEndDate",
+			"CurrentConnection.BrokeringDuration",
+			"CurrentConnection.BrokeringDate",
+			"CurrentConnection.DisconnectCode",
+			"CurrentConnection.DisconnectDate",
+			"CurrentConnection.EstablishmentDate",
+			"CurrentConnection.VMStartStartDate",
+			"CurrentConnection.VMStartEndDate",
+			"CurrentConnection.HdxStartDate",
+			"CurrentConnection.HdxEndDate",
+			"CurrentConnection.AuthenticationDuration",
+			"CurrentConnection.GpoStartDate",
+			"CurrentConnection.GpoEndDate",
+			"CurrentConnection.LogOnScriptsStartDate",
+			"CurrentConnection.LogOnScriptsEndDate",
+			"CurrentConnection.ProfileLoadStartDate",
+			"CurrentConnection.ProfileLoadEndDate",
+			"CurrentConnection.InteractiveStartDate",
+			"CurrentConnection.InteractiveEndDate"
+		]
+	}
+]
