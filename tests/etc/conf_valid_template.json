@@ -1,0 +1,19 @@
+{
+    "debug": "DEBUG",
+    "base_dir": "tests",
+    "config_dir": "etc",
+    "sock_file": "var/samm.sock",
+    "resource_file": "resources.json",
+    "object_files":[ "objects/templates1.json" ],
+    "webserver": true,
+    "webserver_port": 5000,
+    "wait_on_error": 60,
+    "tags": {
+        "job": "samm_job"
+    },
+    "service_tags": {
+        "instance": "samm_service"
+    },
+    "poll_time": 5,
+    "stale_timeout": 600
+}

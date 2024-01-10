@@ -1,0 +1,99 @@
+{
+    "_checks": {
+        "cim_disk": {
+            "_command": {
+                "args": {
+                    "address": "$(instance.address)",
+                    "metrics": "$(check.metrics)",
+                    "numeric": 1
+                },
+                "object_type": "command",
+                "register": true,
+                "type": "samm.dummymodule.DummyModuleUp"
+            },
+            "alias": "test_check_alias",
+            "check_interval": 60,
+            "command": "test_command_up",
+            "metrics": [
+                "metric1",
+                "metric2"
+            ],
+            "object_type": "check",
+            "register": true,
+            "stale_timeout": 180,
+            "tag_properties": [
+                "name"
+            ]
+        },
+        "other": {
+            "_command": {
+                "args": {
+                    "address": "$(instance.address)",
+                    "metrics": "$(check.metrics)",
+                    "numeric": 1
+                },
+                "object_type": "command",
+                "register": true,
+                "type": "samm.dummymodule.DummyModuleUp"
+            },
+            "alias": "test_check_alias",
+            "check_interval": 60,
+            "command": "test_command_up",
+            "metrics": [
+                "metric1",
+                "metric2"
+            ],
+            "object_type": "check",
+            "register": true,
+            "stale_timeout": 180,
+            "tag_properties": [
+                "name"
+            ]
+        },
+        "ping": {
+            "_command": {
+                "args": {
+                    "address": "$(instance.address)",
+                    "metrics": "$(check.metrics)",
+                    "numeric": 1
+                },
+                "object_type": "command",
+                "register": true,
+                "type": "samm.dummymodule.DummyModuleUp"
+            },
+            "alias": "test_check_alias",
+            "check_interval": 60,
+            "command": "test_command_up",
+            "metrics": [
+                "metric1",
+                "metric2"
+            ],
+            "object_type": "check",
+            "register": true,
+            "stale_timeout": 180,
+            "tag_properties": [
+                "name"
+            ]
+        }
+    },
+    "address": "test_instance.domain",
+    "alias": "test_instance",
+    "check_if_down": false,
+    "checks": [
+        "ping",
+        "cim_disk",
+        "other"
+    ],
+    "display_name": "template_host",
+    "name": "test_instance",
+    "object_type": "instance",
+    "register": true,
+    "stale_timeout": 432000,
+    "tags": {
+        "layer": "control",
+        "tagdisk": "set"
+    },
+    "up_check": "ping.is_alive",
+    "up_check_name": "ping",
+    "up_metric_name": "is_alive"
+}
