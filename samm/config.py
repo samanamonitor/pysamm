@@ -1,56 +1,8 @@
 import re, os, json, sys
-from .objecttype import Instance, Command, Check
+from . import objecttype
 import logging
 
 log = logging.getLogger(__name__)
-
-def get_variables(s):
-    '''This function receives a string containing text and variables in the form $(variable_name)
-    and will return a list of variable names. It can detect multiple variables.
-    Variable names cannot contain the following characters (,),\\ or quotes
-'''
-    var_regex=r'(?<!\\)\$\(([^\)]+)\)'
-    varlist=re.findall(var_regex, s)
-    return varlist
-
-def replace_vars(o, config, instance_name=None, check_name=None, default=None, default_variable=""):
-    out=None
-    if isinstance(o, str):
-        '''
-        We don't need to continue recursion. Just find variables and replace them
-        '''
-        variables=get_variables(o)
-        out=o
-        if not isinstance(default, str):
-            defaut = ""
-        for v in variables:
-            var_value=config.get(v, instance_name=instance_name, check_name=check_name, resolve_vars=True, default=default)
-            if isinstance(var_value, str):
-                out=o.replace("$(%s)" % v, var_value)
-            elif o == "$(%s)" % v:
-                out=var_value
-            else:
-                raise TypeError("Unable to parse variable %s." % o)
-    elif isinstance(o, list):
-        '''
-        We need to process recursively for each item in the list
-        '''
-        out = [None] * len(o)
-        for i in range(len(o)):
-            out[i] = replace_vars(o[i], config, instance_name=instance_name, check_name=check_name, default=default)
-    elif isinstance(o, dict):
-        '''
-        We need to process recursively for each item in the dict
-        '''
-        out = {}
-        for i in o:
-            out[i] = replace_vars(o[i], config, instance_name=instance_name, check_name=check_name)
-    elif isinstance(o, (int, float)):
-        out = o
-    else:
-        out = default
-    return out
-
 
 class Config():
     def __init__(self, config_file):
@@ -61,6 +13,16 @@ class Config():
         log.debug("Config object created with file %s", config_file)
 
     def reload(self):
+        object_definition_list = []
+        self.load_base()
+        object_definition_list = self.load_objects()
+        self.process_objects(object_definition_list)
+        object_definition_list = self.discover_objects()
+        self.process_objects(object_definition_list)
+        self._valid_config = True
+        return self._valid_config
+
+    def load_base(self):
         with open(self.config_file) as f:
             log.debug("Config file %s opened for loading.", self.config_file)
             try:
@@ -92,25 +54,22 @@ class Config():
                 log.exception("Unable to load config file %s.", self._config["resources"])
                 raise
 
-        self._config["commands"] = {}
-        self._config["checks"] = {}
-        self._config["instances"] = {}
+        if not isinstance(self._config.get('object_files'), list):
+            raise TypeError("Parameter object_files must be a list.")
+        _ = self._config.setdefault("tags", {}).setdefault("job", "samm")
 
-        object_files = self._config.get('object_files', [])
-        if not isinstance(object_files, list):
-            raise TypeError("object_files must be a list")
+    def load_objects(self):
+        object_definition_list = []
         for c in self._config['object_files']:
             object_file_path = os.path.join(self._config['config_dir'], c)
             log.debug("Loading config file %s", object_file_path)
-            self.load(object_file_path)
-
-        _ = self._config.setdefault("tags", {}).setdefault("job", "samm")
-        self._valid_config = True
-        return self._valid_config
+            object_definition_list += self.load_object_file(object_file_path)
+        return object_definition_list
 
 
-    def load(self, filename):
+    def load_object_file(self, filename):
         c=None
+        object_definition_list = []
         with open(filename) as f:
             try:
                 c=json.load(f)
@@ -122,21 +81,50 @@ class Config():
             raise TypeError("Invalid config type. Must be list")
         for o in c:
             if not isinstance(o, dict):
-                raise TypeError("Invalid config type. Expecting dict. data=%s" % str(o))
+                raise TypeError("Invalid config type at file=%s. Expecting dict. data=%s" %
+                    (filename, str(o)))
             if "object_type" not in o:
-                raise KeyError("Mandatory \'object_type\' missing. data=%s" % str(o))
+                raise KeyError("Mandatory \'object_type\' missing at file=%s. data=%s" %
+                    (filename, str(o)))
             if "name" not in o:
-                raise KeyError("Mandatory \'name\' missing. data=%s" % str(o))
+                raise KeyError("Mandatory \'name\' missingat file=%s. data=%s" %
+                    (filename, str(o)))
+            object_definition_list += [ o ]
+        return object_definition_list
 
-            if o["object_type"] == "command":
-                log.debug("Creating new command name=%s", o["name"])
-                self._config["commands"][o["name"]] = Command(o, self._config)
-            elif o["object_type"] == "check":
-                log.debug("Creating new check name=%s", o["name"])
-                self._config["checks"][o["name"]] = Check(o, self._config)
-            elif o["object_type"] == "instance":
-                log.debug("Creating new instance name=%s", o["name"])
-                self._config["instances"][o["name"]] = Instance(o, self._config)
+    def discover_objects(self):
+        object_definition_list = []
+        for discovery_name, discovery in self._config.get("discoveries", {}).items():
+            object_definition_list += discovery.run()
+        return object_definition_list
+
+    def process_objects(self, object_definition_list):
+        objects = []
+        for o in object_definition_list:
+            obj = self.load_single_object(o)
+            if obj is not None:
+                objects.append(obj)
+
+        for obj in objects:
+            log.debug("Running post-process for %s:%s" %
+                (obj.__class__.__name__.lower(), obj.name))
+            obj.post_process()
+        return objects
+
+    def load_single_object(self, o, force=False):
+        try:
+            obj = objecttype.__getattribute__(o["object_type"])(o, self)
+            config_section = self._config.setdefault(obj.config_section, {})
+            if obj.name in config_section and not force:
+                log.debug("Object %s name=%s already defined. Not adding.",
+                    obj.config_section, obj.name)
+                return None
+            config_section[obj.name] = obj
+            log.debug("Creating new %s name=%s register=%s" %
+                (o["object_type"], o["name"], obj.register))
+        except AttributeError:
+            log.exception("Invalid object_type %s" % o["object_type"])
+        return obj
 
     def setdefault(self, key, value):
         return self._config.setdefault(key, value)
@@ -166,7 +154,8 @@ class Config():
                 return default
             return curconfig
 
-        return replace_vars(curconfig, self, instance_name=instance_name, check_name=check_name, default=default, default_variable=default_variable)
+        return self.replace_vars(curconfig, instance_name=instance_name,
+            check_name=check_name, default=default, default_variable=default_variable)
 
     def run_module(self, module_str, **kwargs):
         if module_str not in self.modules:
@@ -182,7 +171,73 @@ class Config():
         try:
             self.modules[import_str] = getattr(sys.modules[mod_str], class_str)
         except AttributeError:
-            raise ImportError('Class %s cannot be found (%s)' %
-                              (class_str,
-                               traceback.format_exception(*sys.exc_info())))
+            log.exception('Class %s cannot be found', class_str)
+            raise
 
+    def get_variables(self, s):
+        '''This function receives a string containing text and variables in the form $(variable_name)
+        and will return a list of variable names. It can detect multiple variables.
+        Variable names cannot contain the following characters (,),\\ or quotes'''
+        var_regex=r'(?<!\\)\$\(([^\)]+)\)'
+        varlist=re.findall(var_regex, s)
+        return varlist
+
+    def replace_vars(self, o, instance_name=None, check_name=None, default=None, default_variable=""):
+        out=None
+        if isinstance(o, str):
+            '''
+            We don't need to continue recursion. Just find variables and replace them
+            '''
+            variables=self.get_variables(o)
+            out=o
+            if not isinstance(default, str):
+                defaut = ""
+            for v in variables:
+                var_value=self.get(v, instance_name=instance_name, check_name=check_name,
+                    resolve_vars=True, default=default)
+                if isinstance(var_value, str):
+                    out=o.replace("$(%s)" % v, var_value)
+                elif o == "$(%s)" % v:
+                    out=var_value
+                else:
+                    raise TypeError("Unable to parse variable %s." % o)
+        elif isinstance(o, list):
+            '''
+            We need to process recursively for each item in the list
+            '''
+            out = [None] * len(o)
+            for i in range(len(o)):
+                out[i] = self.replace_vars(o[i], instance_name=instance_name,
+                    check_name=check_name, default=default)
+        elif isinstance(o, dict):
+            '''
+            We need to process recursively for each item in the dict
+            '''
+            out = {}
+            for i in o:
+                out[i] = self.replace_vars(o[i], instance_name=instance_name, check_name=check_name)
+        elif isinstance(o, (int, float)):
+            out = o
+        else:
+            out = default
+        return out
+
+    @property
+    def __dict__(self):
+        '''TODO: generalize the objects section'''
+        return {
+            "config_file": self.config_file,
+            "config": {
+                "base_dir": self._config['base_dir'],
+                "config_dir": self._config['config_dir'],
+                "resource_file": self._config['resource_file'],
+                "resources": self._config['resources'],
+                "object_files": self._config['object_files'],
+                "objects": {
+                    "instances": [ i.__dict__ for name, i in self._config.get('instances', {}).items() ],
+                    "checks": [ i.__dict__ for name, i in self._config.get('checks', {}).items() ],
+                    "commands": [ i.__dict__ for name, i in self._config.get('commands', {}).items() ],
+                    "discoveries": [ i.__dict__ for name, i in self._config.get('discoveries', {}).items() ]
+                }
+            }
+        }
