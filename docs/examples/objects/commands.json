@@ -73,5 +73,19 @@
 				"job": "$(tags.job)"
 			}
 		}
+	},
+	{
+		"object_type": "command",
+		"name": "ctxmonitor",
+		"type": "sammodata.OdataQuery",
+		"args": {
+				"auth_protocol": "ntlm",
+				"username": "$(resources.cim_username)",
+				"password": "$(resources.cim_password)",
+				"entity": "$(check.entity)",
+				"expand": "$(check.expand)",
+				"filter": "$(check.filter)",
+				"service_url": "http://$(instance.address)/citrix/monitor/odata/v2/Data/"
+		}
 	}
 ]
