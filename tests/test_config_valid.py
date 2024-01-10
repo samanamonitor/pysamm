@@ -1,4 +1,4 @@
-from samm.config import Config, get_variables
+from samm.config import Config
 import json
 
 config = None
@@ -28,7 +28,7 @@ def test_05_get_variables():
     with open('tests/variable_strings.txt', "r") as f:
         data = json.load(f)
     for t in data:
-        assert get_variables(t['text']) == eval(t['eval'])
+        assert config.get_variables(t['text']) == eval(t['eval'])
 
 def test_06_replace_vars():
     assert "test_address" == config.get('commands.test_command_up.args.address', \
