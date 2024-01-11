@@ -18,6 +18,6 @@ if __name__ == "__main__":
         packages=find_packages(include=['samm', 'samm.*']),
         scripts=['scripts/server.py'],
         data_files=[('/usr/local/samm/etc', ['docs/examples/conf.json.example', 'docs/examples/resources.json.example']),
-            ('/usr/local/samm/etc/objects', ['docs/examples/objects/objects.json.example'])],
+            ('/usr/local/samm/etc/objects', ['docs/examples/objects/*'])],
         install_requires=[ ]
     )
