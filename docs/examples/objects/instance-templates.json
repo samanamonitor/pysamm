@@ -1,0 +1,76 @@
+[
+	{
+		"object_type": "instance",
+		"name": "template_host",
+		"checks": [
+			"ping"
+		],
+		"up_check": "ping.is_alive",
+		"check_if_down": false,
+		"stale_timeout": 432000,
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_snmp_net",
+		"checks": [
+			"snmp_ifstats"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_netscaler",
+		"checks": [
+			"snmp_ns", 
+			"snmp_netscaler_ipstats",
+			"snmp_netscaler_vserver",
+			"snmp_netscaler_certkey"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_netscaler_appfw",
+		"checks": [
+			"snmp_netscaler_appfw"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_windows",
+		"checks": [
+			"cim_os",
+			"cim_disk",
+			"cim_pagefile",
+			"cim_perfdisk",
+			"cim_perfnic",
+			"cim_perfcpu",
+			"cim_certificates",
+			"cim_computer",
+			"cim_system_events",
+			"cim_application_events",
+			"cim_service"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_windows_rds",
+		"checks": [
+			"cim_perftssession",
+			"cim_perfprocess"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_citrix_cvad_control",
+		"checks": [
+			"ctx_machines",
+			"ctx_sessions"
+		],
+		"register": false
+	}	
+]
