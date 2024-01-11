@@ -1,6 +1,29 @@
 [
 	{
 		"object_type": "check",
+		"name": "snmp_ifstats",
+		"command": "snmp_table",
+		"table": "IF-MIB::ifTable",
+		"tag_properties": [
+			"ifDescr"
+		],
+		"alias": "ifstats",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"metrics": [
+			"ifInOctets",
+			"ifInUcastPkts",
+			"ifInDiscards",
+			"ifInErrors",
+			"ifInUnknownProtos",
+			"ifOutOctets",
+			"ifOutUcastPkts",
+			"ifOutDiscards",
+			"ifOutErrors"
+		]
+	},
+	{
+		"object_type": "check",
 		"name": "ping",
 		"command": "ping",
 		"check_interval": 30,

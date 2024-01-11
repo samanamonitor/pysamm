@@ -11,7 +11,7 @@
 	},
 	{
 		"object_type": "command",
-		"name": "wmi",
+		"name": "cim",
 		"type": "sammwr.wmi.WMIQuery",
 		"args": {
 			"class_name": "$(check.class_name)",
@@ -25,9 +25,10 @@
 		"name": "snmp_table",
 		"type": "sammsnmp.SnmpQuery",
 		"args": {
-			"hostaddress": "$(instance.address)",
-			"community": "$(resources.community)",
-			"mib_module_name": "$(check.mib_module_name)",
+			"hostname": "$(instance.address)",
+			"community": "$(instance.community)",
+			"version": 2,
+			"use_enums": 1,
 			"table": "$(check.table)"
 		}
 	},
@@ -36,9 +37,10 @@
 		"name": "snmp_vars",
 		"type": "sammsnmp.SnmpQuery",
 		"args": {
-			"hostaddress": "$(instance.address)",
+			"hostname": "$(instance.address)",
 			"community": "$(instance.community)",
-			"mib_module_name": "$(check.mib_module_name)",
+			"version": 2,
+			"use_enums": 1,
 			"mib_variable_name_list": "$(check.mib_variable_name_list)"
 		}
 	},
@@ -76,16 +78,26 @@
 	},
 	{
 		"object_type": "command",
-		"name": "ctxmonitor",
+		"name": "odata_ctx_director",
 		"type": "sammodata.OdataQuery",
 		"args": {
-				"auth_protocol": "ntlm",
-				"username": "$(resources.cim_username)",
-				"password": "$(resources.cim_password)",
-				"entity": "$(check.entity)",
-				"expand": "$(check.expand)",
-				"filter": "$(check.filter)",
-				"service_url": "http://$(instance.address)/citrix/monitor/odata/v2/Data/"
+			"auth_protocol": "ntlm",
+			"username": "$(resources.cim_username)",
+			"password": "$(resources.cim_password)",
+			"entity": "$(check.entity)",
+			"expand": "$(check.expand)",
+			"filter": "$(check.filter)",
+			"service_url": "http://$(instance.address)/citrix/monitor/odata/v2/Data/"
 		}
+	},
+	{
+		"object_type": "check",
+		"name": "cim_certificates",
+		"command": "wrcertificates",
+		"alias": "certkey",
+		"tag_properties": [ "sslcertkeyname" ],
+		"check_interval": 600,
+		"stale_timeout": 1800,
+		"metrics": [ "ssldaystoexpire" ]
 	}
 ]

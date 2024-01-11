@@ -1,14 +1,14 @@
 [
 	{
 		"object_type": "check",
-		"name": "ctxmon_machines",
-		"command": "ctxmonitor",
+		"name": "ctx_machines",
+		"command": "odata_ctx_director",
 		"tag_properties": [ 
 			"Catalog.Name",
 			"DesktopGroup.Name",
 			"DnsName"
 		],
-		"alias": "ctxmachine",
+		"alias": "ctx_machine",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"entity": "Machines",
@@ -31,13 +31,13 @@
 	},
 	{
 		"object_type": "check",
-		"name": "ctxmon_sessions",
-		"command": "ctxmonitor",
+		"name": "ctx_sessions",
+		"command": "odata_ctx_director",
 		"tag_properties": [ 
 			"User.Upn",
 			"Machine.DnsName"
 		],
-		"alias": "ctxsession",
+		"alias": "ctx_session",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"entity": "Sessions",

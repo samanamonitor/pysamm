@@ -3,11 +3,10 @@
 		"object_type": "check",
 		"name": "snmp_ns",
 		"command": "snmp_vars",
-		"mib_module_name": "NS-ROOT-MIB",
 		"mib_variable_name_list": [
-			"sysHighAvailabilityMode",
-			"resCpuUsage",
-			"resMemUsage"
+			"NS-ROOT-MIB::sysHighAvailabilityMode",
+			"NS-ROOT-MIB::resCpuUsage",
+			"NS-ROOT-MIB::resMemUsage"
 		],
 		"tag_properties": [
 			"sysHighAvailabilityMode"
@@ -22,14 +21,29 @@
 	},
 	{
 		"object_type": "check",
-		"name": "snmp_appfw",
+		"name": "snmp_netscaler_certkey",
+		"tag_properties": [
+			"sslCertKeyName",
+			"sslInputFormat"
+		],
+		"command": "snmp_table",
+		"table": "NS-ROOT-MIB::sslCertKeyTable",
+		"alias": "certkey",
+		"check_interval": 600,
+		"stale_timeout": 1800,
+		"metrics": [
+			"sslDaysToExpire"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "snmp_netscaler_appfw",
 		"tag_properties": [
 			"appfwprofileName",
 			"appfwProfileFullName"
 		],
 		"command": "snmp_table",
-		"mib_module_name": "NS-ROOT-MIB",
-		"table": "appfwProfileTable",
+		"table": "NS-ROOT-MIB::appfwProfileTable",
 		"alias": "appfwstats",
 		"check_interval": 60,
 		"stale_timeout": 180,
@@ -82,7 +96,7 @@
 	},
 	{
 		"object_type": "check",
-		"name": "snmp_vserver",
+		"name": "snmp_netscaler_vserver",
 		"tag_properties": [
 			"vsvrName",
 			"vsvrIpAddress",
@@ -92,59 +106,57 @@
 			"vsvrEntityType"
 		],
 		"command": "snmp_table",
-		"mib_module_name": "NS-ROOT-MIB",
-		"table": "vserverTable",
+		"table": "NS-ROOT-MIB::vserverTable",
 		"alias": "vserverstats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
-			"vsvrCurClntConnections",
-			"vsvrCurSrvrConnections",
-			"vsvrSurgeCount",
-			"vsvrTotalRequests",
-			"vsvrTotalRequestBytes",
-			"vsvrTotalResponses",
-			"vsvrTotalResponseBytes",
-			"vsvrTotalPktsRecvd",
-			"vsvrTotalPktsSent",
-			"vsvrTotalSynsRecvd",
-			"vsvrCurServicesDown",
-			"vsvrCurServicesUnKnown",
-			"vsvrCurServicesOutOfSvc",
-			"vsvrCurServicesTransToOutOfSvc",
-			"vsvrCurServicesUp",
-			"vsvrTotMiss",
-			"vsvrTotHits",
-			"vsvrTotSpillOvers",
-			"vsvrTotalClients",
-			"vsvrCurSslVpnUsers",
-			"vsvrTotalServicesBound",
-			"vsvrHealth",
-			"vsvrTicksSinceLastStateChange",
-			"vsvrTotalServers",
-			"vsvrInvalidRequestResponse",
-			"vsvrInvalidRequestResponseDropped",
-			"vsvrSoThreshold",
-			"vsvrEstablishedConn",
-			"vsvrCurTotalVpnUsers",
-			"vsvrCurMptcpSessions",
-			"vsvrCursubflowConn",
-			"vsvrCurPersistenceSessions",
-			"vsvrCurBackupPersistenceSessions",
-			"vsvrtotalConnReassemblyQueueFlush",
-			"vsvrtotalConnReassemblyQueue75",
-			"vsvrtotalSvrBusyErr",
-			"vsvrTotalH2Responses",
-			"vsvrTotalH2Requests",
-			"vsvrCpuUsagePm"
+		   "vsvrCurClntConnections",
+		   "vsvrCurSrvrConnections",
+		   "vsvrSurgeCount",
+		   "vsvrTotalRequests",
+		   "vsvrTotalRequestBytes",
+		   "vsvrTotalResponses",
+		   "vsvrTotalResponseBytes",
+		   "vsvrTotalPktsRecvd",
+		   "vsvrTotalPktsSent",
+		   "vsvrTotalSynsRecvd",
+		   "vsvrCurServicesDown",
+		   "vsvrCurServicesUnKnown",
+		   "vsvrCurServicesOutOfSvc",
+		   "vsvrCurServicesTransToOutOfSvc",
+		   "vsvrCurServicesUp",
+		   "vsvrTotMiss",
+		   "vsvrTotHits",
+		   "vsvrTotSpillOvers",
+		   "vsvrTotalClients",
+		   "vsvrCurSslVpnUsers",
+		   "vsvrTotalServicesBound",
+		   "vsvrHealth",
+		   "vsvrTicksSinceLastStateChange",
+		   "vsvrTotalServers",
+		   "vsvrInvalidRequestResponse",
+		   "vsvrInvalidRequestResponseDropped",
+		   "vsvrSoThreshold",
+		   "vsvrEstablishedConn",
+		   "vsvrCurTotalVpnUsers",
+		   "vsvrCurMptcpSessions",
+		   "vsvrCursubflowConn",
+		   "vsvrCurPersistenceSessions",
+		   "vsvrCurBackupPersistenceSessions",
+		   "vsvrtotalConnReassemblyQueueFlush",
+		   "vsvrtotalConnReassemblyQueue75",
+		   "vsvrtotalSvrBusyErr",
+		   "vsvrTotalH2Responses",
+		   "vsvrTotalH2Requests",
+		   "vsvrCpuUsagePm"
 		]
 	},
 	{
 		"object_type": "check",
-		"name": "snmp_ipstats",
+		"name": "snmp_netscaler_ipstats",
 		"command": "snmp_table",
-		"mib_module_name": "NS-ROOT-MIB",
-		"table": "nsIpStatsGroup",
+		"table": "NS-ROOT-MIB::nsIpStatsGroup",
 		"alias": "ipstats",
 		"check_interval": 60,
 		"stale_timeout": 180,
@@ -184,23 +196,6 @@
 			"ipTotZeroNextHop",
 			"ipTotTtlExpired",
 			"nonIpTotTruncatedPackets"
-		]
-	},
-	{
-		"object_type": "check",
-		"name": "snmp_certkey",
-		"tag_properties": [
-			"sslCertKeyName",
-			"sslInputFormat"
-		],
-		"command": "snmp_table",
-		"mib_module_name": "NS-ROOT-MIB",
-		"table": "sslCertKeyTable",
-		"alias": "certkey",
-		"check_interval": 600,
-		"stale_timeout": 1800,
-		"metrics": [
-			"sslDaysToExpire"
 		]
 	}
 ]
