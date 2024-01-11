@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 from samm import __version__
-import re
+import re, os
 
 def set_control_version():
     with open("./debian/control.tmpl", "r") as src, open("./debian/control", "w") as dst:
@@ -18,6 +18,8 @@ if __name__ == "__main__":
         packages=find_packages(include=['samm', 'samm.*']),
         scripts=['scripts/server.py'],
         data_files=[('/usr/local/samm/etc', ['docs/examples/conf.json.example', 'docs/examples/resources.json.example']),
-            ('/usr/local/samm/etc/objects', ['docs/examples/objects/*'])],
+            ('/usr/local/samm/etc/objects', 
+                list(map(lambda x: 'docs/examples/objects/' + x, os.listdir('docs/examples/objects/')))
+)],
         install_requires=[ ]
     )
