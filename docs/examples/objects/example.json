@@ -1,5 +1,32 @@
 [
 	{
+		"object_type": "discovery",
+		"use": "discovery_domain_local",
+		"name": "all",
+		"ldap_base": "DC=domain,DC=local",
+		"object_use": [ 
+			"template_host", 
+			"template_windows"
+		],
+		"tags": {
+			"layer": "test"
+		}
+	},
+	{
+		"object_type": "instance",
+		"name": "<replace with windows instance name>",
+		"alias": "<replace with instance alias>",
+		"tags": { 
+			"layer": "control"
+		},
+		"address": "<replace with instance fqdn or IP>",
+		"use": [
+			"template_host",
+			"template_windows"
+		],
+		"register": false
+	},
+	{
 		"object_type": "instance",
 		"name": "<replace with windows instance name>",
 		"alias": "<replace with instance alias>",

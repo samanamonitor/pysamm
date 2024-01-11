@@ -5,10 +5,12 @@
     "sock_file": "/tmp/samm.sock",
     "resource_file": "resources.json",
     "object_files":[
-        "objects/commands.json",
+        "objects/checks-citrix.json",
+        "objects/checks-generic.json",
         "objects/checks-netscaler.json",
-        "objects/checks-snmp.json",
-        "objects/checks-windows.json"
+        "objects/checks-windows.json",
+        "objects/commands.json",
+        "objects/discovery.json"
     ],
     "webserver": true,
     "webserver_port": 5000,
