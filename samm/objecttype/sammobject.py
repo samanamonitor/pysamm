@@ -5,12 +5,6 @@ import uuid
 class SammException(Exception):
     pass
 
-class SammObjectEncoder(JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, SammObject):
-            return obj.__dict__
-        return JSONEncoder.default(self, obj)
-
 class SammObject:
     def __init__(self, object_definition, configuration=None):
         if not isinstance(object_definition, dict):

@@ -10,6 +10,7 @@
         "objects/checks-netscaler.json",
         "objects/checks-windows.json",
         "objects/commands.json",
+        "objects/instance-templates.json",
         "objects/discovery.json"
     ],
     "webserver": true,
