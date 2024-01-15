@@ -1,4 +1,5 @@
 import re, os, json, sys
+from .utils import FilterFunction
 from . import objecttype
 import logging
 
@@ -95,6 +96,7 @@ class Config():
 	def discover_objects(self):
 		object_definition_list = []
 		for discovery_name, discovery in self._config.get("discoveries", {}).items():
+			discovery.reprocess()
 			object_definition_list += discovery.run()
 		return object_definition_list
 
@@ -197,8 +199,21 @@ class Config():
 			if not isinstance(default, str):
 				defaut = ""
 			for v in variables:
-				var_value=self.get(v, instance_name=instance_name, check_name=check_name,
-					resolve_vars=True, default=default)
+				if v[:4] == 'Fn::':
+					func, args = v.split(' ', 1)
+					args = tuple(args.split(' '))
+					try:
+						func = getattr(FilterFunction, func[4:])
+						var_value = str(func(*args))
+					except AttributeError:
+						log.exception("Invalid function %s" % func)
+						raise
+					except Exception:
+						log.exception("Error processing function %s" % func)
+						raise
+				else:
+					var_value=self.get(v, instance_name=instance_name, check_name=check_name,
+						resolve_vars=True, default=default)
 				if isinstance(var_value, str):
 					out=o.replace("$(%s)" % v, var_value)
 				elif o == "$(%s)" % v:
