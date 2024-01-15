@@ -7,10 +7,13 @@
                     "metrics": "$(check.metrics)",
                     "numeric": 1
                 },
+                "name": "test_command_up",
                 "object_type": "command",
                 "register": true,
-                "type": "samm.dummymodule.DummyModuleUp"
+                "type": "samm.dummymodule.DummyModuleUp",
+                "tags": {}
             },
+            "name": "other",
             "alias": "test_check_alias",
             "check_interval": 60,
             "command": "test_command_up",
@@ -23,7 +26,8 @@
             "stale_timeout": 180,
             "tag_properties": [
                 "name"
-            ]
+            ],
+            "tags": {}
         }
     },
     "address": null,
