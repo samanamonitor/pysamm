@@ -100,8 +100,8 @@ class Config():
 
     def process_objects(self, object_definition_list):
         objects = []
-        for o in object_definition_list:
-            obj = self.load_single_object(o)
+        for object_definition in object_definition_list:
+            obj = self.load_single_object(object_definition)
             if obj is not None:
                 objects.append(obj)
 
@@ -111,19 +111,23 @@ class Config():
             obj.post_process()
         return objects
 
-    def load_single_object(self, o, force=False):
+    def load_single_object(self, object_definition):
+        obj = None
         try:
-            obj = objecttype.__getattribute__(o["object_type"])(o, self)
+            object_class = objecttype.__getattribute__(object_definition["object_type"])
+            obj = object_class(object_definition, self)
             config_section = self._config.setdefault(obj.config_section, {})
-            if obj.name in config_section and not force:
-                log.debug("Object %s name=%s already defined. Not adding.",
-                    obj.config_section, obj.name)
-                return None
-            config_section[obj.name] = obj
-            log.debug("Creating new %s name=%s register=%s" %
-                (o["object_type"], o["name"], obj.register))
+            if obj.name in config_section:
+                obj = config_section[obj.name]
+                obj.merge_object_definition(object_definition)
+                log.debug("Merging definition %s name=%s register=%s" %
+                    (object_definition["object_type"], object_definition["name"], obj.register))
+            else:
+                config_section[obj.name] = obj
+                log.debug("Creating new %s name=%s register=%s" %
+                    (object_definition["object_type"], object_definition["name"], obj.register))
         except AttributeError:
-            log.exception("Invalid object_type %s" % o["object_type"])
+            log.exception("Invalid object_type %s" % object_definition["object_type"])
         return obj
 
     def setdefault(self, key, value):
