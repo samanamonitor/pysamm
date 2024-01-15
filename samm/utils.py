@@ -75,6 +75,10 @@ class LokiStream:
 
 
 class FilterFunction:
+	def lower(s):
+		return s.lower()
+	def upper(s):
+		return s.upper()
 	def adsecondsfromnow(seconds):
 		if not isinstance(seconds, int):
 			seconds = int(seconds)
