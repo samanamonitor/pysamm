@@ -15,11 +15,13 @@ class Discovery(SammObject):
 		self._config_section = "discoveries"
 		self._next_run = 0
 
-	def _post_process_internal(self):
+	def post_process(self):
+		super(Discovery, self).post_process()
 		for attribute_name, value in self._attributes.items():
 			self._attributes[attribute_name] = self._config.replace_vars(value)
 		if self.discovery_type == "active_directory":
-			self.method = ActiveDirectoryDiscovery(name=self.name, **self._attributes)
+			self.method = ActiveDirectoryDiscovery(name=self.name, tags=self.tags, **self._attributes)
+		self._applied_templates = True
 
 	def schedule(self, seconds=None):
 		if seconds == None:
@@ -46,6 +48,7 @@ class ActiveDirectoryDiscovery:
 		self.ldap_password = kwargs.get('ldap_password')
 		self.ldap_base = kwargs.get('ldap_base')
 		self.ldap_scope = ldap.__getattribute__(kwargs.get('ldap_scope'))
+		self.tags = kwargs.get('tags', {})
 
 		ldap_filter = kwargs.get('ldap_filter')
 		if not isinstance(ldap_filter, dict):
@@ -99,6 +102,7 @@ class ActiveDirectoryDiscovery:
 			"object_type": self.object_type,
 			"tags": self.tags.copy()
 		}
+		log.debug(str(object_definition))
 		ldap_instance_dict = item[1]
 		if not isinstance(ldap_instance_dict, dict):
 			raise StopIteration
