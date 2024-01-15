@@ -37,3 +37,4 @@ def test_06_replace_vars():
 		instance_name="test_instance", check_name="test_check_up", resolve_vars=True)
 	assert 2 == config.get('commands.test_command_up.args.numeric', \
 		instance_name="test_instance", check_name="test_check_up", resolve_vars=True)
+	assert "test_instance_alias_2" == config.get('instances.test_instance2.alias', resolve_vars=True)

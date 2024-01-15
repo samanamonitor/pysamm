@@ -57,7 +57,7 @@
 	{
 		"object_type": "instance",
 		"name": "test_instance2",
-		"alias": "test_instance_alias2",
+		"alias": "$(Fn::lower TEST_INSTANCE_ALIAS_2)",
 		"up_check": "test_check_up.metric1",
 		"tags": {"tagname": "instancetag2"},
 		"address": "test_address2",
