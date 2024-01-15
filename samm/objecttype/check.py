@@ -3,6 +3,9 @@ from .sammobject import SammObject, SammException
 class Check(SammObject):
 	def __init__(self, config, configuration=None):
 		super(Check, self).__init__(config, configuration)
+
+	def pre_process(self):
+		super(Check, self).pre_process()
 		self._config_section = "checks"
 		self._command = None
 
