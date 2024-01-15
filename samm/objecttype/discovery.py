@@ -12,6 +12,9 @@ log = logging.getLogger(__name__)
 class Discovery(SammObject):
 	def __init__(self, object_definition, configuration=None):
 		super(Discovery, self).__init__(object_definition, configuration)
+
+	def pre_process(self):
+		super(Discovery, self).pre_process()
 		self._config_section = "discoveries"
 		self._next_run = 0
 
@@ -51,9 +54,14 @@ class ActiveDirectoryDiscovery:
 		self.tags = kwargs.get('tags', {})
 
 		ldap_filter = kwargs.get('ldap_filter')
-		if not isinstance(ldap_filter, dict):
+		if isinstance(ldap_filter, dict):
+			self.ldap_filter = FilterFunction.filter_dict_to_string(ldap_filter)
+		elif isinstance(ldap_filter, str):
+			self.ldap_filter = ldap_filter
+		elif isinstance(ldap_filter, list):
+			self.ldap_filter = "".join(ldap_filter)
+		else:
 			raise TypeError("Attribute ldap_filter must be a dictionary")
-		self.ldap_filter = FilterFunction.filter_dict_to_string(ldap_filter)
 		ldap_attrlist = kwargs.get('ldap_attrlist')
 		if not isinstance(ldap_attrlist, list):
 			self.ldap_attrlist = [ ldap_attrlist ]
@@ -79,7 +87,6 @@ class ActiveDirectoryDiscovery:
 			self._test_iter = iter(self._test_data)
 			return self
 		self._conn = ldap.initialize(self.ldap_url)
-		self.search_ids = []
 		self._conn.simple_bind_s(self.ldap_dn, self.ldap_password)
 		self._search_id = self._conn.search(self.ldap_base, self.ldap_scope, 
 				self.ldap_filter, self.ldap_attrlist)
