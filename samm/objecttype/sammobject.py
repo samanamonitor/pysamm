@@ -13,21 +13,28 @@ class SammObject:
 			raise TypeError("config must have object_type set.")
 
 		self._config = configuration
-		self._attributes = {}
+		self._object_definition = object_definition
+		self.pre_process()
 
-		self.use = object_definition.get("use", [])
+	def pre_process(self):
+		self._attributes = {}
+		self.use = self._object_definition.get("use", [])
 		if isinstance(self.use, str):
 			self.use = [ self.use ]
-		self.register = object_definition.get("register", True)
-		self.name = object_definition.get("name", str(uuid.uuid4()))
-		self.tags = object_definition.get("tags", {})
+		self.register = self._object_definition.get("register", True)
+		self.name = self._object_definition.get("name", str(uuid.uuid4()))
+		self.tags = self._object_definition.get("tags", {})
 
-		for k in object_definition.keys():
+		for k in self._object_definition.keys():
 			if k in [ "use", "register", "name", "tags" ]:
 				continue
-			self._attributes[k] = object_definition[k]
+			self._attributes[k] = self._object_definition[k]
 		self._config_section = "undefined"
 		self._applied_templates = False
+
+	def reprocess(self):
+		self.pre_process()
+		self.post_process()
 
 	@property
 	def config_section(self):
@@ -54,7 +61,13 @@ class SammObject:
 		return self._attributes.get(key, default)
 
 	def __repr__(self):
-		return "<%s %s>" % (self.__class__.__name__, str(self._attributes))
+		return "<%s name=%s register=%s tags=%s %s>" % (
+			self.__class__.__name__, 
+			self.name,
+			self.register,
+			self.tags,
+			str(self._attributes)
+			)
 
 	def apply_template(self, template_name):
 		raise SammException("Unable to apply template to base class")
@@ -80,7 +93,8 @@ class SammObject:
 				attribute += value
 			elif isinstance(value, dict):
 				attribute = self._attributes.setdefault(key, {})
-				attribute.update(value)
+				if isinstance(attribute, dict):
+					attribute.update(value)
 			else:
 				self._attributes.setdefault(key, value)
 
