@@ -4,10 +4,13 @@ from .check import Check
 class Instance(SammObject):
 	def __init__(self, object_definition, configuration=None):
 		super(Instance, self).__init__(object_definition, configuration)
+
+	def pre_process(self):
+		super(Instance, self).pre_process()
+		self._config_section = "instances"
 		self.up_check_name = None
 		self.up_metric_name = None
 		self.is_alive = 0
-		self._config_section = "instances"
 		self._checks = {}
 
 	def _set_defaults(self):
