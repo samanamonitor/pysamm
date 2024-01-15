@@ -1,0 +1,131 @@
+[
+	{
+		"object_type": "discovery",
+		"discovery_type": "active_directory",
+		"discovery_object_type": "instance",
+		"name": "discovery_domain_local",
+		"ldap_url": "ldap://0.0.0.0",
+		"ldap_dn": "$(resources.ldap_dn)",
+		"ldap_password": "$(resources.ldap_password)",
+		"ldap_scope": "SCOPE_SUBTREE",
+		"ldap_refresh_seconds": 600,
+		"ldap_filter": {
+			"objectClass": {
+				"eq": "computer"
+			},
+			"lastLogonTimestamp": {
+				"ge": {
+					"Fn::adsecondsfromnow": [
+						"31536000"
+					]
+				}
+			}
+		},
+		"ldap_attrlist": [
+			"dn",
+			"dNSHostName",
+			"cn"
+		],
+		"ldap_attribute_tags": {
+			"fqdn": "dNSHostName",
+			"dn": "dn"
+		},
+		"ldap_attribute_object_map": {
+			"name": "cn",
+			"alias": "cn",
+			"display_name": "cn",
+			"address": "dNSHostName"
+		},
+		"register": false
+	},
+	{
+		"object_type": "command",
+		"name": "ping",
+		"type": "samm.dummymodule.DummyModuleUp",
+		"args": {
+			"address": "$(instance.address)",
+			"metrics": "$(check.metrics)",
+			"numeric": 2
+		}
+	},
+	{
+		"object_type": "command",
+		"name": "windows_command",
+		"type": "samm.dummymodule.DummyModuleUp",
+		"args": {
+			"address": "$(instance.address)",
+			"metrics": "$(check.metrics)",
+			"numeric": 2
+		}
+	},
+	{
+		"object_type": "check",
+		"name": "ping",
+		"command": "ping",
+		"tag_properties": [ "name" ],
+		"alias": "ping",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"metrics": [
+			"metric1",
+			"metric2"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "windows_check",
+		"command": "windows_command",
+		"alias": "windows_check",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"metrics": [
+			"metric1",
+			"metric2"
+		]
+	},
+	{
+		"object_type": "instance",
+		"name": "template_host",
+		"checks": [
+			"ping"
+		],
+		"up_check": "ping.is_alive",
+		"check_if_down": false,
+		"stale_timeout": 432000,
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_windows",
+		"checks": [
+			"windows_check"
+		],
+		"register": false
+	},
+	{
+		"object_type": "discovery",
+		"test_file": "tests/ldap_discovery_data.py",
+		"use": "discovery_domain_local",
+		"name": "all",
+		"ldap_base": "DC=domain,DC=local",
+		"object_use": [ 
+			"template_host"
+		],
+		"tags": {
+			"domain_joined": "domain.local"
+		}
+	},
+	{
+		"object_type": "discovery",
+		"test_file": "tests/ldap_discovery_data2.py",
+		"use": "discovery_domain_local",
+		"name": "control",
+		"ldap_base": "OU=CONTROL,OU=CTX,OU=Servers,DC=domain,DC=local",
+		"object_use": [ 
+			"template_windows"
+		],
+		"tags": {
+			"layer": "control"
+		}
+	}
+]
