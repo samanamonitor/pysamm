@@ -1,5 +1,5 @@
 {
-    "debug": 0,
+    "debug": "INFO",
     "base_dir": "/usr/local/samm",
     "config_dir": "etc",
     "sock_file": "/tmp/samm.sock",
