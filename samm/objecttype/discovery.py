@@ -88,6 +88,7 @@ class ActiveDirectoryDiscovery:
 			return self
 		self._conn = ldap.initialize(self.ldap_url)
 		self._conn.simple_bind_s(self.ldap_dn, self.ldap_password)
+		self._conn.set_option(ldap.OPT_REFERRALS, 0)
 		self._search_id = self._conn.search(self.ldap_base, self.ldap_scope, 
 				self.ldap_filter, self.ldap_attrlist)
 		return self
