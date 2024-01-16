@@ -106,6 +106,7 @@ class Config():
 			if obj is not None:
 				objects.append(obj)
 
+		log.info("Processing %d new objects from discovery." % len(objects))
 		for obj in objects:
 			log.debug("Running post-process for %s:%s" %
 				(obj.__class__.__name__.lower(), obj.name))
@@ -120,9 +121,12 @@ class Config():
 			config_section = self._config.setdefault(obj.config_section, {})
 			if obj.name in config_section:
 				obj = config_section[obj.name]
-				obj.merge_object_definition(object_definition)
-				log.debug("Merging definition %s name=%s register=%s" %
-					(object_definition["object_type"], object_definition["name"], obj.register))
+				changed = obj.merge_object_definition(object_definition)
+				if changed:
+					log.debug("Merging definition %s name=%s register=%s" %
+						(object_definition["object_type"], object_definition["name"], obj.register))
+				else:
+					obj = None
 			else:
 				config_section[obj.name] = obj
 				log.debug("Creating new %s name=%s register=%s" %

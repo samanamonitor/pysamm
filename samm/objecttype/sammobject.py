@@ -99,11 +99,20 @@ class SammObject:
 				self._attributes.setdefault(key, value)
 
 	def merge_object_definition(self, object_definition):
-		self.tags.update(object_definition.get('tags', {}))
+		changed = False
+		for key, value in object_definition.get('tags', {}).items():
+			if key not in self.tags:
+				self.tags[key] = value
+				changed = True
+			elif key in self.tags and self.tags[key] != value:
+				self.tags[key] = value
+				changed = True
 		use = object_definition.get('use', [])
 		for u in use:
 			if u not in self.use:
 				self.use.append(u)
+				changed = True
+		return changed
 
 	@property
 	def __dict__(self):
