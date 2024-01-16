@@ -9,8 +9,8 @@
 			"DnsName"
 		],
 		"alias": "ctx_machine",
-		"check_interval": 60,
-		"stale_timeout": 180,
+		"check_interval": 300,
+		"stale_timeout": 900,
 		"entity": "Machines",
 		"expand": "Catalog,DesktopGroup,CurrentLoadIndex",
 		"filter": "Name ne null",
@@ -38,8 +38,8 @@
 			"Machine.DnsName"
 		],
 		"alias": "ctx_session",
-		"check_interval": 60,
-		"stale_timeout": 180,
+		"check_interval": 300,
+		"stale_timeout": 900,
 		"entity": "Sessions",
 		"expand": "User,CurrentConnection,Machine",
 		"filter": "ConnectionState ne 3",
