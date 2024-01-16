@@ -96,7 +96,6 @@ class Config():
 	def discover_objects(self):
 		object_definition_list = []
 		for discovery_name, discovery in self._config.get("discoveries", {}).items():
-			discovery.reprocess()
 			object_definition_list += discovery.run()
 		return object_definition_list
 
