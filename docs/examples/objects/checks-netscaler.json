@@ -11,7 +11,7 @@
 		"tag_properties": [
 			"sysHighAvailabilityMode"
 		],
-		"alias": "nsstats",
+		"alias": "snmp_nsstats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
@@ -28,7 +28,7 @@
 		],
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::sslCertKeyTable",
-		"alias": "certkey",
+		"alias": "snmp_nscertkey",
 		"check_interval": 600,
 		"stale_timeout": 1800,
 		"metrics": [
@@ -44,7 +44,7 @@
 		],
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::appfwProfileTable",
-		"alias": "appfwstats",
+		"alias": "snmp_nsappfwstats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
@@ -107,7 +107,7 @@
 		],
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::vserverTable",
-		"alias": "vserverstats",
+		"alias": "snmp_nsvserverstats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
@@ -157,7 +157,7 @@
 		"name": "snmp_netscaler_ipstats",
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::nsIpStatsGroup",
-		"alias": "ipstats",
+		"alias": "snmp_nsipstats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [

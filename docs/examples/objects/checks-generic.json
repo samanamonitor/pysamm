@@ -7,7 +7,7 @@
 		"tag_properties": [
 			"ifDescr"
 		],
-		"alias": "ifstats",
+		"alias": "snmp_ifstats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
