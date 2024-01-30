@@ -46,7 +46,7 @@
 	},
 	{
 		"object_type": "command",
-		"name": "wrcertificates",
+		"name": "cim_certificates",
 		"type": "sammwr.certificates.WRCertificates",
 		"args": {
 			"endpoint": "http://$(instance.address):5985/wsman",
@@ -89,15 +89,5 @@
 			"filter": "$(check.filter)",
 			"service_url": "http://$(instance.address)/citrix/monitor/odata/v2/Data/"
 		}
-	},
-	{
-		"object_type": "check",
-		"name": "cim_certificates",
-		"command": "wrcertificates",
-		"alias": "certkey",
-		"tag_properties": [ "sslcertkeyname" ],
-		"check_interval": 600,
-		"stale_timeout": 1800,
-		"metrics": [ "ssldaystoexpire" ]
 	}
 ]
