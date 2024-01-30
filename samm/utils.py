@@ -133,3 +133,8 @@ class FilterFunction:
 		if len(filterlist) > 1:
 			return "(&%s)" % "".join(filterlist)
 		return filterlist[0]
+
+	def join(l):
+		if not isinstance(l, list):
+			raise TypeError("Invalid type. %s" % str(l))
+		return "".join(l)
