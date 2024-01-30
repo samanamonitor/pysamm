@@ -106,7 +106,8 @@ class Config():
 			if obj is not None:
 				objects.append(obj)
 
-		log.info("Processing %d new objects from discovery." % len(objects))
+		if len(objects) > 0:
+			log.info("Processing %d new objects from discovery." % len(objects))
 		for obj in objects:
 			log.debug("Running post-process for %s:%s" %
 				(obj.__class__.__name__.lower(), obj.name))
