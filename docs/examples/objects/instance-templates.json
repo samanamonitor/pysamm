@@ -72,5 +72,58 @@
 			"ctx_sessions"
 		],
 		"register": false
-	}	
+	},
+	{
+		"object_type": "instance",
+		"name": "template_windows_iis",
+		"checks": [
+			"cim_perfiis"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_windows_addc",
+		"checks": [
+			"cim_perflsa",
+			"cim_perfadds"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_windows_adcs",
+		"checks": [
+			"cim_perfadcs"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_windows_dns",
+		"checks": [
+			"cim_perfdns"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_windows_smb",
+		"checks": [
+			"cim_perfsmb_server"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_citrix_vda",
+		"checks": [
+			"cim_perftssession",
+			"cim_perfprocess",
+			"cim_perfcitrix_ica",
+			"cim_perfcitrix_cpm",
+			"cim_perfcitrix_print"
+		],
+		"register": false
+	}
 ]
