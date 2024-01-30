@@ -40,7 +40,7 @@ class Discovery(SammObject):
 			return discovered_objects
 		self.reprocess()
 		discovered_objects = list(self.method)
-		log.debug("Refreshing discovered objects. %s Objects discovered=%d" % (
+		log.info("Refreshing discovered objects. %s Objects discovered=%d" % (
 			self.name,
 			len(discovered_objects)))
 		self.schedule()
