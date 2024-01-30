@@ -38,14 +38,14 @@ class Service:
 		signal.signal(signal.SIGINT, self.signal_handler)
 
 	def init_local_metrics(self):
-		self.startup_time = InstanceMetric("startup_time", time(), self.tags)
-		self.metric_count = InstanceMetric("metric_count", 0, self.tags)
-		self.host_count   = InstanceMetric("host_count", 0, self.tags)
-		self.scheduled_attempts = InstanceMetric("scheduled_attempts_count", 0, self.tags)
-		self.running_time = InstanceMetric("running_time_seconds_count", 0, self.tags)
-		self.metric_data_bytes = InstanceMetric("metric_data_bytes", 0, self.tags)
-		self.thread_count = InstanceMetric("thread_count", 0, self.tags)
-		self.pt = InstanceMetric("process_time_seconds_count", 0, self.tags)
+		self.startup_time = InstanceMetric("samm_startup_time", time(), self.tags)
+		self.metric_count = InstanceMetric("samm_metric_count", 0, self.tags)
+		self.host_count   = InstanceMetric("samm_host_count", 0, self.tags)
+		self.scheduled_attempts = InstanceMetric("samm_scheduled_attempts_count", 0, self.tags)
+		self.running_time = InstanceMetric("samm_running_time_seconds_count", 0, self.tags)
+		self.metric_data_bytes = InstanceMetric("samm_metric_data_bytes", 0, self.tags)
+		self.thread_count = InstanceMetric("samm_thread_count", 0, self.tags)
+		self.pt = InstanceMetric("samm_process_time_seconds_count", 0, self.tags)
 		self.metric_data = { 
 			self.tags.get('instance', 'samm'): {
 				self.startup_time.key: self.startup_time,
