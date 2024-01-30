@@ -8,7 +8,8 @@ docker run --rm -it -v $(pwd):/usr/src -v $(pwd)/../gpg:/gpg -v ~/.aws:/root/.aw
 
 # Build SAMM container image
 `cd support
-docker build -t samm-server samm-server`
+VERSION=x.x.x.x
+docker build --no-cache -t samm-server:$VERSION samm-server`
 
 # Run SAMM container
 ## Copy configuration files and then edit them
@@ -20,11 +21,8 @@ sudo cp tests/objects/objects.json.example /usr/local/samm/etc/objects/objects.j
 sudo mkdir -p /usr/local/samm/var`
 
 ## Run the container
-`docker run -idt -v /usr/local/samm/samm1:/usr/local/samm/etc --name samm-server -p 9091:5000 samm-server /usr/local/samm/etc/conf.json`
-
-# Run SAMM with flask
-`export FLASK_APP=/usr/local/bin/metrics`
-`flask run --host 0.0.0.0`
+`SAMM_PATH=/usr/local/samm/samm1
+docker run -idt -v $SAMM_PATH:/usr/local/samm/etc --name samm-server --label samm=collector samm-server /usr/local/samm/etc/conf.json`
 
 # To run unit tests
 ## python3-pytest must be installed
