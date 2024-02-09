@@ -139,7 +139,7 @@ class Config():
 	def setdefault(self, key, value):
 		return self._config.setdefault(key, value)
 
-	def get(self, in_data, instance_name=None, check_name=None, resolve_vars=False, default=None, default_variable=""):
+	def get(self, in_data, instance_name=None, check_name=None, discovery_name=None, resolve_vars=False, default=None):
 		if isinstance(in_data, str):
 			path = tuple(in_data.split("."))
 		elif isinstance(in_data, list):
@@ -152,6 +152,8 @@ class Config():
 			path = ( "instances", instance_name ) + path[1:]
 		if path[0] == "check":
 			path = ( "checks", check_name ) + path[1:]
+		if path[0] == "discovery":
+			path = ( "discoveries", discovery_name ) + path[1:]
 		curconfig=self._config
 
 		for p in path:
@@ -165,7 +167,7 @@ class Config():
 			return curconfig
 
 		return self.replace_vars(curconfig, instance_name=instance_name,
-			check_name=check_name, default=default, default_variable=default_variable)
+			check_name=check_name, default=default, discovery_name=discovery_name)
 
 	def run_module(self, module_str, **kwargs):
 		if module_str not in self.modules:
@@ -192,7 +194,7 @@ class Config():
 		varlist=re.findall(var_regex, s)
 		return varlist
 
-	def replace_vars(self, o, instance_name=None, check_name=None, default=None, default_variable=""):
+	def replace_vars(self, o, instance_name=None, check_name=None, discovery_name=None, default=None, caller_object=None):
 		out=None
 		if isinstance(o, str):
 			'''
@@ -203,21 +205,8 @@ class Config():
 			if not isinstance(default, str):
 				defaut = ""
 			for v in variables:
-				if v[:4] == 'Fn::':
-					func, args = v.split(' ', 1)
-					args = tuple(args.split(' '))
-					try:
-						func = getattr(FilterFunction, func[4:])
-						var_value = str(func(*args))
-					except AttributeError:
-						log.exception("Invalid function %s" % func)
-						raise
-					except Exception:
-						log.exception("Error processing function %s" % func)
-						raise
-				else:
-					var_value=self.get(v, instance_name=instance_name, check_name=check_name,
-						resolve_vars=True, default=default)
+				var_value=self.get(v, instance_name=instance_name, check_name=check_name,
+					resolve_vars=True, discovery_name=discovery_name, default=default)
 				if isinstance(var_value, str):
 					out=o.replace("$(%s)" % v, var_value)
 				elif o == "$(%s)" % v:
@@ -231,14 +220,29 @@ class Config():
 			out = [None] * len(o)
 			for i in range(len(o)):
 				out[i] = self.replace_vars(o[i], instance_name=instance_name,
-					check_name=check_name, default=default)
+					check_name=check_name, discovery_name=discovery_name, default=default)
 		elif isinstance(o, dict):
 			'''
 			We need to process recursively for each item in the dict
 			'''
 			out = {}
 			for i in o:
-				out[i] = self.replace_vars(o[i], instance_name=instance_name, check_name=check_name)
+				if i[:4] == "Fn::":
+					args = tuple(o[i])
+					try:
+						func = getattr(FilterFunction, i[4:])
+						out = str(func(*args, config=self, instance_name=instance_name,
+							check_name=check_name, discovery_name=discovery_name))
+						break
+					except AttributeError:
+						log.exception("Invalid function %s" % func)
+						raise
+					except Exception:
+						log.exception("Error processing function %s" % func)
+						raise
+				else:
+					out[i] = self.replace_vars(o[i], instance_name=instance_name,
+						check_name=check_name, discovery_name=discovery_name, default=default)
 		elif isinstance(o, (int, float)):
 			out = o
 		else:
