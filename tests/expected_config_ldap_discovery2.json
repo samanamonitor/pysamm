@@ -4,7 +4,11 @@
 		"base_dir": "/usr/src/pysamm/tests",
 		"config_dir": "/usr/src/pysamm/tests/etc",
 		"resource_file": "resources.json",
-		"resources": {},
+		"resources": {
+			"ldap_url": "ldap://ldap.server.com",
+			"ldap_dn": "user@server.com",
+			"ldap_password": "thisisapassword"
+		},
 		"object_files": [
 			"objects/ldap_discovery2.json"
 		],
@@ -45,8 +49,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -89,8 +101,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "windows_command",
@@ -141,8 +161,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -193,8 +221,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -245,8 +281,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -297,8 +341,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -349,8 +401,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -401,8 +461,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -453,8 +521,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -505,8 +581,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -557,8 +641,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -609,8 +701,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -661,8 +761,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -713,8 +821,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -765,8 +881,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -817,8 +941,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -871,8 +1003,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -897,8 +1037,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "windows_command",
@@ -951,8 +1099,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -977,8 +1133,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "windows_command",
@@ -1031,8 +1195,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1057,8 +1229,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "windows_command",
@@ -1109,8 +1289,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1163,8 +1351,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1189,8 +1385,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "windows_command",
@@ -1243,8 +1447,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1269,8 +1481,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "windows_command",
@@ -1323,8 +1543,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1349,8 +1577,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "windows_command",
@@ -1401,8 +1637,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1453,8 +1697,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1505,8 +1757,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1557,8 +1817,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1609,8 +1877,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1661,8 +1937,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1713,8 +1997,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1765,8 +2057,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1817,8 +2117,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1869,8 +2177,16 @@
 								"object_type": "command",
 								"type": "samm.dummymodule.DummyModuleUp",
 								"args": {
-									"address": "$(instance.address)",
-									"metrics": "$(check.metrics)",
+									"address": {
+										"Fn::ref": [
+											"instance.address"
+										]
+									},
+									"metrics": {
+										"Fn::ref": [
+											"check.metrics"
+										]
+									},
 									"numeric": 2
 								},
 								"name": "ping",
@@ -1904,8 +2220,16 @@
 						"object_type": "command",
 						"type": "samm.dummymodule.DummyModuleUp",
 						"args": {
-							"address": "$(instance.address)",
-							"metrics": "$(check.metrics)",
+							"address": {
+								"Fn::ref": [
+									"instance.address"
+								]
+							},
+							"metrics": {
+								"Fn::ref": [
+									"check.metrics"
+								]
+							},
 							"numeric": 2
 						},
 						"name": "ping",
@@ -1930,8 +2254,16 @@
 						"object_type": "command",
 						"type": "samm.dummymodule.DummyModuleUp",
 						"args": {
-							"address": "$(instance.address)",
-							"metrics": "$(check.metrics)",
+							"address": {
+								"Fn::ref": [
+									"instance.address"
+								]
+							},
+							"metrics": {
+								"Fn::ref": [
+									"check.metrics"
+								]
+							},
 							"numeric": 2
 						},
 						"name": "windows_command",
@@ -1945,8 +2277,16 @@
 					"object_type": "command",
 					"type": "samm.dummymodule.DummyModuleUp",
 					"args": {
-						"address": "$(instance.address)",
-						"metrics": "$(check.metrics)",
+						"address": {
+							"Fn::ref": [
+								"instance.address"
+							]
+						},
+						"metrics": {
+							"Fn::ref": [
+								"check.metrics"
+							]
+						},
 						"numeric": 2
 					},
 					"name": "ping",
@@ -1957,8 +2297,16 @@
 					"object_type": "command",
 					"type": "samm.dummymodule.DummyModuleUp",
 					"args": {
-						"address": "$(instance.address)",
-						"metrics": "$(check.metrics)",
+						"address": {
+							"Fn::ref": [
+								"instance.address"
+							]
+						},
+						"metrics": {
+							"Fn::ref": [
+								"check.metrics"
+							]
+						},
 						"numeric": 2
 					},
 					"name": "windows_command",
@@ -1971,9 +2319,21 @@
 					"object_type": "discovery",
 					"discovery_type": "active_directory",
 					"discovery_object_type": "instance",
-					"ldap_url": "ldap://0.0.0.0",
-					"ldap_dn": null,
-					"ldap_password": null,
+					"ldap_url": {
+						"Fn::ref": [
+							"resources.ldap_url"
+						]
+					},
+					"ldap_dn": {
+						"Fn::ref": [
+							"resources.ldap_dn"
+						]
+					},
+					"ldap_password": {
+						"Fn::ref": [
+							"resources.ldap_password"
+						]
+					},
 					"ldap_scope": "SCOPE_SUBTREE",
 					"ldap_refresh_seconds": 600,
 					"ldap_filter": {
@@ -1983,7 +2343,8 @@
 						"lastLogonTimestamp": {
 							"ge": {
 								"Fn::adsecondsfromnow": [
-									"31536000"
+									"31536000",
+									"test"
 								]
 							}
 						}
@@ -2005,7 +2366,9 @@
 					},
 					"name": "discovery_domain_local",
 					"register": false,
-					"tags": {}
+					"tags": {},
+					"method_type": null,
+					"method": null
 				},
 				{
 					"object_type": "discovery",
@@ -2016,9 +2379,21 @@
 					],
 					"discovery_type": "active_directory",
 					"discovery_object_type": "instance",
-					"ldap_url": "ldap://0.0.0.0",
-					"ldap_dn": null,
-					"ldap_password": null,
+					"ldap_url": {
+						"Fn::ref": [
+							"resources.ldap_url"
+						]
+					},
+					"ldap_dn": {
+						"Fn::ref": [
+							"resources.ldap_dn"
+						]
+					},
+					"ldap_password": {
+						"Fn::ref": [
+							"resources.ldap_password"
+						]
+					},
 					"ldap_scope": "SCOPE_SUBTREE",
 					"ldap_refresh_seconds": 600,
 					"ldap_filter": {
@@ -2028,7 +2403,8 @@
 						"lastLogonTimestamp": {
 							"ge": {
 								"Fn::adsecondsfromnow": [
-									"31536000"
+									"31536000",
+									"test"
 								]
 							}
 						}
@@ -2052,6 +2428,39 @@
 					"register": true,
 					"tags": {
 						"domain_joined": "domain.local"
+					},
+					"method_type": "ActiveDirectoryDiscovery",
+					"method": {
+						"name": "all",
+						"ldap_url": "ldap://ldap.server.com",
+						"ldap_dn": "user@server.com",
+						"ldap_password": "thisisapassword",
+						"ldap_base": "DC=domain,DC=local",
+						"ldap_scope": 2,
+						"tags": {
+							"domain_joined": "domain.local"
+						},
+						"ldap_filter": "(&(objectClass=computer)(lastLogonTimestamp>=0))",
+						"ldap_attrlist": [
+							"dn",
+							"dNSHostName",
+							"cn"
+						],
+						"ldap_refresh_seconds": 600,
+						"ldap_attribute_tags": {
+							"fqdn": "dNSHostName",
+							"dn": "dn"
+						},
+						"object_type": "instance",
+						"ldap_attribute_object_map": {
+							"name": "cn",
+							"alias": "cn",
+							"display_name": "cn",
+							"address": "dNSHostName"
+						},
+						"object_use": [
+							"template_host"
+						]
 					}
 				},
 				{
@@ -2063,9 +2472,21 @@
 					],
 					"discovery_type": "active_directory",
 					"discovery_object_type": "instance",
-					"ldap_url": "ldap://0.0.0.0",
-					"ldap_dn": null,
-					"ldap_password": null,
+					"ldap_url": {
+						"Fn::ref": [
+							"resources.ldap_url"
+						]
+					},
+					"ldap_dn": {
+						"Fn::ref": [
+							"resources.ldap_dn"
+						]
+					},
+					"ldap_password": {
+						"Fn::ref": [
+							"resources.ldap_password"
+						]
+					},
 					"ldap_scope": "SCOPE_SUBTREE",
 					"ldap_refresh_seconds": 600,
 					"ldap_filter": {
@@ -2075,7 +2496,8 @@
 						"lastLogonTimestamp": {
 							"ge": {
 								"Fn::adsecondsfromnow": [
-									"31536000"
+									"31536000",
+									"test"
 								]
 							}
 						}
@@ -2099,6 +2521,39 @@
 					"register": true,
 					"tags": {
 						"layer": "control"
+					},
+					"method_type": "ActiveDirectoryDiscovery",
+					"method": {
+						"name": "control",
+						"ldap_url": "ldap://ldap.server.com",
+						"ldap_dn": "user@server.com",
+						"ldap_password": "thisisapassword",
+						"ldap_base": "OU=CONTROL,OU=CTX,OU=Servers,DC=domain,DC=local",
+						"ldap_scope": 2,
+						"tags": {
+							"layer": "control"
+						},
+						"ldap_filter": "(&(objectClass=computer)(lastLogonTimestamp>=0))",
+						"ldap_attrlist": [
+							"dn",
+							"dNSHostName",
+							"cn"
+						],
+						"ldap_refresh_seconds": 600,
+						"ldap_attribute_tags": {
+							"fqdn": "dNSHostName",
+							"dn": "dn"
+						},
+						"object_type": "instance",
+						"ldap_attribute_object_map": {
+							"name": "cn",
+							"alias": "cn",
+							"display_name": "cn",
+							"address": "dNSHostName"
+						},
+						"object_use": [
+							"template_windows"
+						]
 					}
 				}
 			]
