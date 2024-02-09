@@ -20,10 +20,14 @@ class Discovery(SammObject):
 
 	def post_process(self):
 		super(Discovery, self).post_process()
+		attributes = {}
 		for attribute_name, value in self._attributes.items():
-			self._attributes[attribute_name] = self._config.replace_vars(value)
-		if self.discovery_type == "active_directory":
-			self.method = ActiveDirectoryDiscovery(name=self.name, tags=self.tags, **self._attributes)
+			attributes[attribute_name] = self._config.replace_vars(value, discovery_name=self.name)
+		if self.discovery_type == "active_directory" and self.register == True:
+			self.method = ActiveDirectoryDiscovery(name=self.name, tags=self.tags,
+				configuration=self._config, **attributes)
+		else:
+			self.method = None
 		self._applied_templates = True
 
 	def schedule(self, seconds=None):
@@ -46,8 +50,19 @@ class Discovery(SammObject):
 		self.schedule()
 		return discovered_objects
 
+	@property
+	def __dict__(self):
+		out = super(Discovery, self).__dict__
+		if self.method is not None:
+			out['method_type'] = self.method.__class__.__name__
+			out['method'] = self.method.__dict__
+		else:
+			out['method_type'] = None
+			out['method'] = None
+		return out
+
 class ActiveDirectoryDiscovery:
-	def __init__(self, /, use=None, **kwargs):
+	def __init__(self, /, use=None, configuration=None, **kwargs):
 		self.name = kwargs.get('name', uuid.uuid4())
 		self.ldap_url = kwargs.get('ldap_url')
 		self.ldap_dn = kwargs.get('ldap_dn')
@@ -55,16 +70,21 @@ class ActiveDirectoryDiscovery:
 		self.ldap_base = kwargs.get('ldap_base')
 		self.ldap_scope = ldap.__getattribute__(kwargs.get('ldap_scope'))
 		self.tags = kwargs.get('tags', {})
+		self._config = configuration
 
 		ldap_filter = kwargs.get('ldap_filter')
 		if isinstance(ldap_filter, dict):
-			self.ldap_filter = FilterFunction.filter_dict_to_string(ldap_filter)
+			keys = list(ldap_filter.keys())
+			if len(keys) == 1 and keys[0][:4] == "Fn::":
+				self.ldap_filter = self._config.replace_vars(ldap_filter, discovery_name=self.name)
+			else:
+				self.ldap_filter = FilterFunction.filter_dict_to_string(ldap_filter)
 		elif isinstance(ldap_filter, str):
 			self.ldap_filter = ldap_filter
 		elif isinstance(ldap_filter, list):
 			self.ldap_filter = "".join(ldap_filter)
 		else:
-			raise TypeError("Attribute ldap_filter must be a dictionary")
+			raise TypeError("Attribute ldap_filter must be a dictionary (%s)" % self.name)
 		ldap_attrlist = kwargs.get('ldap_attrlist')
 		if not isinstance(ldap_attrlist, list):
 			self.ldap_attrlist = [ ldap_attrlist ]
@@ -127,6 +147,25 @@ class ActiveDirectoryDiscovery:
 		object_definition['use'] = self.object_use.copy()
 
 		return object_definition
+
+	@property
+	def __dict__(self):
+		return {
+			"name": self.name,
+			"ldap_url": self.ldap_url,
+			"ldap_dn": self.ldap_dn,
+			"ldap_password": self.ldap_password,
+			"ldap_base": self.ldap_base,
+			"ldap_scope": self.ldap_scope,
+			"tags": self.tags,
+			"ldap_filter": self.ldap_filter,
+			"ldap_attrlist": self.ldap_attrlist,
+			"ldap_refresh_seconds": self.ldap_refresh_seconds,
+			"ldap_attribute_tags": self.ldap_attribute_tags,
+			"object_type": self.object_type,
+			"ldap_attribute_object_map": self.ldap_attribute_object_map,
+			"object_use": self.object_use
+		}
 
 def ldap_list_bytes_to_string(data):
 	if isinstance(data, list):
