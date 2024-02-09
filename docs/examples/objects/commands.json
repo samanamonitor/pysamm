@@ -4,9 +4,9 @@
 		"name": "ping",
 		"type": "samm.pingmodule.PingModule",
 		"args": {
-			"hostaddress": "$(instance.address)",
-			"count": "$(check.count)",
-			"timeout": "$(check.timeout)"
+			"hostaddress": { "Fn::ref": [ "instance.address" ] },
+			"count": { "Fn::ref": [ "check.count" ] },
+			"timeout": { "Fn::ref": [ "check.timeout" ] }
 		}
 	},
 	{
@@ -14,10 +14,16 @@
 		"name": "cim",
 		"type": "sammwr.wmi.WMIQuery",
 		"args": {
-			"class_name": "$(check.class_name)",
-			"endpoint": "http://$(instance.address):5985/wsman",
-			"username": "$(resources.cim_username)",
-			"password": "$(resources.cim_password)"
+			"class_name": { "Fn::ref": [ "check.class_name" ] },
+			"endpoint": {
+					"Fn::join": [
+						"http://",
+						{ "Fn::ref": [ "instance.address" ] },
+						":5985/wsman"
+					]
+				},
+			"username": { "Fn::ref": [ "resources.cim_username" ] },
+			"password": { "Fn::ref": [ "resources.cim_password" ] }
 		}
 	},
 	{
@@ -25,11 +31,11 @@
 		"name": "snmp_table",
 		"type": "sammsnmp.SnmpQuery",
 		"args": {
-			"hostname": "$(instance.address)",
-			"community": "$(instance.community)",
+			"hostname": { "Fn::ref": [ "instance.address" ] },
+			"community": { "Fn::ref": [ "instance.community" ] },
 			"version": 2,
 			"use_enums": 1,
-			"table": "$(check.table)"
+			"table": { "Fn::ref": [ "check.table" ] }
 		}
 	},
 	{
@@ -37,11 +43,11 @@
 		"name": "snmp_vars",
 		"type": "sammsnmp.SnmpQuery",
 		"args": {
-			"hostname": "$(instance.address)",
-			"community": "$(instance.community)",
+			"hostname": { "Fn::ref": [ "instance.address" ] },
+			"community": { "Fn::ref": [ "instance.community" ] },
 			"version": 2,
 			"use_enums": 1,
-			"mib_variable_name_list": "$(check.mib_variable_name_list)"
+			"mib_variable_name_list": { "Fn::ref": [ "check.mib_variable_name_list" ] }
 		}
 	},
 	{
@@ -49,9 +55,15 @@
 		"name": "cim_certificates",
 		"type": "sammwr.certificates.WRCertificates",
 		"args": {
-			"endpoint": "http://$(instance.address):5985/wsman",
-			"username": "$(resources.cim_username)",
-			"password": "$(resources.cim_password)"
+			"endpoint": {
+					"Fn::join": [
+						"http://",
+						{ "Fn::ref": [ "instance.address" ] },
+						":5985/wsman"
+					]
+				},
+			"username": { "Fn::ref": [ "resources.cim_username" ] },
+			"password": { "Fn::ref": [ "resources.cim_password" ] }
 		}
 	},
 	{
@@ -60,19 +72,25 @@
 		"type": "samm.utils.LokiStream",
 		"args": {
 			"submodule_str": "sammwr.event.CIMEvent",
-			"loki_url": "$(resources.loki_url)",
-			"endpoint": "http://$(instance.address):5985/wsman",
-			"username": "$(resources.cim_username)",
-			"password": "$(resources.cim_password)",
-			"logfile": "$(check.logfile)",
-			"event_type": "$(check.event_type)",
-			"time_property": "$(check.time_property)",
+			"loki_url": { "Fn::ref": [ "resources.loki_url" ] },
+			"endpoint": {
+					"Fn::join": [
+						"http://",
+						{ "Fn::ref": [ "instance.address" ] },
+						":5985/wsman"
+					]
+				},
+			"username": { "Fn::ref": [ "resources.cim_username" ] },
+			"password": { "Fn::ref": [ "resources.cim_password" ] },
+			"logfile": { "Fn::ref": [ "check.logfile" ] },
+			"event_type": { "Fn::ref": [ "check.event_type" ] },
+			"time_property": { "Fn::ref": [ "check.time_property" ] },
 			"tag_property": {
 				"logfile": "Logfile",
 				"instance": "ComputerName"
 			},
 			"tags": {
-				"job": "$(tags.job)"
+				"job": { "Fn::ref": [ "tags.job" ] }
 			}
 		}
 	},
@@ -82,12 +100,18 @@
 		"type": "sammodata.OdataQuery",
 		"args": {
 			"auth_protocol": "ntlm",
-			"username": "$(resources.cim_username)",
-			"password": "$(resources.cim_password)",
-			"entity": "$(check.entity)",
-			"expand": "$(check.expand)",
-			"filter": "$(check.filter)",
-			"service_url": "http://$(instance.address)/citrix/monitor/odata/v2/Data/"
+			"username": { "Fn::ref": [ "resources.cim_username" ] },
+			"password": { "Fn::ref": [ "resources.cim_password" ] },
+			"entity": { "Fn::ref": [ "check.entity" ] },
+			"expand": { "Fn::ref": [ "check.expand" ] },
+			"filter": { "Fn::ref": [ "check.filter" ] },
+			"service_url": {
+					"Fn::join": [
+						"http://",
+						{ "Fn::ref": [ "instance.address" ] },
+						"/citrix/monitor/odata/v2/Data/"
+					]
+				}
 		}
 	}
 ]

@@ -459,7 +459,7 @@
 			"SSLServerSideReconnectHandshakes",
 			"Timestamp_Object",
 			"Timestamp_PerfTime",
-			"Timestamp_Sys100NS",
+			"Timestamp_Sys100NS"
 		]
 	},
 	{
@@ -667,7 +667,6 @@
 			"Transitiveoperationsmillisecondsrun",
 			"TransitiveoperationsPersec",
 			"TransitivesuboperationsPersec"
-
 		]
 	},
 	{
