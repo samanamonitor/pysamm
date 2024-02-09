@@ -6,6 +6,9 @@ class Instance(SammObject):
 		super(Instance, self).__init__(object_definition, configuration)
 
 	def pre_process(self):
+		'''
+		Sets all variables defined in object definition
+		'''
 		super(Instance, self).pre_process()
 		self._config_section = "instances"
 		self.up_check_name = None
@@ -22,6 +25,9 @@ class Instance(SammObject):
 		_ = self._attributes.setdefault("up_check", None)
 
 	def post_process(self):
+		'''
+		Resoves all links with checks
+		'''
 		super(Instance, self).post_process()
 		self._set_defaults()
 		for check_name in self._attributes['checks']:
