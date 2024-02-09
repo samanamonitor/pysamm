@@ -75,23 +75,25 @@ class LokiStream:
 
 
 class FilterFunction:
-	def lower(s):
+	def lower(s, *args, config=None, **kwargs):
 		return s.lower()
-	def upper(s):
+	def upper(s, *args, config=None, **kwargs):
 		return s.upper()
-	def adsecondsfromnow(seconds):
+	def adsecondsfromnow(seconds, *args, config=None, **kwargs):
+		if len(args) > 0:
+			return 0
 		if not isinstance(seconds, int):
 			seconds = int(seconds)
 		return int(time() - seconds + 11644473600) * 10000000
 
-	def lastlogon_to_timestamp(ll):
+	def lastlogon_to_timestamp(ll, *args, config=None, **kwargs):
 		if isinstance(ll, list) and len(ll) > 0:
 			ll = ll[0]
 		if isinstance(ll, bytes):
 			ll = ll.decode('ascii')
 		return (int(ll) / 10000000) - 11644473600
 
-	def filter_dict_to_string(filter_dict):
+	def filter_dict_to_string(filter_dict, *args, config=None, **kwargs):
 		'''This function converts dictionary to ldap filter string.
 		TODO: allow for more complex expressions. Now only accepts AND for all
 			  elements in the expression
@@ -134,7 +136,29 @@ class FilterFunction:
 			return "(&%s)" % "".join(filterlist)
 		return filterlist[0]
 
-	def join(l):
+	def join(l, *args, config=None, **kwargs):
+		out = []
 		if not isinstance(l, list):
 			raise TypeError("Invalid type. %s" % str(l))
-		return "".join(l)
+		for i in l:
+			if isinstance(i, dict):
+				if config is None:
+					raise Exception("Invalid config object")
+				temp = config.replace_vars(i, *args, **kwargs)
+				out.append(temp)
+			else:
+				out.append(i)
+
+		return "".join(out)
+
+	def ref(varname, *args, config=None, **kwargs):
+		default = None
+		if config is None:
+			raise Exception("Invalid config object")
+		if len(args) > 0:
+			default = args[0]
+			args = args[1:]
+		temp = config.get(varname, default=default, **kwargs)
+		if isinstance(temp, dict):
+			temp = config.replace_vars(temp, *args, default=default, **kwargs)
+		return temp
