@@ -1,0 +1,2469 @@
+{
+    "config_file": "tests/etc/conf_ldap_discovery4.json",
+    "config":
+    {
+        "base_dir": "/usr/src/pysamm/tests",
+        "config_dir": "/usr/src/pysamm/tests/etc",
+        "resource_file": "resources.json",
+        "resources":
+        {
+            "ldap_url": "ldap://ldap.server.com",
+            "ldap_dn": "user@server.com",
+            "ldap_password": "thisisapassword"
+        },
+        "object_files": ["objects/ldap_discovery4.json"],
+        "objects":
+        {
+            "instances": [
+            {
+                "object_type": "instance",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "alias": "template_host",
+                "display_name": "template_host",
+                "address": null,
+                "name": "template_host",
+                "register": false,
+                "tags":
+                {},
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "checks": ["windows_check"],
+                "alias": "template_windows",
+                "display_name": "template_windows",
+                "address": null,
+                "check_if_down": true,
+                "up_check": null,
+                "name": "template_windows",
+                "register": false,
+                "tags":
+                {},
+                "_checks":
+                {
+                    "windows_check":
+                    {
+                        "object_type": "check",
+                        "command": "windows_command",
+                        "alias": "windows_check",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "windows_check",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "windows_command",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": null,
+                "up_metric_name": null
+            },
+            {
+                "object_type": "instance",
+                "alias": "msdc1",
+                "display_name": "msdc1",
+                "address": "msdc1.domain.local",
+                "checks": ["ping", "windows_check"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "msdc1",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "msdc1.domain.local",
+                    "dn": "cn=msdc1,ou=domain controllers,dc=domain,dc=local",
+                    "layer": "control"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    },
+                    "windows_check":
+                    {
+                        "object_type": "check",
+                        "command": "windows_command",
+                        "alias": "windows_check",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "windows_check",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "windows_command",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxddc1",
+                "display_name": "ctxddc1",
+                "address": "ctxddc1.domain.local",
+                "checks": ["ping", "windows_check"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxddc1",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxddc1.domain.local",
+                    "dn": "cn=ctxddc1,ou=control,ou=servers,dc=domain,dc=local",
+                    "layer": "control"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    },
+                    "windows_check":
+                    {
+                        "object_type": "check",
+                        "command": "windows_command",
+                        "alias": "windows_check",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "windows_check",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "windows_command",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxvda1",
+                "display_name": "ctxvda1",
+                "address": "ctxvda1.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxvda1",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxvda1.domain.local",
+                    "dn": "cn=ctxvda1,ou=sessionhosts,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "mslic1",
+                "display_name": "mslic1",
+                "address": "mslic1.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "mslic1",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "mslic1.domain.local",
+                    "dn": "cn=mslic1,ou=control,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxvda2",
+                "display_name": "ctxvda2",
+                "address": "ctxvda2.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxvda2",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxvda2.domain.local",
+                    "dn": "cn=ctxvda2,ou=sessionhosts,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "msfs01",
+                "display_name": "msfs01",
+                "address": "msfs01.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "msfs01",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "msfs01.domain.local",
+                    "dn": "cn=msfs01,ou=control,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxvda3",
+                "display_name": "ctxvda3",
+                "address": "ctxvda3.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxvda3",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxvda3.domain.local",
+                    "dn": "cn=ctxvda3,ou=sessionhosts,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "mfas01",
+                "display_name": "mfas01",
+                "address": "mfas01.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "mfas01",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "mfas01.domain.local",
+                    "dn": "cn=mfas01,ou=control,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxsf02",
+                "display_name": "ctxsf02",
+                "address": "ctxsf02.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxsf02",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxsf02.domain.local",
+                    "dn": "cn=ctxsf02,ou=control,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "smnovvmvpn1",
+                "display_name": "smnovvmvpn1",
+                "address": "smnovvmvpn1.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "smnovvmvpn1",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "smnovvmvpn1.domain.local",
+                    "dn": "cn=smnovvmvpn1,ou=session,ou=ctx,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "smnovvmvpn2",
+                "display_name": "smnovvmvpn2",
+                "address": "smnovvmvpn2.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "smnovvmvpn2",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "smnovvmvpn2.domain.local",
+                    "dn": "cn=smnovvmvpn2,ou=sessionhosts,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "smnovvmvpn3",
+                "display_name": "smnovvmvpn3",
+                "address": "smnovvmvpn3.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "smnovvmvpn3",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "smnovvmvpn3.domain.local",
+                    "dn": "cn=smnovvmvpn3,ou=sessionhosts,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxddc2",
+                "display_name": "ctxddc2",
+                "address": "ctxddc2.domain.local",
+                "checks": ["ping", "windows_check"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxddc2",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxddc2.domain.local",
+                    "dn": "cn=ctxddc2,ou=control,ou=servers,dc=domain,dc=local",
+                    "layer": "control"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    },
+                    "windows_check":
+                    {
+                        "object_type": "check",
+                        "command": "windows_command",
+                        "alias": "windows_check",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "windows_check",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "windows_command",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "msdc2",
+                "display_name": "msdc2",
+                "address": "msdc2.domain.local",
+                "checks": ["ping", "windows_check"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "msdc2",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "msdc2.domain.local",
+                    "dn": "cn=msdc2,ou=domain controllers,dc=domain,dc=local",
+                    "layer": "control"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    },
+                    "windows_check":
+                    {
+                        "object_type": "check",
+                        "command": "windows_command",
+                        "alias": "windows_check",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "windows_check",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "windows_command",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxnstf01",
+                "display_name": "ctxnstf01",
+                "address": "ctxnstf01.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxnstf01",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxnstf01.domain.local",
+                    "dn": "cn=ctxnstf01,ou=control,ou=ctx,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxnddc01",
+                "display_name": "ctxnddc01",
+                "address": "ctxnddc01.domain.local",
+                "checks": ["ping", "windows_check"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxnddc01",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxnddc01.domain.local",
+                    "dn": "cn=ctxnddc01,ou=control,ou=ctx,ou=servers,dc=domain,dc=local",
+                    "layer": "control"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    },
+                    "windows_check":
+                    {
+                        "object_type": "check",
+                        "command": "windows_command",
+                        "alias": "windows_check",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "windows_check",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "windows_command",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxnlic01",
+                "display_name": "ctxnlic01",
+                "address": "ctxnlic01.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxnlic01",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxnlic01.domain.local",
+                    "dn": "cn=ctxnlic01,ou=control,ou=ctx,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxnvda01",
+                "display_name": "ctxnvda01",
+                "address": "ctxnvda01.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxnvda01",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxnvda01.domain.local",
+                    "dn": "cn=ctxnvda01,ou=session,ou=ctx,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxnddc02",
+                "display_name": "ctxnddc02",
+                "address": "ctxnddc02.domain.local",
+                "checks": ["ping", "windows_check"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxnddc02",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxnddc02.domain.local",
+                    "dn": "cn=ctxnddc02,ou=control,ou=ctx,ou=servers,dc=domain,dc=local",
+                    "layer": "control"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    },
+                    "windows_check":
+                    {
+                        "object_type": "check",
+                        "command": "windows_command",
+                        "alias": "windows_check",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "windows_check",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "windows_command",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxnfed01",
+                "display_name": "ctxnfed01",
+                "address": "ctxnfed01.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxnfed01",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxnfed01.domain.local",
+                    "dn": "cn=ctxnfed01,ou=control,ou=ctx,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxnstf02",
+                "display_name": "ctxnstf02",
+                "address": "ctxnstf02.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxnstf02",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxnstf02.domain.local",
+                    "dn": "cn=ctxnstf02,ou=control,ou=ctx,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "wsamzn-2a972dmi",
+                "display_name": "wsamzn-2a972dmi",
+                "address": "wsamzn-2a972dmi.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "wsamzn-2a972dmi",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "wsamzn-2a972dmi.domain.local",
+                    "dn": "cn=wsamzn-2a972dmi,ou=workspaces,ou=aws,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "poclw01",
+                "display_name": "poclw01",
+                "address": "poclw01.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "poclw01",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "poclw01.domain.local",
+                    "dn": "cn=poclw01,cn=computers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "u-2pzefm8dyl55d",
+                "display_name": "u-2pzefm8dyl55d",
+                "address": "u-2pzefm8dyl55d.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "u-2pzefm8dyl55d",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "u-2pzefm8dyl55d.domain.local",
+                    "dn": "cn=u-2pzefm8dyl55d,cn=computers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "u-2kk8ta9vshv7h",
+                "display_name": "u-2kk8ta9vshv7h",
+                "address": "u-2kk8ta9vshv7h.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "u-2kk8ta9vshv7h",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "u-2kk8ta9vshv7h.domain.local",
+                    "dn": "cn=u-2kk8ta9vshv7h,cn=computers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "u-192a1xpb4c5m5",
+                "display_name": "u-192a1xpb4c5m5",
+                "address": "u-192a1xpb4c5m5.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "u-192a1xpb4c5m5",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "u-192a1xpb4c5m5.domain.local",
+                    "dn": "cn=u-192a1xpb4c5m5,cn=computers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "u-35rqxjz6ihi43",
+                "display_name": "u-35rqxjz6ihi43",
+                "address": "u-35rqxjz6ihi43.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "u-35rqxjz6ihi43",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "u-35rqxjz6ihi43.domain.local",
+                    "dn": "cn=u-35rqxjz6ihi43,cn=computers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxnvda03",
+                "display_name": "ctxnvda03",
+                "address": "ctxnvda03.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxnvda03",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxnvda03.domain.local",
+                    "dn": "cn=ctxnvda03,ou=session,ou=ctx,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxnvda02",
+                "display_name": "ctxnvda02",
+                "address": "ctxnvda02.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxnvda02",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxnvda02.domain.local",
+                    "dn": "cn=ctxnvda02,ou=session,ou=ctx,ou=servers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxnvpn01",
+                "display_name": "ctxnvpn01",
+                "address": "ctxnvpn01.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxnvpn01",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxnvpn01.domain.local",
+                    "dn": "cn=ctxnvpn01,cn=computers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            },
+            {
+                "object_type": "instance",
+                "alias": "ctxnvda04",
+                "display_name": "ctxnvda04",
+                "address": "ctxnvda04.domain.local",
+                "checks": ["ping"],
+                "up_check": "ping.is_alive",
+                "check_if_down": false,
+                "stale_timeout": 432000,
+                "name": "ctxnvda04",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local",
+                    "fqdn": "ctxnvda04.domain.local",
+                    "dn": "cn=ctxnvda04,cn=computers,dc=domain,dc=local"
+                },
+                "_checks":
+                {
+                    "ping":
+                    {
+                        "object_type": "check",
+                        "command": "ping",
+                        "tag_properties": ["name"],
+                        "alias": "ping",
+                        "check_interval": 60,
+                        "stale_timeout": 180,
+                        "metrics": ["metric1", "metric2"],
+                        "name": "ping",
+                        "register": true,
+                        "tags":
+                        {},
+                        "_command":
+                        {
+                            "object_type": "command",
+                            "type": "samm.dummymodule.DummyModuleUp",
+                            "args":
+                            {
+                                "address":
+                                {
+                                    "Fn::ref": ["instance.address"]
+                                },
+                                "metrics":
+                                {
+                                    "Fn::ref": ["check.metrics"]
+                                },
+                                "numeric": 2
+                            },
+                            "name": "ping",
+                            "register": true,
+                            "tags":
+                            {}
+                        }
+                    }
+                },
+                "up_check_name": "ping",
+                "up_metric_name": "is_alive"
+            }],
+            "checks": [
+            {
+                "object_type": "check",
+                "command": "ping",
+                "tag_properties": ["name"],
+                "alias": "ping",
+                "check_interval": 60,
+                "stale_timeout": 180,
+                "metrics": ["metric1", "metric2"],
+                "name": "ping",
+                "register": true,
+                "tags":
+                {},
+                "_command":
+                {
+                    "object_type": "command",
+                    "type": "samm.dummymodule.DummyModuleUp",
+                    "args":
+                    {
+                        "address":
+                        {
+                            "Fn::ref": ["instance.address"]
+                        },
+                        "metrics":
+                        {
+                            "Fn::ref": ["check.metrics"]
+                        },
+                        "numeric": 2
+                    },
+                    "name": "ping",
+                    "register": true,
+                    "tags":
+                    {}
+                }
+            },
+            {
+                "object_type": "check",
+                "command": "windows_command",
+                "alias": "windows_check",
+                "check_interval": 60,
+                "stale_timeout": 180,
+                "metrics": ["metric1", "metric2"],
+                "name": "windows_check",
+                "register": true,
+                "tags":
+                {},
+                "_command":
+                {
+                    "object_type": "command",
+                    "type": "samm.dummymodule.DummyModuleUp",
+                    "args":
+                    {
+                        "address":
+                        {
+                            "Fn::ref": ["instance.address"]
+                        },
+                        "metrics":
+                        {
+                            "Fn::ref": ["check.metrics"]
+                        },
+                        "numeric": 2
+                    },
+                    "name": "windows_command",
+                    "register": true,
+                    "tags":
+                    {}
+                }
+            }],
+            "commands": [
+            {
+                "object_type": "command",
+                "type": "samm.dummymodule.DummyModuleUp",
+                "args":
+                {
+                    "address":
+                    {
+                        "Fn::ref": ["instance.address"]
+                    },
+                    "metrics":
+                    {
+                        "Fn::ref": ["check.metrics"]
+                    },
+                    "numeric": 2
+                },
+                "name": "ping",
+                "register": true,
+                "tags":
+                {}
+            },
+            {
+                "object_type": "command",
+                "type": "samm.dummymodule.DummyModuleUp",
+                "args":
+                {
+                    "address":
+                    {
+                        "Fn::ref": ["instance.address"]
+                    },
+                    "metrics":
+                    {
+                        "Fn::ref": ["check.metrics"]
+                    },
+                    "numeric": 2
+                },
+                "name": "windows_command",
+                "register": true,
+                "tags":
+                {}
+            }],
+            "discoveries": [
+            {
+                "object_type": "discovery",
+                "discovery_type": "active_directory",
+                "discovery_object_type": "instance",
+                "ldap_url":
+                {
+                    "Fn::ref": ["resources.ldap_url"]
+                },
+                "ldap_dn":
+                {
+                    "Fn::ref": ["resources.ldap_dn"]
+                },
+                "ldap_password":
+                {
+                    "Fn::ref": ["resources.ldap_password"]
+                },
+                "ldap_scope": "SCOPE_SUBTREE",
+                "ldap_refresh_seconds": 600,
+                "ldap_base": "DC=samana,DC=local",
+                "ldap_filter":
+                {
+                    "Fn::join": [
+                        ["(", "&", "(objectClass=computer)", "(lastLogonTimestamp>=",
+                        {
+                            "Fn::adsecondsfromnow": ["1000", "test"]
+                        }, ")",
+                        {
+                            "Fn::ref": ["discovery._host_pattern_list", ""]
+                        }, ")"]
+                    ]
+                },
+                "ldap_attrlist": ["dn", "dNSHostName", "cn"],
+                "ldap_attribute_tags":
+                {
+                    "fqdn": "dNSHostName",
+                    "dn": "dn"
+                },
+                "ldap_attribute_object_map":
+                {
+                    "name": "cn",
+                    "alias": "cn",
+                    "display_name": "cn",
+                    "address": "dNSHostName"
+                },
+                "name": "discovery_domain_local",
+                "register": false,
+                "tags":
+                {},
+                "method_type": null,
+                "method": null
+            },
+            {
+                "object_type": "discovery",
+                "test_file": "tests/ldap_discovery_data.py",
+                "object_use": ["template_host"],
+                "discovery_type": "active_directory",
+                "discovery_object_type": "instance",
+                "ldap_url":
+                {
+                    "Fn::ref": ["resources.ldap_url"]
+                },
+                "ldap_dn":
+                {
+                    "Fn::ref": ["resources.ldap_dn"]
+                },
+                "ldap_password":
+                {
+                    "Fn::ref": ["resources.ldap_password"]
+                },
+                "ldap_scope": "SCOPE_SUBTREE",
+                "ldap_refresh_seconds": 600,
+                "ldap_base": "DC=samana,DC=local",
+                "ldap_filter":
+                {
+                    "Fn::join": [
+                        ["(", "&", "(objectClass=computer)", "(lastLogonTimestamp>=",
+                        {
+                            "Fn::adsecondsfromnow": ["1000", "test"]
+                        }, ")",
+                        {
+                            "Fn::ref": ["discovery._host_pattern_list", ""]
+                        }, ")"]
+                    ]
+                },
+                "ldap_attrlist": ["dn", "dNSHostName", "cn"],
+                "ldap_attribute_tags":
+                {
+                    "fqdn": "dNSHostName",
+                    "dn": "dn"
+                },
+                "ldap_attribute_object_map":
+                {
+                    "name": "cn",
+                    "alias": "cn",
+                    "display_name": "cn",
+                    "address": "dNSHostName"
+                },
+                "name": "all",
+                "register": true,
+                "tags":
+                {
+                    "domain_joined": "domain.local"
+                },
+                "method_type": "ActiveDirectoryDiscovery",
+                "method":
+                {
+                    "name": "all",
+                    "ldap_url": "ldap://ldap.server.com",
+                    "ldap_dn": "user@server.com",
+                    "ldap_password": "thisisapassword",
+                    "ldap_base": "DC=samana,DC=local",
+                    "ldap_scope": 2,
+                    "tags":
+                    {
+                        "domain_joined": "domain.local"
+                    },
+                    "ldap_filter": "(&(objectClass=computer)(lastLogonTimestamp>=0))",
+                    "ldap_attrlist": ["dn", "dNSHostName", "cn"],
+                    "ldap_refresh_seconds": 600,
+                    "ldap_attribute_tags":
+                    {
+                        "fqdn": "dNSHostName",
+                        "dn": "dn"
+                    },
+                    "object_type": "instance",
+                    "ldap_attribute_object_map":
+                    {
+                        "name": "cn",
+                        "alias": "cn",
+                        "display_name": "cn",
+                        "address": "dNSHostName"
+                    },
+                    "object_use": ["template_host"]
+                }
+            },
+            {
+                "object_type": "discovery",
+                "test_file": "tests/ldap_discovery_data3.py",
+                "_host_pattern_list":
+                {
+                    "Fn::join": [
+                        ["(", "|", "(cn=*ddc*)", "(cn=*msdc*)", ")"]
+                    ]
+                },
+                "object_use": ["template_windows"],
+                "discovery_type": "active_directory",
+                "discovery_object_type": "instance",
+                "ldap_url":
+                {
+                    "Fn::ref": ["resources.ldap_url"]
+                },
+                "ldap_dn":
+                {
+                    "Fn::ref": ["resources.ldap_dn"]
+                },
+                "ldap_password":
+                {
+                    "Fn::ref": ["resources.ldap_password"]
+                },
+                "ldap_scope": "SCOPE_SUBTREE",
+                "ldap_refresh_seconds": 600,
+                "ldap_base": "DC=samana,DC=local",
+                "ldap_filter":
+                {
+                    "Fn::join": [
+                        ["(", "&", "(objectClass=computer)", "(lastLogonTimestamp>=",
+                        {
+                            "Fn::adsecondsfromnow": ["1000", "test"]
+                        }, ")",
+                        {
+                            "Fn::ref": ["discovery._host_pattern_list", ""]
+                        }, ")"]
+                    ]
+                },
+                "ldap_attrlist": ["dn", "dNSHostName", "cn"],
+                "ldap_attribute_tags":
+                {
+                    "fqdn": "dNSHostName",
+                    "dn": "dn"
+                },
+                "ldap_attribute_object_map":
+                {
+                    "name": "cn",
+                    "alias": "cn",
+                    "display_name": "cn",
+                    "address": "dNSHostName"
+                },
+                "name": "control",
+                "register": true,
+                "tags":
+                {
+                    "layer": "control"
+                },
+                "method_type": "ActiveDirectoryDiscovery",
+                "method":
+                {
+                    "name": "control",
+                    "ldap_url": "ldap://ldap.server.com",
+                    "ldap_dn": "user@server.com",
+                    "ldap_password": "thisisapassword",
+                    "ldap_base": "DC=samana,DC=local",
+                    "ldap_scope": 2,
+                    "tags":
+                    {
+                        "layer": "control"
+                    },
+                    "ldap_filter": "(&(objectClass=computer)(lastLogonTimestamp>=0)(|(cn=*ddc*)(cn=*msdc*)))",
+                    "ldap_attrlist": ["dn", "dNSHostName", "cn"],
+                    "ldap_refresh_seconds": 600,
+                    "ldap_attribute_tags":
+                    {
+                        "fqdn": "dNSHostName",
+                        "dn": "dn"
+                    },
+                    "object_type": "instance",
+                    "ldap_attribute_object_map":
+                    {
+                        "name": "cn",
+                        "alias": "cn",
+                        "display_name": "cn",
+                        "address": "dNSHostName"
+                    },
+                    "object_use": ["template_windows"]
+                }
+            }]
+        }
+    }
+}

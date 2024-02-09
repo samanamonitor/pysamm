@@ -1,0 +1,137 @@
+[
+	{
+		"object_type": "discovery",
+		"discovery_type": "active_directory",
+		"discovery_object_type": "instance",
+		"name": "discovery_domain_local",
+		"ldap_url": { "Fn::ref": [ "resources.ldap_url" ]},
+		"ldap_dn": { "Fn::ref": [ "resources.ldap_dn" ]},
+		"ldap_password": { "Fn::ref": [ "resources.ldap_password" ]},
+		"ldap_scope": "SCOPE_SUBTREE",
+		"ldap_refresh_seconds": 600,
+		"ldap_base": "DC=samana,DC=local",
+		"ldap_filter": {
+			"Fn::join": [[
+				"(",
+					"&",
+					"(objectClass=computer)",
+					"(lastLogonTimestamp>=",
+						{ "Fn::adsecondsfromnow": [ "1000", "test" ] },
+						")",
+					{ "Fn::ref": [ "discovery._host_pattern_list", "" ] },
+				")"
+			]]
+		},
+		"ldap_attrlist": [
+			"dn",
+			"dNSHostName",
+			"cn"
+		],
+		"ldap_attribute_tags": {
+			"fqdn": "dNSHostName",
+			"dn": "dn"
+		},
+		"ldap_attribute_object_map": {
+			"name": "cn",
+			"alias": "cn",
+			"display_name": "cn",
+			"address": "dNSHostName"
+		},
+		"register": false
+	},
+	{
+		"object_type": "command",
+		"name": "ping",
+		"type": "samm.dummymodule.DummyModuleUp",
+		"args": {
+			"address": { "Fn::ref": [ "instance.address" ] },
+			"metrics": { "Fn::ref": [ "check.metrics" ] },
+			"numeric": 2
+		}
+	},
+	{
+		"object_type": "command",
+		"name": "windows_command",
+		"type": "samm.dummymodule.DummyModuleUp",
+		"args": {
+			"address": { "Fn::ref": [ "instance.address" ] },
+			"metrics": { "Fn::ref": [ "check.metrics" ] },
+			"numeric": 2
+		}
+	},
+	{
+		"object_type": "check",
+		"name": "ping",
+		"command": "ping",
+		"tag_properties": [ "name" ],
+		"alias": "ping",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"metrics": [
+			"metric1",
+			"metric2"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "windows_check",
+		"command": "windows_command",
+		"alias": "windows_check",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"metrics": [
+			"metric1",
+			"metric2"
+		]
+	},
+	{
+		"object_type": "instance",
+		"name": "template_host",
+		"checks": [
+			"ping"
+		],
+		"up_check": "ping.is_alive",
+		"check_if_down": false,
+		"stale_timeout": 432000,
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_windows",
+		"checks": [
+			"windows_check"
+		],
+		"register": false
+	},
+	{
+		"object_type": "discovery",
+		"test_file": "tests/ldap_discovery_data.py",
+		"use": "discovery_domain_local",
+		"name": "all",
+		"object_use": [ 
+			"template_host"
+		],
+		"tags": {
+			"domain_joined": "domain.local"
+		}
+	},
+	{
+		"object_type": "discovery",
+		"test_file": "tests/ldap_discovery_data3.py",
+		"use": "discovery_domain_local",
+		"name": "control",
+		"_host_pattern_list": { "Fn::join": [[
+			"(",
+				"|",
+					"(cn=*ddc*)",
+					"(cn=*msdc*)",
+			")"
+		]]},
+		"object_use": [ 
+			"template_windows"
+		],
+		"tags": {
+			"layer": "control"
+		}
+	}
+]
