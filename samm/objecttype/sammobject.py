@@ -13,10 +13,13 @@ class SammObject:
 			raise TypeError("config must have object_type set.")
 
 		self._config = configuration
-		self._object_definition = object_definition
+		self._object_definition = object_definition.copy()
 		self.pre_process()
 
 	def pre_process(self):
+		'''
+		Loads object definition and defines templates
+		'''
 		self._attributes = {}
 		self.use = self._object_definition.get("use", [])
 		if isinstance(self.use, str):
@@ -73,30 +76,45 @@ class SammObject:
 		raise SammException("Unable to apply template to base class")
 
 	def post_process(self):
+		'''
+		Resolves all templates
+		'''
 		if self._applied_templates:
 			return
 		for template_name in self.use:
-			self._apply_template(template_name)
-
-	def _apply_template(self, template_name):
-		template = self._config.get((self._config_section, template_name))
-		if template is None:
-			raise SammException("Template %s defined in %s %s doesn't exist" % 
-				(template_name, self.__class__.__name__.lower(), self.name))
-		if template.__class__.__name__ != self.__class__.__name__:
-			raise SammException("Invalid object type from template=%s" % template_name)
-		template.post_process()
-		self.tags.update(template.tags)
-		for key, value in template._attributes.items():
-			if isinstance(value, list):
-				attribute = self._attributes.setdefault(key, [])
-				attribute += value
-			elif isinstance(value, dict):
-				attribute = self._attributes.setdefault(key, {})
-				if isinstance(attribute, dict):
-					attribute.update(value)
-			else:
-				self._attributes.setdefault(key, value)
+			template = self._config.get((self._config_section, template_name))
+			if template is None:
+				raise SammException("Template %s defined in %s %s doesn't exist" %
+					(template_name, self.__class__.__name__.lower(), self.name))
+			if template.__class__.__name__ != self.__class__.__name__:
+				raise SammException("Invalid object type from template=%s" % template_name)
+			template.post_process()
+			self.tags.update(template.tags)
+			for key, value in template._attributes.items():
+				attribute = self._attributes.get(key)
+				if isinstance(attribute, (str, int, float)):
+					pass
+				elif isinstance(attribute, list):
+					if not isinstance(value, list) and value not in attribute:
+						attribute.append(value)
+					else:
+						for i in value:
+							if i not in attribute:
+								attribute.append(i)
+				elif isinstance(attribute, dict):
+					keys = list(attribute.keys())
+					if len(keys) == 1 and keys[0][:4] == "Fn::":
+						pass
+					else:
+						if isinstance(value, dict):
+							for k, v in value:
+								if k not in attribute:
+									attribute[k] = v
+				else:
+					if isinstance(value, (list, dict)):
+						self._attributes[key] = value.copy()
+					else:
+						self._attributes[key] = value
 
 	def merge_object_definition(self, object_definition):
 		changed = False
