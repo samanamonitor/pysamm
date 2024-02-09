@@ -4,9 +4,9 @@
 		"discovery_type": "active_directory",
 		"discovery_object_type": "instance",
 		"name": "discovery_domain_local",
-		"ldap_url": "$(resources.ldap_url)",
-		"ldap_dn": "$(resources.ldap_dn)",
-		"ldap_password": "$(resources.ldap_password)",
+		"ldap_url": { "Fn::ref": [ "resources.ldap_url" ]},
+		"ldap_dn": { "Fn::ref": [ "resources.ldap_dn" ]},
+		"ldap_password": { "Fn::ref": [ "resources.ldap_password" ]},
 		"ldap_scope": "SCOPE_SUBTREE",
 		"ldap_refresh_seconds": 600,
 		"ldap_base": "DC=samana,DC=local",
@@ -17,7 +17,8 @@
 			"lastLogonTimestamp": {
 				"ge": {
 					"Fn::adsecondsfromnow": [
-						"31536000"
+						"31536000",
+						"test"
 					]
 				}
 			}
@@ -44,8 +45,8 @@
 		"name": "ping",
 		"type": "samm.dummymodule.DummyModuleUp",
 		"args": {
-			"address": "$(instance.address)",
-			"metrics": "$(check.metrics)",
+			"address": { "Fn::ref": [ "instance.address" ] },
+			"metrics": { "Fn::ref": [ "check.metrics" ] },
 			"numeric": 2
 		}
 	},
@@ -54,8 +55,8 @@
 		"name": "windows_command",
 		"type": "samm.dummymodule.DummyModuleUp",
 		"args": {
-			"address": "$(instance.address)",
-			"metrics": "$(check.metrics)",
+			"address": { "Fn::ref": [ "instance.address" ] },
+			"metrics": { "Fn::ref": [ "check.metrics" ] },
 			"numeric": 2
 		}
 	},
@@ -120,18 +121,22 @@
 		"test_file": "tests/ldap_discovery_data3.py",
 		"use": "discovery_domain_local",
 		"name": "control",
-		"ldap_filter": [
-			"(",
-				"&",
-				"(objectClass=computer)",
-				"(lastLogonTimestamp>=133182894700000000)",
+		"ldap_filter": {
+			"Fn::join": [[
 				"(",
-					"|",
-					"(cn=*ddc*)",
-					"(cn=*msdc*)",
-				")",
-			")"
-		],
+					"&",
+					"(objectClass=computer)",
+					"(lastLogonTimestamp>=",
+						{ "Fn::adsecondsfromnow": [ "1000", "test" ] },
+						")",
+					"(",
+						"|",
+						"(cn=*ddc*)",
+						"(cn=*msdc*)",
+					")",
+				")"
+			]]
+		},
 		"object_use": [ 
 			"template_windows"
 		],
