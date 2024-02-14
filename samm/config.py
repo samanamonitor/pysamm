@@ -231,8 +231,8 @@ class Config():
 					args = tuple(o[i])
 					try:
 						func = getattr(FilterFunction, i[4:])
-						out = str(func(*args, config=self, instance_name=instance_name,
-							check_name=check_name, discovery_name=discovery_name))
+						out = func(*args, config=self, instance_name=instance_name,
+							check_name=check_name, discovery_name=discovery_name)
 						break
 					except AttributeError:
 						log.exception("Invalid function %s" % func)

@@ -145,9 +145,9 @@ class FilterFunction:
 				if config is None:
 					raise Exception("Invalid config object")
 				temp = config.replace_vars(i, *args, **kwargs)
-				out.append(temp)
+				out.append(str(temp))
 			else:
-				out.append(i)
+				out.append(str(i))
 
 		return "".join(out)
 
