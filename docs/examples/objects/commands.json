@@ -16,11 +16,11 @@
 		"args": {
 			"class_name": { "Fn::ref": [ "check.class_name" ] },
 			"endpoint": {
-					"Fn::join": [
+					"Fn::join": [[
 						"http://",
 						{ "Fn::ref": [ "instance.address" ] },
 						":5985/wsman"
-					]
+					]]
 				},
 			"username": { "Fn::ref": [ "resources.cim_username" ] },
 			"password": { "Fn::ref": [ "resources.cim_password" ] }
@@ -56,11 +56,11 @@
 		"type": "sammwr.certificates.WRCertificates",
 		"args": {
 			"endpoint": {
-					"Fn::join": [
+					"Fn::join": [[
 						"http://",
 						{ "Fn::ref": [ "instance.address" ] },
 						":5985/wsman"
-					]
+					]]
 				},
 			"username": { "Fn::ref": [ "resources.cim_username" ] },
 			"password": { "Fn::ref": [ "resources.cim_password" ] }
@@ -74,11 +74,11 @@
 			"submodule_str": "sammwr.event.CIMEvent",
 			"loki_url": { "Fn::ref": [ "resources.loki_url" ] },
 			"endpoint": {
-					"Fn::join": [
+					"Fn::join": [[
 						"http://",
 						{ "Fn::ref": [ "instance.address" ] },
 						":5985/wsman"
-					]
+					]]
 				},
 			"username": { "Fn::ref": [ "resources.cim_username" ] },
 			"password": { "Fn::ref": [ "resources.cim_password" ] },
@@ -106,11 +106,11 @@
 			"expand": { "Fn::ref": [ "check.expand" ] },
 			"filter": { "Fn::ref": [ "check.filter" ] },
 			"service_url": {
-					"Fn::join": [
+					"Fn::join": [[
 						"http://",
 						{ "Fn::ref": [ "instance.address" ] },
 						"/citrix/monitor/odata/v2/Data/"
-					]
+					]]
 				}
 		}
 	}
