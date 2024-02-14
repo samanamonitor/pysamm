@@ -14,7 +14,7 @@ scrape_configs:
 - honor_labels: true
   job_name: sammdisc
   docker_sd_configs:
-  - host: unix:///var/run/docker.sock
+  - host: http://172.17.0.1:2375
     port: 5000
     filters:
     - name: label
