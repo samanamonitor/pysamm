@@ -4,4 +4,4 @@
 # Start prometheus container
 `sudo chmod o+rw /var/run/docker.sock
 PROMETHEUS_CONFIG=/usr/local/samm/prometheus/prometheus.yml
-docker run -d -v $PROMETHEUS_CONFIG:/etc/prometheus/prometheus.yml -v /var/run/docker.sock:/var/run/docker.sock -p 9090:9090 --name=prometheus prom/prometheus`
+docker run -d -v $PROMETHEUS_CONFIG:/etc/prometheus/prometheus.yml -v /var/run/docker.sock:/var/run/docker.sock -p 9090:9090 --name=prometheus --restart unless-stopped prom/prometheus`
