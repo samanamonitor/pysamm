@@ -310,16 +310,24 @@
 		"object_type": "check",
 		"name": "ctx_login",
 		"command": "odata_ctx_events",
-		"alias": "cim_perfcitrix_print",
+		"alias": "ctx_login",
 		"check_interval": 300,
+		"time_property": "StartDate",
 		"entity": "Sessions",
-		"expand": "User,Machine,Connections",
+		"expand": "User,Machine,CurrentConnection,Failure",
 		"filter": {
 			"Fn::join": [[
 				"StartDate gt DateTime'",
-				{ "Fn::edmsecondsfromnow": [ -300 ] },
-				"'"
+				{ "Fn::edmsecondsfromnow": [ 300 ] },
+				"' and ExitCode eq 1"
 			]]
+		},
+		"tags": {
+			"event_type": "login"
+		},
+		"tag_property": {
+			"userupn": "User.Upn",
+			"machinednsname": "Machine.DnsName"
 		},
 		"stale_timeout": 900,
 		"metrics": [
@@ -330,16 +338,52 @@
 		"object_type": "check",
 		"name": "ctx_logoff",
 		"command": "odata_ctx_events",
-		"alias": "cim_perfcitrix_print",
+		"alias": "ctx_logoff",
 		"check_interval": 300,
+		"time_property": "EndDate",
 		"entity": "Sessions",
 		"expand": "User,Machine,Connections",
 		"filter": {
 			"Fn::join": [[
 				"EndDate gt DateTime'",
-				{ "Fn::edmsecondsfromnow": [ -300 ] },
-				"'"
+				{ "Fn::edmsecondsfromnow": [ 300 ] },
+				"' and ExitCode eq 1"
 			]]
+		},
+		"tags": {
+			"event_type": "logoff"
+		},
+		"tag_property": {
+			"userupn": "User.Upn",
+			"machinednsname": "Machine.DnsName"
+		},
+		"stale_timeout": 900,
+		"metrics": [
+			"ls_events"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "ctx_loginfail",
+		"command": "odata_ctx_events",
+		"alias": "ctx_logoff",
+		"check_interval": 300,
+		"time_property": "EndDate",
+		"entity": "Sessions",
+		"expand": "User,Machine,Connections",
+		"filter": {
+			"Fn::join": [[
+				"EndDate gt DateTime'",
+				{ "Fn::edmsecondsfromnow": [ 300 ] },
+				"' and ExitCode ne 1"
+			]]
+		},
+		"tags": {
+			"event_type": "loginfail"
+		},
+		"tag_property": {
+			"userupn": "User.Upn",
+			"machinednsname": "Machine.DnsName"
 		},
 		"stale_timeout": 900,
 		"metrics": [
