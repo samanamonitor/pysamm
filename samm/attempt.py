@@ -10,19 +10,18 @@ class Attempt:
 		self.check=config.get(("checks", check_name))
 		if self.check is None:
 			raise TypeError("Check %s not found" % check_name)
+		self.config = config
 		self.instance=config.get(("instances", instance_name))
 		self.next_run = 0
 		self.instance_name=instance_name
 		self.check_name = check_name
 		self.alias = self.check.get('alias', check_name)
+		self.metrics = config.get(("checks", check_name, "metrics"))
 		self.command="commands", config.get(("checks", check_name, "command"), \
 			resolve_vars=True)
-		self.command_args=config.get(self.command + ("args",), 
-			instance_name=instance_name, check_name=check_name, resolve_vars=True)
 		self.module_name=config.get(self.command + ("type",), 
 			instance_name=instance_name, check_name=check_name, resolve_vars=True)
-		self.metrics = config.get(("checks", check_name, "metrics"))
-		self.data = config.run_module(self.module_name, **self.command_args)
+
 		self.thread = None
 		self.instance_stale_timeout = config.get(("instances", instance_name, "stale_timeout"))
 		self.check_stale_timeout = config.get(("checks", check_name, "stale_timeout"))
@@ -63,9 +62,14 @@ class Attempt:
 	def run(self, schedule_next=True):
 		self.next_run = 0
 
+		command_args=self.config.get(self.command + ("args",),
+			instance_name=self.instance.name, check_name=self.check.name, resolve_vars=True)
+		command_args.setdefault('tags', {}).update(self.base_tags)
+		data = self.config.run_module(self.module_name, **command_args)
+
 		try:
 			metric_received = 0
-			for metric_data in self.data:
+			for metric_data in data:
 				metric_received = 1
 				metric_tags = self.base_tags.copy()
 				for tag_property in self.tag_properties:
