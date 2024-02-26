@@ -296,5 +296,54 @@
 			"TotalXPSJobsCreated",
 			"TotalXPSJobsFailed"
 		]
+	},
+	{
+		"object_type": "check",
+		"name": "cim_ctxsf_events",
+		"alias": "cim_ctxsf_events",
+		"logfile": "Citrix Delivery Services",
+		"use": [
+			"template_cim_events"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "ctx_login",
+		"command": "odata_ctx_events",
+		"alias": "cim_perfcitrix_print",
+		"check_interval": 300,
+		"entity": "Sessions",
+		"expand": "User,Machine,Connections",
+		"filter": {
+			"Fn::join": [[
+				"StartDate gt DateTime'",
+				{ "Fn::edmsecondsfromnow": [ -300 ] },
+				"'"
+			]]
+		},
+		"stale_timeout": 900,
+		"metrics": [
+			"ls_events"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "ctx_logoff",
+		"command": "odata_ctx_events",
+		"alias": "cim_perfcitrix_print",
+		"check_interval": 300,
+		"entity": "Sessions",
+		"expand": "User,Machine,Connections",
+		"filter": {
+			"Fn::join": [[
+				"EndDate gt DateTime'",
+				{ "Fn::edmsecondsfromnow": [ -300 ] },
+				"'"
+			]]
+		},
+		"stale_timeout": 900,
+		"metrics": [
+			"ls_events"
+		]
 	}
 ]
