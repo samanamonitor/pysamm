@@ -87,7 +87,8 @@
 			"time_property": { "Fn::ref": [ "check.time_property" ] },
 			"tag_property": {
 				"logfile": "Logfile",
-				"instance": "ComputerName"
+				"instance": "ComputerName",
+				"type": "Type"
 			},
 			"tags": {
 				"job": { "Fn::ref": [ "tags.job" ] }
@@ -134,7 +135,8 @@
 			"entity": { "Fn::ref": [ "check.entity" ] },
 			"expand": { "Fn::ref": [ "check.expand" ] },
 			"filter": { "Fn::ref": [ "check.filter" ] },
-			"tag_property": { },
+			"tag_property": { "Fn::ref": [ "check.tag_property", {} ] },
+			"time_property": { "Fn::ref": [ "check.time_property" ] },
 			"tags": {
 				"job": { "Fn::ref": [ "tags.job" ] }
 			}
