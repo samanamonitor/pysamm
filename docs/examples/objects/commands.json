@@ -113,5 +113,31 @@
 					]]
 				}
 		}
+	},
+	{
+		"object_type": "command",
+		"name": "odata_ctx_events",
+		"type": "samm.utils.LokiStream",
+		"args": {
+			"submodule_str": "sammodata.OdataQuery",
+			"loki_url": { "Fn::ref": [ "resources.loki_url" ] },
+			"service_url": {
+					"Fn::join": [[
+						"http://",
+						{ "Fn::ref": [ "instance.address" ] },
+						"/citrix/monitor/odata/v2/Data/"
+					]]
+				},
+			"auth_protocol": "ntlm",
+			"username": { "Fn::ref": [ "resources.cim_username" ] },
+			"password": { "Fn::ref": [ "resources.cim_password" ] },
+			"entity": { "Fn::ref": [ "check.entity" ] },
+			"expand": { "Fn::ref": [ "check.expand" ] },
+			"filter": { "Fn::ref": [ "check.filter" ] },
+			"tag_property": { },
+			"tags": {
+				"job": { "Fn::ref": [ "tags.job" ] }
+			}
+		}
 	}
 ]
