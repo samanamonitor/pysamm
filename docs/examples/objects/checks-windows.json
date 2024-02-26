@@ -258,9 +258,6 @@
 		"check_interval": 600,
 		"stale_timeout": 1200,
 		"event_type": 3,
-		"tag_properties": [
-			"logfile"
-		],
 		"metrics": [
 			"ls_events"
 		],
