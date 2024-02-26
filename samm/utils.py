@@ -1,6 +1,7 @@
 import sys, requests, json
 from time import time, process_time
 import logging
+import datetime
 
 log = logging.getLogger(__name__)
 
@@ -24,19 +25,21 @@ class LokiStream:
 			'ls_push_process_time': 0,
 		}
 
-	def set_tags(self, item):
-		self.initialized = True
-		for key, prop in self.tag_property.items():
-			self.tags[key] = item[prop]
-
 	def pull(self):
 		self.values = []
+		self.streams = []
 		s = process_time()
 		for item in self.iterable:
-			if not self.initialized:
-				self.set_tags(item)
 			event_time = int(item.get(self.time_property, time()) * 1000000000)
 			self.values += [[ str(event_time), json.dumps(dict(item)) ]]
+			tags = self.tags.copy()
+			for key, prop in self.tag_property.items():
+				tags[key] = item.get(prop, "")
+
+			self.streams.append({
+				"stream": tags,
+				"values": [[ str(event_time), json.dumps(dict(item)) ]]
+				})
 		self.metrics['ls_pull_process_time'] = process_time() - s
 		self.metrics['ls_events'] = len(self.values)
 
@@ -48,14 +51,7 @@ class LokiStream:
 		headers = {
 			'Content-type': 'application/json'
 		}
-		payload = {
-			'streams': [ ]
-		}
-		payload['streams'] += [ {
-			'stream': self.tags,
-			'values': self.values
-		}]
-		p = json.dumps(payload)
+		p = json.dumps({ "streams": self.streams })
 		log.debug(p)
 		self.answer = requests.post(self.loki_url, data=p, headers=headers)
 		log.debug(self.answer.text)
@@ -85,6 +81,9 @@ class FilterFunction:
 		if not isinstance(seconds, int):
 			seconds = int(seconds)
 		return int(time() - seconds + 11644473600) * 10000000
+
+	def edmsecondsfromnow(seconds, *args, config=None, **kwargs):
+		return (datetime.datetime.now() + datetime.timedelta(seconds=-seconds)).strftime("%Y-%m-%dT%H:%M:%S")
 
 	def lastlogon_to_timestamp(ll, *args, config=None, **kwargs):
 		if isinstance(ll, list) and len(ll) > 0:
