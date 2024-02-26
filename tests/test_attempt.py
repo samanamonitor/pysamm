@@ -1,6 +1,6 @@
 from samm.attempt import Attempt
 from samm.config import Config
-from time import time
+from time import time, sleep
 
 def test_attempt_up():
 	config = Config('tests/etc/conf_valid.json')
@@ -14,6 +14,7 @@ def test_attempt_up():
 		for metric_key, metric_value in instance_metric_data.items():
 			expected_line = f.readline()
 			assert expected_line == str(metric_value)
+	sleep(.1)
 	assert a.next_run > 0
 	assert not a.due()
 	a.schedule(-1)
