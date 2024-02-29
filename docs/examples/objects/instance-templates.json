@@ -66,15 +66,6 @@
 	},
 	{
 		"object_type": "instance",
-		"name": "template_citrix_cvad_control",
-		"checks": [
-			"ctx_machines",
-			"ctx_sessions"
-		],
-		"register": false
-	},
-	{
-		"object_type": "instance",
 		"name": "template_windows_iis",
 		"checks": [
 			"cim_perfiis"
@@ -111,6 +102,27 @@
 		"name": "template_windows_smb",
 		"checks": [
 			"cim_perfsmb_server"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_citrix_cvad_control",
+		"checks": [
+			"ctx_machines",
+			"ctx_sessions",
+			"ctx_login",
+			"ctx_loginfail",
+			"ctx_logoff"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
+		"name": "template_citrix_storefront",
+		"checks": [
+			"cim_ctxsf_events",
+			"cim_perfiis"
 		],
 		"register": false
 	},
