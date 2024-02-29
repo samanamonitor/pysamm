@@ -1,9 +1,17 @@
 from icmplib import ping, NameLookupError, DestinationUnreachable, TimeExceeded
+import logging
+
+log = logging.getLogger(__name__)
 
 class PingModule:
 	def __init__(self, hostaddress, **kwargs):
 		self.hostaddress = hostaddress
-		self.kwargs = kwargs
+		ping_args = [ "count", "interval", "timeout", "id", "source", 
+			"family", "privileged", "payload", "payload_size", 
+			"traffic_class" ]
+		for k in kwargs:
+			if k in ping_args:
+				self.kwargs[k] = kwargs[k]
 
 	def __iter__(self):
 		data = {
@@ -31,7 +39,8 @@ class PingModule:
 			data['address'] = 'unreachable'
 		except TimeExceeded:
 			data['address'] = 'timeexceeded'
-		except Exception:
+		except Exception as e:
+			log.exception(e)
 			data['address'] = 'unknownerror'
 		return iter([data])
 
