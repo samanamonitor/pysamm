@@ -64,7 +64,7 @@ class Attempt:
 
 		command_args=self.config.get(self.command + ("args",),
 			instance_name=self.instance.name, check_name=self.check.name, resolve_vars=True)
-		command_args.setdefault('tags', {}).update(self.base_tags)
+		#command_args.setdefault('tags', {}).update(self.base_tags)
 		data = self.config.run_module(self.module_name, **command_args)
 
 		try:
