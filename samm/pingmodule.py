@@ -9,6 +9,7 @@ class PingModule:
 		ping_args = [ "count", "interval", "timeout", "id", "source", 
 			"family", "privileged", "payload", "payload_size", 
 			"traffic_class" ]
+		self.kwargs = {}
 		for k in kwargs:
 			if k in ping_args:
 				self.kwargs[k] = kwargs[k]
