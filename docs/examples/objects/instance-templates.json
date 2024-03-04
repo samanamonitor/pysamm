@@ -115,7 +115,8 @@
 			"ctx_loginfail",
 			"ctx_logoff",
 			"ctx_machinefail",
-			"ctx_machinefaillog"
+			"ctx_machinefaillog",
+			"ctx_machineinfail"
 		],
 		"register": false
 	},

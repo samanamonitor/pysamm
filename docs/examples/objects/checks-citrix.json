@@ -459,5 +459,35 @@
 		"metrics": [
 			"ls_events"
 		]
+	},
+	{
+		"object_type": "check",
+		"name": "ctx_machineinfail",
+		"alias": "ctx_machineinfail",
+		"command": "odata_ctx_director",
+		"tag_properties": [
+			"Machine.DnsName",
+			"Machine.HostingServerName",
+			"Machine.HostedMachineName",
+			"Machine.AssociatedUserUPNs",
+			"Machine.CurrentPowerState",
+			"Machine.CurrentRegistrationState",
+			"Machine.ControllerDnsName",
+			"FaultState",
+			"LastDeregisteredCode"
+		],
+		"check_interval": 300,
+		"stale_timeout": 900,
+		"entity": "MachineFailureLogs",
+		"expand": "Machine",
+		"filter": {
+			"Fn::join": [[
+				"FailureEndDate is null'"
+			]]
+		},
+		"metrics": [
+			"FaultState",
+			"FailureStartDate",
+		]
 	}
 ]
