@@ -3,7 +3,7 @@
 		"object_type": "check",
 		"name": "ctx_machines",
 		"command": "odata_ctx_director",
-		"tag_properties": [ 
+		"tag_properties": [
 			"Catalog.Name",
 			"DesktopGroup.Name",
 			"DnsName"
@@ -33,7 +33,7 @@
 		"object_type": "check",
 		"name": "ctx_sessions",
 		"command": "odata_ctx_director",
-		"tag_properties": [ 
+		"tag_properties": [
 			"User.Upn",
 			"Machine.DnsName",
 			"User.UserName",
@@ -323,7 +323,9 @@
 			]]
 		},
 		"tags": {
-			"event_type": "login"
+			"event_type": "login",
+			"job": { "Fn::ref": [ "tags.job" ] },
+			"logfile": "ctx_logs"
 		},
 		"tag_property": {
 			"userupn": "User.Upn",
@@ -351,7 +353,9 @@
 			]]
 		},
 		"tags": {
-			"event_type": "logoff"
+			"event_type": "logoff",
+			"job": { "Fn::ref": [ "tags.job" ] },
+			"logfile": "ctx_logs"
 		},
 		"tag_property": {
 			"userupn": "User.Upn",
@@ -366,11 +370,11 @@
 		"object_type": "check",
 		"name": "ctx_loginfail",
 		"command": "odata_ctx_events",
-		"alias": "ctx_logoff",
+		"alias": "ctx_loginfail",
 		"check_interval": 300,
 		"time_property": "EndDate",
-		"entity": "Sessions",
-		"expand": "User,Machine,Connections",
+		"entity": "MachineFailureLogs",
+		"expand": "Machine",
 		"filter": {
 			"Fn::join": [[
 				"EndDate gt DateTime'",
@@ -379,7 +383,94 @@
 			]]
 		},
 		"tags": {
-			"event_type": "loginfail"
+			"event_type": "machinefail",
+			"job": { "Fn::ref": [ "tags.job" ] },
+			"logfile": "ctx_logs"
+		},
+		"tag_property": {
+			"userupn": "User.Upn",
+			"machinednsname": "Machine.DnsName"
+		},
+		"stale_timeout": 900,
+		"metrics": [
+			"ls_events"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "ctx_machinesfail",
+		"alias": "ctx_machinesfail",
+		"command": "odata_ctx_director",
+		"tag_properties": [
+			"Machine.DnsName",
+			"Machine.HostingServerName",
+			"Machine.HostedMachineName",
+			"Machine.AssociatedUserUPNs",
+			"Machine.CurrentPowerState",
+			"Machine.CurrentRegistrationState",
+			"Machine.ControllerDnsName",
+			"FaultState",
+			"LastDeregisteredCode"
+		],
+		"check_interval": 300,
+		"stale_timeout": 900,
+		"entity": "Sessions",
+		"expand": "User,CurrentConnection,Machine",
+		"filter": "ConnectionState ne 3",
+		"metrics": [
+			"FaultState",
+			"FailureStartDate"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "ctx_machinefaillog",
+		"alias": "ctx_machinefaillog",
+		"command": "odata_ctx_events",
+		"check_interval": 300,
+		"time_property": "CreatedDate",
+		"entity": "MachineFailureLogs",
+		"expand": "Machine",
+		"filter": {
+			"Fn::join": [[
+				"FailureEndDate gt DateTime'",
+				{ "Fn::edmsecondsfromnow": [ 300 ] },
+				"'"
+			]]
+		},
+		"tags": {
+			"event_type": "machinefaillog",
+			"job": { "Fn::ref": [ "tags.job" ] },
+			"logfile": "ctx_logs"
+		},
+		"tag_property": {
+			"machinednsname": "Machine.DnsName"
+		},
+		"stale_timeout": 900,
+		"metrics": [
+			"ls_events"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "ctx_machinefaillog",
+		"command": "odata_ctx_events",
+		"alias": "ctx_machinefaillog",
+		"check_interval": 300,
+		"time_property": "CreatedDate",
+		"entity": "MachineFailureLogs",
+		"expand": "Machine",
+		"filter": {
+			"Fn::join": [[
+				"FailureEndDate gt DateTime'",
+				{ "Fn::edmsecondsfromnow": [ 300 ] },
+				"'"
+			]]
+		},
+		"tags": {
+			"event_type": "machinefail",
+			"job": { "Fn::ref": [ "tags.job" ] },
+			"logfile": "ctx_logs"
 		},
 		"tag_property": {
 			"userupn": "User.Upn",
