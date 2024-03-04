@@ -6,7 +6,9 @@
 		"tag_properties": [
 			"Catalog.Name",
 			"DesktopGroup.Name",
-			"DnsName"
+			"DnsName",
+			"HostingServerName",
+			"HostedMachineName"
 		],
 		"alias": "ctx_machine",
 		"check_interval": 300,
@@ -314,7 +316,7 @@
 		"check_interval": 300,
 		"time_property": "StartDate",
 		"entity": "Sessions",
-		"expand": "User,Machine,CurrentConnection,Failure",
+		"expand": "User,Machine,CurrentConnection",
 		"filter": {
 			"Fn::join": [[
 				"StartDate gt DateTime'",
@@ -373,8 +375,8 @@
 		"alias": "ctx_loginfail",
 		"check_interval": 300,
 		"time_property": "EndDate",
-		"entity": "MachineFailureLogs",
-		"expand": "Machine",
+		"entity": "Sessions",
+		"expand": "User,Machine",
 		"filter": {
 			"Fn::join": [[
 				"EndDate gt DateTime'",
@@ -383,7 +385,7 @@
 			]]
 		},
 		"tags": {
-			"event_type": "machinefail",
+			"event_type": "loginfail",
 			"job": { "Fn::ref": [ "tags.job" ] },
 			"logfile": "ctx_logs"
 		},
