@@ -137,9 +137,7 @@
 			"filter": { "Fn::ref": [ "check.filter" ] },
 			"tag_property": { "Fn::ref": [ "check.tag_property", {} ] },
 			"time_property": { "Fn::ref": [ "check.time_property" ] },
-			"tags": {
-				"job": { "Fn::ref": [ "tags.job" ] }
-			}
+			"tags": { "Fn::ref": [ "check.tags" ] }
 		}
 	}
 ]
