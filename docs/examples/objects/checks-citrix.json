@@ -400,8 +400,8 @@
 	},
 	{
 		"object_type": "check",
-		"name": "ctx_machinesfail",
-		"alias": "ctx_machinesfail",
+		"name": "ctx_machinefail",
+		"alias": "ctx_machinefail",
 		"command": "odata_ctx_director",
 		"tag_properties": [
 			"Machine.DnsName",
