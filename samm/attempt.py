@@ -2,11 +2,12 @@ from threading import Thread
 from .metric import InstanceMetric
 import time
 import logging
+from random import Random
 
 log = logging.getLogger(__name__)
 
 class Attempt:
-	def __init__(self, config, instance_name, check_name, instance_metric_data, rand=None):
+	def __init__(self, config, instance_name, check_name, instance_metric_data):
 		self.check=config.get(("checks", check_name))
 		if self.check is None:
 			raise TypeError("Check %s not found" % check_name)
@@ -35,7 +36,7 @@ class Attempt:
 		self.value_mappings = self.check.get('value_mappings', {})
 		self.instance_metric_data = instance_metric_data
 		log.debug("Attempt created. %s:%s", instance_name, check_name)
-		self.rand = rand
+		self.rand = Random(time.time())
 
 	def due(self):
 		if self.next_run == 0:
@@ -112,7 +113,7 @@ class Attempt:
 
 	def schedule(self, seconds):
 		if self.rand is not None:
-			r = self.rand.gauss(10, 5)
+			r = self.rand.uniform(-8, 8)
 		else:
 			r = 0
 		self.next_run = time.time() + seconds + r

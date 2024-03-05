@@ -3,7 +3,6 @@ from .attempt import Attempt
 from .metric import InstanceMetric
 from time import sleep, process_time, time
 import socket, select, os, signal, sys
-from random import Random
 import threading
 import logging
 
@@ -14,7 +13,6 @@ class Service:
 	def __init__(self, config_file):
 		self.running_config = None
 		self.keep_running = False
-		self.rand = Random()
 		self.sock = None
 		self.debug = 0
 		self.config_path = ""
@@ -76,10 +74,9 @@ class Service:
 			self.host_count.val(self.host_count.val() + 1)
 			for check_name in instance.checks:
 				try:
-					a = Attempt(self.running_config, instance_name, check_name, instance_metric_data, rand=self.rand)
+					a = Attempt(self.running_config, instance_name, check_name, instance_metric_data)
 					log.debug("Created attempt %s:%s", instance_name, check_name)
-					a.schedule(self.scheduled_attempts.val() * self.initial_spread
-						+ int(self.rand.gauss(10, 5)))
+					a.schedule(self.scheduled_attempts.val() * self.initial_spread)
 					self.attempt_list += [ a ]
 					self.scheduled_attempts.val(self.scheduled_attempts.val() + 1)
 				except Exception as e:
