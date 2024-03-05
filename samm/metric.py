@@ -17,11 +17,20 @@ class InstanceMetric:
 		else:
 			self._name=name
 
+		if value_mapping and not isinstance(value_mapping, dict):
+			raise TypeError("Invalid value_mapping. Expecting dict.")
+		if value_mapping is None:
+			self.value_mapping = { "*": -1 }
+		else:
+			self.value_mapping = value_mapping
+
 		if isinstance(value, bool):
 			self.value = int(value)
 		elif isinstance(value, str) and value.replace('.', '').isnumeric():
 			self.value = float(value)
 		elif isinstance(value, (int, float)):
+			self.value = value
+		elif isinstance(self.value_mapping, dict) and isinstance(value, str):
 			self.value = value
 		elif value is None and self.none_is_zero:
 			self.value = 0
@@ -39,15 +48,8 @@ class InstanceMetric:
 		else:
 			raise TypeError("Invalid type for tags")
 
-		if value_mapping and not isinstance(value_mapping, dict):
-			raise TypeError("Invalid value_mapping. Expecting dict.")
-
 		self._last_update = time.time()
 		self._stale_timeout = stale_timeout
-		if value_mapping is None:
-			self.value_mapping = { "*": -1 }
-		else:
-			self.value_mapping = value_mapping
 
 	def add_tag(self, tag):
 		self._tags += [tag]
