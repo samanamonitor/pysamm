@@ -482,7 +482,7 @@
 		"expand": "Machine",
 		"filter": {
 			"Fn::join": [[
-				"FailureEndDate is null"
+				"FailureEndDate eq null"
 			]]
 		},
 		"metrics": [
