@@ -9,7 +9,8 @@ class Tag:
 
 
 class InstanceMetric:
-	def __init__(self, name, value, tags=None, prefix=None, stale_timeout=-1, value_mapping=None):
+	def __init__(self, name, value, tags=None, prefix=None, stale_timeout=-1, value_mapping=None, none_is_zero=True):
+		self.none_is_zero = none_is_zero
 		name = name.replace(".", "_")
 		if isinstance(prefix, str):
 			self._name = "%s_%s" % (prefix, name)
@@ -20,10 +21,12 @@ class InstanceMetric:
 			self.value = int(value)
 		elif isinstance(value, str) and value.replace('.', '').isnumeric():
 			self.value = float(value)
-		elif value is None:
-			raise TypeError("Invalid value")
-		else:
+		elif isinstance(value, (int, float)):
 			self.value = value
+		elif value is None and self.none_is_zero:
+			self.value = 0
+		else:
+			raise TypeError("Invalid value")
 
 		if isinstance(tags, list):
 			self._tags=tags.copy()
