@@ -5,7 +5,14 @@
 		"command": "odata_ctx_director",
 		"tag_properties": [
 			"Catalog.Name",
+			"Catalog.ProvisioningType",
+			"Catalog.PersistentUserChanges",
+			"Catalog.IsMachinePhysical",
+			"Catalog.AllocationType",
+			"Catalog.SessionSupport",
 			"DesktopGroup.Name",
+			"DesktopGroup.DeliveryType",
+			"DesktopGroup.DesktopKind",
 			"DnsName",
 			"HostingServerName",
 			"HostedMachineName"
