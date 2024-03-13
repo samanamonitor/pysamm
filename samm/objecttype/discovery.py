@@ -8,6 +8,7 @@ import json
 from time import time
 
 log = logging.getLogger(__name__)
+ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
 
 class Discovery(SammObject):
 	def __init__(self, object_definition, configuration=None):
@@ -110,6 +111,11 @@ class ActiveDirectoryDiscovery:
 			self._test_iter = iter(self._test_data)
 			return self
 		self._conn = ldap.initialize(self.ldap_url)
+		self._conn.set_option(ldap.OPT_REFERRALS, 0)
+		self._conn.set_option(ldap.OPT_PROTOCOL_VERSION, 3)
+		self._conn.set_option(ldap.OPT_X_TLS, ldap.OPT_X_TLS_DEMAND)
+		self._conn.set_option(ldap.OPT_X_TLS_DEMAND, True)
+		self._conn.set_option(ldap.OPT_DEBUG_LEVEL, 255)
 		self._conn.simple_bind_s(self.ldap_dn, self.ldap_password)
 		self._conn.set_option(ldap.OPT_REFERRALS, 0)
 		self._search_id = self._conn.search(self.ldap_base, self.ldap_scope, 
