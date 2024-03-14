@@ -34,7 +34,7 @@ class LokiStream:
 			self.values += [[ str(event_time), json.dumps(dict(item)) ]]
 			tags = self.tags.copy()
 			for key, prop in self.tag_property.items():
-				tags[key.lower] = item.get(prop, "").lower()
+				tags[key.lower()] = item.get(prop, "").lower()
 
 			self.streams.append({
 				"stream": tags,
