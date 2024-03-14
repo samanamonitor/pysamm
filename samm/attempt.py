@@ -3,11 +3,12 @@ from .metric import InstanceMetric
 import time
 import logging
 from random import Random
+from .objecttype.instance import INSTANCE_UP, INSTANCE_DOWN, INSTANCE_PENDING
 
 log = logging.getLogger(__name__)
 
 class Attempt:
-	def __init__(self, config, instance_name, check_name, instance_metric_data):
+	def __init__(self, config, instance_name, check_name, instance_metric_data, pending_retry=60):
 		self.check=config.get(("checks", check_name))
 		if self.check is None:
 			raise TypeError("Check %s not found" % check_name)
@@ -37,6 +38,7 @@ class Attempt:
 		self.instance_metric_data = instance_metric_data
 		log.debug("Attempt created. %s:%s", instance_name, check_name)
 		self.rand = Random(time.time())
+		self.pending_retry = pending_retry
 
 	def due(self):
 		if self.next_run == 0:
@@ -50,12 +52,17 @@ class Attempt:
 		if self.thread is not None and self.thread.is_alive():
 			log.warning("Last attempt is still running. (%s:%s)", self.instance_name, self.check_name)
 			return False
-		if self.instance.check_if_down is False and not self.instance.is_alive and \
-				self.check_name != self.instance.up_check_name:
-			log.info("Instance is down. Skipping attempt %s:%s.", \
-				self.instance_name, self.check_name)
-			self.schedule_next()
+		if self.instance.check_if_down is False and self.check_name != self.instance.up_check_name:
+			if self.instance.is_alive == INSTANCE_DOWN:
+				log.info("Instance is down. Skipping attempt %s:%s.", \
+					self.instance_name, self.check_name)
+				self.schedule_next()
+			elif self.instance.is_alive == INSTANCE_PENDING:
+				log.info("Instance is pending. Skipping attempt %s:%s for %d seconds.", \
+					self.instance_name, self.check_name, self.pending_retry)
+				self.schedule(self.pending_retry)
 			return False
+
 		self.thread = Thread(target=self.run)
 		self.thread.start()
 		return True
@@ -83,7 +90,10 @@ class Attempt:
 						if self.check_name == self.instance.up_check_name and \
 								metric_name == self.instance.up_metric_name:
 							value = metric_data.get(metric_name, 0)
-							self.instance.is_alive = value
+							if value == 0:
+								self.instance.is_alive = INSTANCE_DOWN
+							else:
+								self.instance.is_alive = INSTANCE_UP
 							im = InstanceMetric("up", value, metric_tags, \
 								stale_timeout=self.instance_stale_timeout)
 

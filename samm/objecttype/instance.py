@@ -1,6 +1,10 @@
 from .sammobject import SammObject, SammException
 from .check import Check
 
+INSTANCE_UP = 1
+INSTANCE_DOWN = 0
+INSTANCE_PENDING = -1
+
 class Instance(SammObject):
 	def __init__(self, object_definition, configuration=None):
 		super(Instance, self).__init__(object_definition, configuration)
@@ -13,7 +17,7 @@ class Instance(SammObject):
 		self._config_section = "instances"
 		self.up_check_name = None
 		self.up_metric_name = None
-		self.is_alive = 0
+		self.is_alive = INSTANCE_PENDING
 		self._checks = {}
 
 	def _set_defaults(self):

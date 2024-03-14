@@ -16,6 +16,7 @@
     "webserver": true,
     "webserver_port": 5000,
     "wait_on_error": 60,
+    "pending_retry": 30,
     "tags": {
         "job": "samm"
     },

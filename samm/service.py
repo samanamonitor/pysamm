@@ -64,6 +64,7 @@ class Service:
 		logging.basicConfig(stream=sys.stdout, level=self.debug, force=True)
 		self._stale_timeout = self.running_config.get("stale_timeout", default=600)
 		self.poll_time = self.running_config.get("poll_time", default=5)
+		self.pending_retry = self.running_config.get("pending_retry", default=60)
 		self.tags = self.running_config.get('service_tags', default={}).copy()
 		self.tags.update(self.running_config.get('tags'))
 
@@ -74,7 +75,8 @@ class Service:
 			self.host_count.val(self.host_count.val() + 1)
 			for check_name in instance.checks:
 				try:
-					a = Attempt(self.running_config, instance_name, check_name, instance_metric_data)
+					a = Attempt(self.running_config, instance_name, check_name, instance_metric_data,
+						pending_retry=self.pending_retry)
 					log.debug("Created attempt %s:%s", instance_name, check_name)
 					a.schedule(self.scheduled_attempts.val() * self.initial_spread)
 					self.attempt_list += [ a ]
