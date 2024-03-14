@@ -42,7 +42,7 @@
 					{ "Fn::ref": [ "discovery._host_pattern_list", "" ] },
 				")"
 			]]
-		},
+		}
 	},
 	{
 		"object_type": "discovery",
@@ -58,6 +58,6 @@
 					")",
 				")"
 			]]
-		},
+		}
 	}
 ]
