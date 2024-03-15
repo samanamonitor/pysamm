@@ -178,6 +178,7 @@ class Service:
 			instance_list = self.metric_data.keys()
 		else:
 			instance_list = _c_read[0].recv(1024).decode('ascii').strip().split(" ")
+			log.info("List of instances requested: %s" % str(instance_list))
 
 		_, _c_write, _ = select.select([], [connection], [], 2)
 		if len(_c_write) < 1:
@@ -188,7 +189,7 @@ class Service:
 			for instance_name in instance_list:
 				if instance_name not in self.metric_data:
 					instance_tags = self.running_config.get("tags").copy()
-					instance_tags.update(self.running_config.get(("instances", instance_name, "tags")))
+					instance_tags.update(self.running_config.get(("instances", instance_name, "tags"), default={}))
 					instance_down = InstanceMetric("up", 0, tags=instance_tags)
 					_c_write[0].sendall(str(instance_down).encode('ascii'))
 					continue
