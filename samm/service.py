@@ -174,10 +174,11 @@ class Service:
 		connection, client_address = conn.accept()
 		_c_read, _, _ = select.select([connection], [], [], 2)
 
-		if len(_c_read) == 0 or len(_c_read[0].recv(1024).decode('ascii').strip()) == 0:
+		recvdata = _c_read[0].recv(1024).decode('ascii').strip()
+		if len(_c_read) == 0 or len(recvdata) == 0:
 			instance_list = self.metric_data.keys()
 		else:
-			instance_list = _c_read[0].recv(1024).decode('ascii').strip().split(" ")
+			instance_list = recvdata.split(" ")
 			log.info("List of instances requested: %s" % str(instance_list))
 
 		_, _c_write, _ = select.select([], [connection], [], 2)
