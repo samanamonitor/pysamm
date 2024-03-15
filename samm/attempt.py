@@ -57,11 +57,12 @@ class Attempt:
 				log.info("Instance is down. Skipping attempt %s:%s.", \
 					self.instance_name, self.check_name)
 				self.schedule_next()
+				return False
 			elif self.instance.is_alive == INSTANCE_PENDING:
 				log.info("Instance is pending. Skipping attempt %s:%s for %d seconds.", \
 					self.instance_name, self.check_name, self.pending_retry)
 				self.schedule(self.pending_retry)
-			return False
+				return False
 
 		self.thread = Thread(target=self.run)
 		self.thread.start()
