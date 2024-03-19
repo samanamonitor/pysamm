@@ -134,7 +134,6 @@
 		"name": "template_citrix_vda",
 		"checks": [
 			"cim_perftssession",
-			"cim_perfprocess",
 			"cim_perfcitrix_ica",
 			"cim_perfcitrix_cpm",
 			"cim_perfcitrix_print"
