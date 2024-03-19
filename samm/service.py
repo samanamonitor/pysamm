@@ -28,6 +28,7 @@ class Service:
 		log.debug("Service startup. %d" % ( int(time()) ))
 		self.keep_running = self.running_config._valid_config
 		self.attempts_run_in_loop = 0
+		self.loop_time = 0
 
 		self.init_local_metrics()
 		self.init_attempts()
@@ -138,7 +139,9 @@ class Service:
 	def maintain_metric_data(self):
 		self.metric_data_bytes.val(sys.getsizeof(self.metric_data_bytes))
 		self.running_time.val(time() - self.startup_time.val())
-		self.pt.val(process_time())
+		current_pt = process_time()
+		self.loop_time = current_pt - self.pt.val()
+		self.pt.val(current_pt)
 		self.thread_count.val(threading.active_count())
 		mc = 0
 		stale_list = []
@@ -163,7 +166,7 @@ class Service:
 
 	def process_prompt_request(self):
 		log.info("Sleeping... process_time=%f attempt_count=%d host_count=%d attempts_run_in_loop=%d",
-			process_time(), len(self.attempt_list), self.host_count.val(), self.attempts_run_in_loop)
+			self.loop_time, len(self.attempt_list), self.host_count.val(), self.attempts_run_in_loop)
 		c_read, _, _ = select.select([self.sock], [], [], self.poll_time)
 		for _sock in c_read:
 			log.debug("Connection received. Sending data.")

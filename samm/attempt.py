@@ -83,7 +83,7 @@ class Attempt:
 				metric_tags = self.base_tags.copy()
 				for tag_property in self.tag_properties:
 					key = tag_property.lower()
-					value = str(metric_data.get(tag_property, "none")).lower()
+					value = str(metric_data.get(tag_property, "none"))
 					metric_tags.update({ key: value })
 
 				try:
