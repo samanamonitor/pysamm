@@ -8,6 +8,9 @@ PROMETHEUS_PATH=${SAMM_BASE}/prometheus
 PROMETHEUS_TMPL=${DIR}/prometheus/prometheus.yml
 PROMETHEUS_CFG=${PROMETHEUS_PATH}/prometheus.yml
 SAMM_VAR=${SAMM_BASE}/var
+SAMM_NAME=samm-server
+IMAGE_NAME=samm-server
+IMAGE_VERSION=latest
 
 if [ ! -d "${SAMM_ETC}" ]; then
     sudo mkdir -p ${SAMM_ETC}
@@ -23,7 +26,10 @@ docker build -t samm-server samm-server
 sudo cp ../tests/conf.json.example ${SAMM_ETC}/conf.json
 sudo cp ../tests/resources.json.example ${SAMM_ETC}/resources.json
 sudo cp ../tests/objects/objects.json.example ${SAMM_ETC}/objects/objects.json
-docker run -idt -v ${SAMM_BASE}:${SAMM_BASE} --name samm-server samm-server ${SAMM_ETC}/conf.json
+docker run -idt -v $SAMM_BASE:/usr/local/samm/etc --name ${SAMM_NAME} \
+    -v /usr/share/snmp:/usr/local/share \
+    --label samm=collector --restart unless-stopped ${IMAGE_NAME}:${IMAGE_VERSION} \
+    /usr/local/samm/etc/conf.json
 
 docker build -t samm-apache samm-apache
 docker run -idt -p 9091:80 --name samm-apache -v ${SAMM_VAR}:${SAMM_VAR} samm-apache
