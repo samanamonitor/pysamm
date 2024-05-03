@@ -16,7 +16,7 @@
 			"CurrentRegistrationState",
 			"CurrentPowerState",
 			"IsInMaintenanceMode",
-			"DnsName",
+			{ "property": "DnsName", "transform": "lower" },
 			"HostingServerName",
 			"HostedMachineName"
 		],
@@ -47,7 +47,8 @@
 		"command": "odata_ctx_director",
 		"tag_properties": [
 			"User.Upn",
-			"Machine.DnsName",
+			{"property": "Machine.DnsName", "transform": "lower" },
+			"SessionKey",
 			"User.UserName",
 			"User.Domain"
 		],
@@ -340,6 +341,7 @@
 			"logfile": "ctx_logs"
 		},
 		"tag_property": {
+			"sessionkey": "SessionKey",
 			"userupn": "User.Upn",
 			"machinednsname": "Machine.DnsName"
 		},
@@ -371,7 +373,8 @@
 		},
 		"tag_property": {
 			"userupn": "User.Upn",
-			"machinednsname": "Machine.DnsName"
+			"machinednsname": "Machine.DnsName",
+			"sessionkey": "SessionKey"
 		},
 		"stale_timeout": 900,
 		"metrics": [
@@ -401,7 +404,8 @@
 		},
 		"tag_property": {
 			"userupn": "User.Upn",
-			"machinednsname": "Machine.DnsName"
+			"machinednsname": "Machine.DnsName",
+			"sessionkey": "SessionKey"
 		},
 		"stale_timeout": 900,
 		"metrics": [
@@ -483,6 +487,7 @@
 			"Machine.CurrentPowerState",
 			"Machine.CurrentRegistrationState",
 			"Machine.ControllerDnsName",
+			"Machine.DesktopGroupId",
 			"FaultState",
 			"LastDeregisteredCode"
 		],

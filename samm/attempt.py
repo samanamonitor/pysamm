@@ -1,5 +1,6 @@
 from threading import Thread
 from .metric import InstanceMetric
+from .utils import FilterFunction
 import time
 import logging
 from random import Random
@@ -82,9 +83,17 @@ class Attempt:
 				metric_received = 1
 				metric_tags = self.base_tags.copy()
 				for tag_property in self.tag_properties:
-					key = tag_property.lower()
-					value = str(metric_data.get(tag_property, "none"))
-					metric_tags.update({ key: value })
+					if isinstance(tag_property, str):
+						property_name = tag_property
+						transform_name = "str"
+					elif isinstance(tag_property, dict):
+						property_name = tag_property.get('property', "none")
+						transform_name = tag_property.get("transform", "str")
+
+					key = property_name.lower()
+					transform = getattr(FilterFunction, transform_name, lambda x: str(x))
+					value = transform(metric_data.get(property_name, "none"))
+					metric_tags[key] = value
 
 				try:
 					for metric_name in self.metrics:
