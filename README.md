@@ -1,3 +1,10 @@
+# TODO: update to the following versions for kerberos to work
+# pykerberos        1.2.4
+# requests-kerberos 0.14.0
+
+# Test json files
+`for i in $(ls -1 *.json); do cat $i | jq > /dev/null || echo "error on $i"; done`
+
 # Build DEB package
 `docker run -it --rm -v $(pwd):/usr/src sammrepo /usr/local/bin/build-deb.sh`
 
@@ -46,3 +53,5 @@ docker run -idt -v $SAMM_PATH:/usr/local/samm/etc --name samm-server --label sam
 # TODO
 * procedure to install new MIB
 * check MIB integrity
+
+
