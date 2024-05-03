@@ -52,7 +52,9 @@
 		"class_name": "Win32_LogicalDisk",
 		"alias": "cim_disk",
 		"tag_properties": [
-			"Caption"
+			"Caption",
+			"DriveType",
+			"Description"
 		],
 		"check_interval": 300,
 		"stale_timeout": 900,
@@ -147,6 +149,7 @@
 			"PercentIdleTime",
 			"PercentIdleTime_Base",
 			"SplitIOPerSec",
+			"Timestamp_Sys100NS",
 			"Timestamp_Object"
 		]
 	},
