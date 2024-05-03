@@ -71,6 +71,8 @@ class LokiStream:
 
 
 class FilterFunction:
+	def str(s, *args, config=None, **kwargs):
+		return str(s)
 	def lower(s, *args, config=None, **kwargs):
 		return s.lower()
 	def upper(s, *args, config=None, **kwargs):
