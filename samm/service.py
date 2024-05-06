@@ -68,6 +68,7 @@ class Service:
 		self.pending_retry = self.running_config.get("pending_retry", default=60)
 		self.tags = self.running_config.get('service_tags', default={}).copy()
 		self.tags.update(self.running_config.get('tags'))
+		self.initial_spread = self.running_config.get("initial_spread", 1.0)
 
 	def init_instance_attempts(self, instance):
 		instance_name = instance.name

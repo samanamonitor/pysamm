@@ -132,7 +132,7 @@ class Attempt:
 		self.schedule(self.check.get("check_interval"))
 
 	def schedule(self, seconds):
-		if self.rand is not None:
+		if self.rand is not None and seconds > 0:
 			r = self.rand.uniform(-8, 8)
 		else:
 			r = 0
