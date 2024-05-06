@@ -24,5 +24,6 @@
         "instance": "samm"
     },
     "poll_time": 5,
-    "stale_timeout": 600
+    "stale_timeout": 600,
+    "initial_spread": 0.1
 }
