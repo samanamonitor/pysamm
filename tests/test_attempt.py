@@ -19,7 +19,7 @@ def test_attempt_up():
 	assert not a.due()
 	a.schedule(-1)
 	assert a.due()
-	a.schedule(5)
+	a.schedule(15)
 	assert not a.due()
 
 def test_attempt_down():
@@ -38,7 +38,7 @@ def test_attempt_down():
 	assert not a.due()
 	a.schedule(-1)
 	assert a.due()
-	a.schedule(5)
+	a.schedule(15)
 	assert not a.due()
 
 def test_attempt_check_up():
@@ -57,5 +57,5 @@ def test_attempt_check_up():
 	assert not a.due()
 	a.schedule(-1)
 	assert a.due()
-	a.schedule(5)
+	a.schedule(15)
 	assert not a.due()
