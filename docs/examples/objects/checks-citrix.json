@@ -13,9 +13,6 @@
 			"DesktopGroup.Name",
 			"DesktopGroup.DeliveryType",
 			"DesktopGroup.DesktopKind",
-			"CurrentRegistrationState",
-			"CurrentPowerState",
-			"IsInMaintenanceMode",
 			{ "property": "DnsName", "transform": "lower" },
 			"HostingServerName",
 			"HostedMachineName"
