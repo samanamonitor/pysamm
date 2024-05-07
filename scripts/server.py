@@ -3,7 +3,7 @@ import sys, os
 from sys import argv
 from samm.service import Service
 import time
-import threading
+from multiprocessing import Process
 from flask import Flask, make_response
 import socket
 
@@ -41,8 +41,10 @@ def main(config_file):
         wait_on_error = svc.running_config.get("wait_on_error", 0)
         if svc.running_config.get("webserver", False):
             port = svc.running_config.get("webserver_port", 5000)
-            threading.Thread(target=web, args=[port], daemon=True).start()
+            p = Process(target=web, args=(port,))
+            p.start()
         svc.process_loop()
+        p.terminate()
     except Exception as e:
         print(e)
         time.sleep(wait_on_error)
