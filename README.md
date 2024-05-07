@@ -55,3 +55,5 @@ docker run -idt -v $SAMM_PATH:/usr/local/samm/etc --name samm-server --label sam
 * check MIB integrity
 
 
+# Limits
+After testing SAMM with lots of hosts, we found that it is best to configure less than 3500(190k metrics - 4seconds download) attempts per container. Having more than this number of attempts configured in a single container will cause the download of metrics from prometheus to take too long and it will give up, losing data. It is important to measure the time it takes to poll for the entire metric table from a container to establish how big it can get.
