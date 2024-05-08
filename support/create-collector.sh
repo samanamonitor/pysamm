@@ -38,7 +38,7 @@ docker run -idt --name ${SAMM_NAME} \
     -v $SAMM_BASE:/usr/local/samm/etc \
     -v /usr/share/snmp:/usr/share/snmp \
     --log-driver=loki \
-    --log-opt loki-url="https://${SAMM_IP}:3100/loki/api/v1/push" \
+    --log-opt loki-url="http://${SAMM_IP}:3100/loki/api/v1/push" \
     --log-opt loki-retries=5 \
     --log-opt loki-batch-size=400 \
     --label samm=collector \
