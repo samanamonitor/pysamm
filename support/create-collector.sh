@@ -17,7 +17,7 @@ if [ ! -d ${SAMM_BASE} ]; then
 fi
 
 if [ ! -f ${SAMM_CONF} ]; then
-    echo "File ${SAMM_CONF} doesn't exist. Cannot create collector" > >&2
+    echo "File ${SAMM_CONF} doesn't exist. Cannot create collector" >&2
     exit 1
 fi
 
