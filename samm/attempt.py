@@ -120,7 +120,7 @@ class Attempt:
 						self.instance_name, self.check_name, metric_data, e)
 
 		except Exception as e:
-			log.exception("An error occurred processing (%s:%s).instance_metric_data. %s", self.instance_name, self.check_name, e)
+			log.error("An error occurred processing (%s:%s).instance_metric_data. %s", self.instance_name, self.check_name, e)
 			pass
 
 		if schedule_next:
