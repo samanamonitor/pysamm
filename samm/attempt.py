@@ -116,7 +116,7 @@ class Attempt:
 						self.instance_metric_data[im.key] = im
 
 				except Exception as e:
-					log.exception("An error occurred processing (%s:%s).metrics\nmetric_data=%s. %s",
+					log.error("An error occurred processing (%s:%s).metrics\nmetric_data=%s. %s",
 						self.instance_name, self.check_name, metric_data, e)
 
 		except Exception as e:
