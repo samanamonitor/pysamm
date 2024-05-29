@@ -5,8 +5,8 @@
 		"command": "cim",
 		"class_name": "Win32_ComputerSystem",
 		"alias": "cim_computer",
-		"check_interval": 300,
-		"stale_timeout": 900,
+		"check_interval": 1200,
+		"stale_timeout": 3600,
 		"tag_properties": [
 			"BootupState",
 			"DNSHostName",
@@ -24,8 +24,8 @@
 		"command": "cim",
 		"class_name": "Win32_OperatingSystem",
 		"alias": "cim_os",
-		"check_interval": 300,
-		"stale_timeout": 900,
+		"check_interval": 600,
+		"stale_timeout": 1800,
 		"tag_properties": [
 			"Caption",
 			"OSArchitecture",
@@ -56,8 +56,8 @@
 			"DriveType",
 			"Description"
 		],
-		"check_interval": 300,
-		"stale_timeout": 900,
+		"check_interval": 600,
+		"stale_timeout": 1800,
 		"metrics": [
 			"FreeSpace",
 			"Size"
@@ -70,8 +70,8 @@
 		"class_name": "Win32_PerfRawData_PerfOS_Processor",
 		"alias": "cim_perfcpu",
 		"tag_properties": [ "Name" ],
-		"check_interval": 60,
-		"stale_timeout": 180,
+		"check_interval": 120,
+		"stale_timeout": 3600,
 		"metrics": [
 			"C1TransitionsPersec",
 			"C2TransitionsPersec",
@@ -115,8 +115,8 @@
 		"class_name": "Win32_PerfRawData_PerfDisk_PhysicalDisk",
 		"alias": "cim_perfdisk",
 		"tag_properties": [ "Name" ],
-		"check_interval": 60,
-		"stale_timeout": 180,
+		"check_interval": 600,
+		"stale_timeout": 1800,
 		"metrics": [
 			"AvgDiskBytesPerRead",
 			"AvgDiskBytesPerRead_Base",
@@ -160,8 +160,8 @@
 		"class_name": "Win32_PerfRawData_Tcpip_NetworkInterface",
 		"alias": "cim_perfnic",
 		"tag_properties": [ "Name" ],
-		"check_interval": 60,
-		"stale_timeout": 180,
+		"check_interval": 600,
+		"stale_timeout": 1800,
 		"metrics": [
 			"BytesReceivedPersec",
 			"BytesSentPersec",
@@ -232,8 +232,8 @@
 		"class_name": "Win32_PerfRawData_TermService_TerminalServicesSession",
 		"alias": "cim_perftssession",
 		"tag_properties": [ "Name" ],
-		"check_interval": 300,
-		"stale_timeout": 900,
+		"check_interval": 600,
+		"stale_timeout": 1800,
 		"metrics": [
 			"HandleCount",
 			"PageFaultsPersec",
@@ -290,8 +290,8 @@
 		"command": "cim",
 		"class_name": "Win32_Service",
 		"alias": "cim_service",
-		"check_interval": 300,
-		"stale_timeout": 900,
+		"check_interval": 600,
+		"stale_timeout": 1800,
 		"tag_properties": [
 			"Caption",
 			"DisplayName",
@@ -318,8 +318,8 @@
 		"command": "cim_certificates",
 		"alias": "cim_certificates",
 		"tag_properties": [ "sslcertkeyname" ],
-		"check_interval": 600,
-		"stale_timeout": 1800,
+		"check_interval": 1200,
+		"stale_timeout": 3600,
 		"metrics": [ "ssldaystoexpire" ]
 	},
 	{
