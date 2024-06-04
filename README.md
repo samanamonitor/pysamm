@@ -57,3 +57,11 @@ docker run -idt -v $SAMM_PATH:/usr/local/samm/etc --name samm-server --label sam
 
 # Limits
 After testing SAMM with lots of hosts, we found that it is best to configure less than 3500(190k metrics - 4seconds download) attempts per container. Having more than this number of attempts configured in a single container will cause the download of metrics from prometheus to take too long and it will give up, losing data. It is important to measure the time it takes to poll for the entire metric table from a container to establish how big it can get.
+
+# Server install on Red Hat
+`nmcli connection add type bridge con-name docker-local ifname docker-local stp no
+nmcli connection modify docker-local connection.autoconnect yes
+nmcli connection modify docker-local +ipv4.address "100.100.200.200/32"
+nmcli con modify docker-local ipv4.method 'manual'
+nmcli connection up docker-local
+`
