@@ -32,8 +32,14 @@
 		"type": "sammsnmp.SnmpQuery",
 		"args": {
 			"hostname": { "Fn::ref": [ "instance.address" ] },
-			"community": { "Fn::ref": [ "instance.community" ] },
-			"version": 2,
+			"version":  { "Fn::ref": [ "instance.snmp_version", "" ] },
+			"community": { "Fn::ref": [ "instance.snmp2_community", "" ] },
+			"security_level": { "Fn::ref": [ "instance.snmp3_security_level", "" ] },
+			"security_username": { "Fn::ref": [ "instance.snmp3_username", "" ] },
+			"privacy_protocol": { "Fn::ref": [ "instance.snmp3_privacy_protocol", "" ] },
+			"privacy_password": { "Fn::ref": [ "instance.snmp3_privacy_password", "" ] },
+			"auth_protocol": { "Fn::ref": [ "instance.snmp3_auth_protocol", "" ] },
+			"auth_password": { "Fn::ref": [ "instance.snmp3_auth_password", "" ] },
 			"use_enums": 1,
 			"table": { "Fn::ref": [ "check.table" ] }
 		}
@@ -44,8 +50,14 @@
 		"type": "sammsnmp.SnmpQuery",
 		"args": {
 			"hostname": { "Fn::ref": [ "instance.address" ] },
-			"community": { "Fn::ref": [ "instance.community" ] },
-			"version": 2,
+			"version":  { "Fn::ref": [ "instance.snmp_version", "" ] },
+			"community": { "Fn::ref": [ "instance.snmp2_community", "" ] },
+			"security_level": { "Fn::ref": [ "instance.snmp3_security_level", "" ] },
+			"security_username": { "Fn::ref": [ "instance.snmp3_username", "" ] },
+			"privacy_protocol": { "Fn::ref": [ "instance.snmp3_privacy_protocol", "" ] },
+			"privacy_password": { "Fn::ref": [ "instance.snmp3_privacy_password", "" ] },
+			"auth_protocol": { "Fn::ref": [ "instance.snmp3_auth_protocol", "" ] },
+			"auth_password": { "Fn::ref": [ "instance.snmp3_auth_password", "" ] },
 			"use_enums": 1,
 			"mib_variable_name_list": { "Fn::ref": [ "check.mib_variable_name_list" ] }
 		}
