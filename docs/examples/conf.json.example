@@ -25,5 +25,6 @@
     },
     "poll_time": 5,
     "stale_timeout": 600,
-    "initial_spread": 0.1
+    "initial_spread": 0.1,
+    "max_attempts_per_loop": 1000
 }

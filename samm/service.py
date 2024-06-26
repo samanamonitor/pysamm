@@ -29,6 +29,7 @@ class Service:
 		self.keep_running = self.running_config._valid_config
 		self.attempts_run_in_loop = 0
 		self.loop_time = 0
+		self.max_attempts_per_loop = self.running_config.get("max_attempts_per_loop", 1000)
 
 		self.init_local_metrics()
 		self.init_attempts()
@@ -121,6 +122,9 @@ class Service:
 					self.attempts_run_in_loop += 1
 					log.debug("Running attempt alias=%s instance_name=%s check_name=%s.",
 						attempt.alias, attempt.instance_name, attempt.check_name)
+					if self.attempts_run_in_loop > self.max_attempts_per_loop:
+						log.warning("Max number of attempts per loop reached. All other attempts will be tried in the next loop")
+						return
 			except Exception as e:
 				log.exception("Got error from Attempt.run() : %s - instance=%s check=%s",
 					str(e), attempt.instance_name, attempt.check_name)
