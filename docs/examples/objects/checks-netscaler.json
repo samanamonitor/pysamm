@@ -21,6 +21,21 @@
 	},
 	{
 		"object_type": "check",
+		"name": "snmp_ns_disk",
+		"tag_properties": [
+			"sysHealthDiskName"
+		],
+		"command": "snmp_table",
+		"table": "NS-ROOT-MIB::nsSysHealthDiskTable",
+		"alias": "snmp_nsdisk",
+		"check_interval": 600,
+		"stale_timeout": 1800,
+		"metrics": [
+			"sysHealthDiskPerusage"
+		]
+	},
+	{
+		"object_type": "check",
 		"name": "snmp_netscaler_certkey",
 		"tag_properties": [
 			"sslCertKeyName",
