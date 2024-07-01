@@ -1,23 +1,50 @@
 [
 	{
 		"object_type": "check",
+		"name": "snmp_ns_info",
+		"command": "snmp_vars",
+		"mib_variable_name_list": [
+			"NS-ROOT-MIB::sysBuildVersion",
+			"NS-ROOT-MIB::sysIpAddress",
+			"NS-ROOT-MIB::sysNetmask",
+			"NS-ROOT-MIB::sysGateway",
+			"NS-ROOT-MIB::sysHardwareVersionDesc",
+			"NS-ROOT-MIB::sysCustomID",
+			"NS-ROOT-MIB::sysHighAvailabilityMode",
+			"NS-ROOT-MIB::sysCurMappedIpCount",
+			"NS-ROOT-MIB::sysHardwareSerialNumber",
+			"NS-ROOT-MIB::sysModelId"
+		],
+		"tag_properties": [
+			"sysBuildVersion",
+			"sysIpAddress",
+			"sysNetmask",
+			"sysGateway",
+			"sysHardwareVersionDesc",
+			"sysCustomID",
+			"sysHighAvailabilityMode",
+			"sysHardwareSerialNumber",
+			"sysModelId"
+		],
+		"alias": "snmp_ns_info",
+		"check_interval": 600,
+		"stale_timeout": 1800,
+		"metrics": [
+			"sysCurMappedIpCount"
+		]
+
+	},
+	{
+		"object_type": "check",
 		"name": "snmp_ns",
 		"command": "snmp_vars",
 		"mib_variable_name_list": [
-			"NS-ROOT-MIB::sysHighAvailabilityMode",
 			"NS-ROOT-MIB::resCpuUsage",
 			"NS-ROOT-MIB::resMemUsage",
-			"NS-ROOT-MIB::sysBuildVersion",
-			"NS-ROOT-MIB::sysHardwareVersionDesc",
 			"NS-ROOT-MIB::sysTotConfigChanges",
 			"NS-ROOT-MIB::sysTotSaveConfigs"
 		],
-		"tag_properties": [
-			"sysHighAvailabilityMode",
-			"sysBuildVersion",
-			"sysHardwareVersionDesc"
-		],
-		"alias": "snmp_nsstats",
+		"alias": "snmp_ns_stats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
