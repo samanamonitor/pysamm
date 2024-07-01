@@ -23,6 +23,7 @@
 		"name": "template_netscaler",
 		"checks": [
 			"snmp_ns", 
+			"snmp_ns_disk",
 			"snmp_netscaler_ipstats",
 			"snmp_netscaler_vserver",
 			"snmp_netscaler_certkey"
