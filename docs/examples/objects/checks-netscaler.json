@@ -36,7 +36,7 @@
 	},
 	{
 		"object_type": "check",
-		"name": "snmp_ns",
+		"name": "snmp_ns_stats",
 		"command": "snmp_vars",
 		"mib_variable_name_list": [
 			"NS-ROOT-MIB::resCpuUsage",

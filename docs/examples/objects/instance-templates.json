@@ -22,7 +22,8 @@
 		"object_type": "instance",
 		"name": "template_netscaler",
 		"checks": [
-			"snmp_ns", 
+			"snmp_ns_info",
+			"snmp_ns_stats",
 			"snmp_ns_disk",
 			"snmp_netscaler_ipstats",
 			"snmp_netscaler_vserver",
