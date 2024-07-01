@@ -6,17 +6,25 @@
 		"mib_variable_name_list": [
 			"NS-ROOT-MIB::sysHighAvailabilityMode",
 			"NS-ROOT-MIB::resCpuUsage",
-			"NS-ROOT-MIB::resMemUsage"
+			"NS-ROOT-MIB::resMemUsage",
+			"NS-ROOT-MIB::sysBuildVersion",
+			"NS-ROOT-MIB::sysHardwareVersionDesc",
+			"NS-ROOT-MIB::sysTotConfigChanges",
+			"NS-ROOT-MIB::sysTotSaveConfigs"
 		],
 		"tag_properties": [
-			"sysHighAvailabilityMode"
+			"sysHighAvailabilityMode",
+			"sysBuildVersion",
+			"sysHardwareVersionDesc"
 		],
 		"alias": "snmp_nsstats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
 			"resCpuUsage",
-			"resMemUsage"
+			"resMemUsage",
+			"sysTotConfigChanges",
+			"sysTotSaveConfigs"
 		]
 	},
 	{
