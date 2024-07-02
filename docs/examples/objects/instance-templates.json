@@ -39,7 +39,7 @@
 		"object_type": "instance",
 		"name": "template_netscaler_appfw",
 		"checks": [
-			"snmp_netscaler_appfw"
+			"snmp_ns_appfwstats"
 		],
 		"register": false
 	},
