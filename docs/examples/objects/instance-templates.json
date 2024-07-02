@@ -29,7 +29,7 @@
 			"snmp_ns_vserverstats",
 			"snmp_ns_certkey",
 			"snmp_ns_sslstats",
-			"snmp_ns_httpstats"
+			"snmp_ns_httpstats",
 			"snmp_ns_ifstats",
 			"snmp_ns_aaastats"
 		],
