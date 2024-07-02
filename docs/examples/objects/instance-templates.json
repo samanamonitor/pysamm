@@ -25,9 +25,13 @@
 			"snmp_ns_info",
 			"snmp_ns_stats",
 			"snmp_ns_disk",
-			"snmp_netscaler_ipstats",
-			"snmp_netscaler_vserver",
-			"snmp_netscaler_certkey"
+			"snmp_ns_ipstats",
+			"snmp_ns_vserverstats",
+			"snmp_ns_certkey",
+			"snmp_ns_sslstats",
+			"snmp_ns_httpstats"
+			"snmp_ns_ifstats",
+			"snmp_ns_aaastats"
 		],
 		"register": false
 	},

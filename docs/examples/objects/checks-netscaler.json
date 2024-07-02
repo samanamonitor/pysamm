@@ -78,7 +78,7 @@
 		],
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::nsSysHealthDiskTable",
-		"alias": "snmp_nsdisk",
+		"alias": "snmp_ns_disk",
 		"check_interval": 600,
 		"stale_timeout": 1800,
 		"metrics": [
@@ -87,7 +87,7 @@
 	},
 	{
 		"object_type": "check",
-		"name": "snmp_netscaler_certkey",
+		"name": "snmp_ns_certkey",
 		"tag_properties": [
 			"sslCertKeyName",
 			"sslInputFormat"
@@ -103,7 +103,7 @@
 	},
 	{
 		"object_type": "check",
-		"name": "snmp_netscaler_appfw",
+		"name": "snmp_ns_appfwstats",
 		"tag_properties": [
 			"appfwprofileName",
 			"appfwProfileFullName"
@@ -162,7 +162,7 @@
 	},
 	{
 		"object_type": "check",
-		"name": "snmp_netscaler_vserver",
+		"name": "snmp_ns_vserverstats",
 		"tag_properties": [
 			"vsvrName",
 			"vsvrIpAddress",
@@ -220,7 +220,7 @@
 	},
 	{
 		"object_type": "check",
-		"name": "snmp_netscaler_ipstats",
+		"name": "snmp_ns_ipstats",
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::nsIpStatsGroup",
 		"alias": "snmp_ns_ipstats",
@@ -266,7 +266,7 @@
 	},
 	{
 		"object_type": "check",
-		"name": "snmp_netscaler_sslstats",
+		"name": "snmp_ns_sslstats",
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::nsSslStatsGroup",
 		"alias": "snmp_ns_sslstats",
@@ -285,12 +285,12 @@
 			"sslTotDecFE",
 			"sslTotEnc",
 			"sslTotEncBE",
-			"sslTotEncFE",
+			"sslTotEncFE"
 		]
 	},
 	{
 		"object_type": "check",
-		"name": "snmp_netscaler_httpstats",
+		"name": "snmp_ns_httpstats",
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::nsHttpStatsGroup",
 		"alias": "snmp_ns_httpstats",
@@ -314,7 +314,7 @@
 	},
 	{
 		"object_type": "check",
-		"name": "snmp_netscaler_ifstats",
+		"name": "snmp_ns_ifstats",
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::nsIfStatsTable",
 		"alias": "snmp_ns_ifstats",
@@ -335,10 +335,10 @@
 	},
 	{
 		"object_type": "check",
-		"name": "snmp_netscaler_ifstats",
+		"name": "snmp_ns_aaastats",
 		"command": "snmp_table",
-		"table": "NS-ROOT-MIB::nsIfStatsTable",
-		"alias": "snmp_ns_ifstats",
+		"table": "NS-ROOT-MIB::nsAaaStatsGroup",
+		"alias": "snmp_ns_aaastats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
