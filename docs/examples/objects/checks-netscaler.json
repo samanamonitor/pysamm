@@ -13,7 +13,10 @@
 			"NS-ROOT-MIB::sysHighAvailabilityMode",
 			"NS-ROOT-MIB::sysCurMappedIpCount",
 			"NS-ROOT-MIB::sysHardwareSerialNumber",
-			"NS-ROOT-MIB::sysModelId"
+			"NS-ROOT-MIB::sysModelId",
+			"NS-ROOT-MIB::haCurState",
+			"NS-ROOT-MIB::numPEs",
+			"NS-ROOT-MIB::sslCards"
 		],
 		"tag_properties": [
 			"sysBuildVersion",
@@ -24,7 +27,10 @@
 			"sysCustomID",
 			"sysHighAvailabilityMode",
 			"sysHardwareSerialNumber",
-			"sysModelId"
+			"sysModelId",
+			"haCurState",
+			"numPEs",
+			"sslCards"
 		],
 		"alias": "snmp_ns_info",
 		"check_interval": 600,
@@ -42,7 +48,12 @@
 			"NS-ROOT-MIB::resCpuUsage",
 			"NS-ROOT-MIB::resMemUsage",
 			"NS-ROOT-MIB::sysTotConfigChanges",
-			"NS-ROOT-MIB::sysTotSaveConfigs"
+			"NS-ROOT-MIB::sysTotSaveConfigs",
+			"NS-ROOT-MIB::haTotStateTransitions",
+			"NS-ROOT-MIB::haTimeofLastStateTransition",
+			"NS-ROOT-MIB::haTotStateFail",
+			"NS-ROOT-MIB::haErrSyncFailure",
+			"NS-ROOT-MIB::haNicsMonitorFailed"
 		],
 		"alias": "snmp_ns_stats",
 		"check_interval": 60,
@@ -51,7 +62,12 @@
 			"resCpuUsage",
 			"resMemUsage",
 			"sysTotConfigChanges",
-			"sysTotSaveConfigs"
+			"sysTotSaveConfigs",
+			"haTotStateTransitions",
+			"haTimeofLastStateTransition",
+			"haTotStateFail",
+			"haErrSyncFailure",
+			"haNicsMonitorFailed"
 		]
 	},
 	{
@@ -78,7 +94,7 @@
 		],
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::sslCertKeyTable",
-		"alias": "snmp_nscertkey",
+		"alias": "snmp_ns_certkey",
 		"check_interval": 600,
 		"stale_timeout": 1800,
 		"metrics": [
@@ -94,7 +110,7 @@
 		],
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::appfwProfileTable",
-		"alias": "snmp_nsappfwstats",
+		"alias": "snmp_ns_appfwstats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
@@ -157,7 +173,7 @@
 		],
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::vserverTable",
-		"alias": "snmp_nsvserverstats",
+		"alias": "snmp_ns_vserverstats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
@@ -207,7 +223,7 @@
 		"name": "snmp_netscaler_ipstats",
 		"command": "snmp_table",
 		"table": "NS-ROOT-MIB::nsIpStatsGroup",
-		"alias": "snmp_nsipstats",
+		"alias": "snmp_ns_ipstats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
@@ -246,6 +262,93 @@
 			"ipTotZeroNextHop",
 			"ipTotTtlExpired",
 			"nonIpTotTruncatedPackets"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "snmp_netscaler_sslstats",
+		"command": "snmp_table",
+		"table": "NS-ROOT-MIB::nsSslStatsGroup",
+		"alias": "snmp_ns_sslstats",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"metrics": [
+			"sslTotTransactions",
+			"sslTotSessions",
+			"sslTotExpiredSessions",
+			"sslTotNewSessions",
+			"sslTotRenegSessions",
+			"sslBeTotSessions",
+			"sslCurSessions",
+			"sslTotDec",
+			"sslTotDecBE",
+			"sslTotDecFE",
+			"sslTotEnc",
+			"sslTotEncBE",
+			"sslTotEncFE",
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "snmp_netscaler_httpstats",
+		"command": "snmp_table",
+		"table": "NS-ROOT-MIB::nsHttpStatsGroup",
+		"alias": "snmp_ns_httpstats",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"metrics": [
+			"httpTotGets",
+			"httpTotPosts",
+			"httpTotOthers",
+			"httpTotRxRequestBytes",
+			"httpTotRxResponseBytes",
+			"httpTotTxRequestBytes",
+			"httpTotTxResponseBytes",
+			"httpTotResponses",
+			"httpErrIncompleteRequests",
+			"httpErrIncompleteResponses",
+			"httpErrIncompleteHeaders",
+			"httpErrServerBusy",
+			"httpTotRequests"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "snmp_netscaler_ifstats",
+		"command": "snmp_table",
+		"table": "NS-ROOT-MIB::nsIfStatsTable",
+		"alias": "snmp_ns_ifstats",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"tag_properties": [
+			"ifName"
+		],
+		"metrics": [
+			"ifTotRxBytes",
+			"ifTotRxPkts",
+			"ifTotTxBytes",
+			"ifTotTxPkts",
+			"ifRxCRCErrors",
+			"ifErrPktRx",
+			"ifErrPktTx"
+		]
+	},
+	{
+		"object_type": "check",
+		"name": "snmp_netscaler_ifstats",
+		"command": "snmp_table",
+		"table": "NS-ROOT-MIB::nsIfStatsTable",
+		"alias": "snmp_ns_ifstats",
+		"check_interval": 60,
+		"stale_timeout": 180,
+		"metrics": [
+			"aaaAuthFail",
+			"aaaAuthSuccess",
+			"aaaAuthNonHttpFail",
+			"aaaTotSessions",
+			"aaaCurSessions",
+			"aaaCurICASessions",
+			"aaaCurICAOnlyConn"
 		]
 	}
 ]
