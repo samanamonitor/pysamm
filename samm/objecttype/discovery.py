@@ -44,11 +44,14 @@ class Discovery(SammObject):
 		if not force and time() < self._next_run:
 			return discovered_objects
 		self.reprocess()
-		discovered_objects = list(self.method)
-		log.info("Refreshing discovered objects. %s Objects discovered=%d" % (
-			self.name,
-			len(discovered_objects)))
-		self.schedule()
+		try:
+			discovered_objects = list(self.method)
+			log.info("Refreshing discovered objects. %s Objects discovered=%d" % (
+				self.name,
+				len(discovered_objects)))
+			self.schedule()
+		except Exception as e:
+			log.exception(e)
 		return discovered_objects
 
 	@property
