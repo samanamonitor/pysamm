@@ -16,7 +16,8 @@
 			"NS-ROOT-MIB::sysModelId",
 			"NS-ROOT-MIB::haCurState",
 			"NS-ROOT-MIB::numPEs",
-			"NS-ROOT-MIB::sslCards"
+			"NS-ROOT-MIB::sslCards",
+			"NS-ROOT-MIB::haNicsMonitorFailed"
 		],
 		"tag_properties": [
 			"sysBuildVersion",
@@ -30,7 +31,8 @@
 			"sysModelId",
 			"haCurState",
 			"numPEs",
-			"sslCards"
+			"sslCards",
+			"haNicsMonitorFailed"
 		],
 		"alias": "snmp_ns_info",
 		"check_interval": 600,
@@ -45,6 +47,7 @@
 		"name": "snmp_ns_stats",
 		"command": "snmp_vars",
 		"mib_variable_name_list": [
+			"RFC1213-MIB::sysUpTime",
 			"NS-ROOT-MIB::resCpuUsage",
 			"NS-ROOT-MIB::resMemUsage",
 			"NS-ROOT-MIB::sysTotConfigChanges",
@@ -52,13 +55,13 @@
 			"NS-ROOT-MIB::haTotStateTransitions",
 			"NS-ROOT-MIB::haTimeofLastStateTransition",
 			"NS-ROOT-MIB::haTotStateFail",
-			"NS-ROOT-MIB::haErrSyncFailure",
-			"NS-ROOT-MIB::haNicsMonitorFailed"
+			"NS-ROOT-MIB::haErrSyncFailure"
 		],
 		"alias": "snmp_ns_stats",
 		"check_interval": 60,
 		"stale_timeout": 180,
 		"metrics": [
+			"sysUpTime",
 			"resCpuUsage",
 			"resMemUsage",
 			"sysTotConfigChanges",
@@ -66,8 +69,7 @@
 			"haTotStateTransitions",
 			"haTimeofLastStateTransition",
 			"haTotStateFail",
-			"haErrSyncFailure",
-			"haNicsMonitorFailed"
+			"haErrSyncFailure"
 		]
 	},
 	{
