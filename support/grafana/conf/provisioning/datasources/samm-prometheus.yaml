@@ -22,3 +22,14 @@ datasources:
     jsonData:
       timeout: 60
       maxLines: 1000
+  - uid: "fe37eb96-e778-4098-b04d-bf73e9683d48"
+    orgId: 1
+    name: "SAMM-CONFIG"
+    type: "yesoreyeram-infinity-datasource"
+    url: "http://172.17.0.1/"
+    basicAuth: false
+    basicAuthUser: ""
+    isDefault: false
+    jsonData:
+      global_queries: []
+    readOnly: false

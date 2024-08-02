@@ -5,7 +5,8 @@
 * certificate is mandatory for google authentication
 * edit the file at conf/provisioning/datasources/samm-prometheus.yaml and set the IP address of the prometheus server. If mapping ports to host, use the host IP address and mapped port
 # Start grafana container
-`docker run -d -v /usr/local/samm/grafana/conf:/etc/grafana -v /usr/local/samm/grafana/dashboards:/var/lib/grafana/dashboards -p 3000:3000 --restart unless-stopped --name=grafana grafana/grafana-enterprise`
+`./create-container.sh <path to config>
+`
 
 # Prepare config
 `PROMIP=$(docker inspect prometheus | jq -r ".[0].NetworkSettings.IPAddress")

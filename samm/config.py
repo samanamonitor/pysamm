@@ -96,7 +96,11 @@ class Config():
 	def discover_objects(self):
 		object_definition_list = []
 		for discovery_name, discovery in self._config.get("discoveries", {}).items():
-			object_definition_list += discovery.run()
+			try:
+				object_definition_list += discovery.run()
+			except Exception as e:
+				log.exception(e)
+				continue
 		return object_definition_list
 
 	def process_objects(self, object_definition_list):

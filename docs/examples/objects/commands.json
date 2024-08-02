@@ -28,6 +28,23 @@
 	},
 	{
 		"object_type": "command",
+		"name": "cim_wql",
+		"type": "sammwr.wmi.WMIQuery",
+		"args": {
+			"wql": { "Fn::ref": [ "check.wql" ] },
+			"endpoint": {
+					"Fn::join": [[
+						"http://",
+						{ "Fn::ref": [ "instance.address" ] },
+						":5985/wsman"
+					]]
+				},
+			"username": { "Fn::ref": [ "resources.cim_username" ] },
+			"password": { "Fn::ref": [ "resources.cim_password" ] }
+		}
+	},
+	{
+		"object_type": "command",
 		"name": "snmp_table",
 		"type": "sammsnmp.SnmpQuery",
 		"args": {

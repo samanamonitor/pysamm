@@ -137,6 +137,14 @@
 	},
 	{
 		"object_type": "instance",
+		"name": "template_vdi",
+		"checks": [
+			"cim_perftssession"
+		],
+		"register": false
+	},
+	{
+		"object_type": "instance",
 		"name": "template_citrix_vda",
 		"checks": [
 			"cim_perftssession",
