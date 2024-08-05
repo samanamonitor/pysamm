@@ -411,6 +411,38 @@
 	},
 	{
 		"object_type": "check",
+		"name": "ctx_sessionevent",
+		"command": "odata_ctx_events",
+		"alias": "ctx_sessionevent",
+		"check_interval": 300,
+		"time_property": "ConnectionStateChangeDate",
+		"entity": "Sessions",
+		"expand": "User,Machine",
+		"filter": {
+			"Fn::join": [[
+				"ConnectionStateChangeDate gt DateTime'",
+				{ "Fn::edmsecondsfromnow": [ 300 ] },
+				"'"
+			]]
+		},
+		"tags": {
+			"event_type": "sessionchange",
+			"job": { "Fn::ref": [ "tags.job" ] },
+			"logfile": "ctx_logs"
+		},
+		"tag_property": {
+			"userupn": "User.Upn",
+			"machinednsname": "Machine.DnsName",
+			"sessionkey": "SessionKey",
+			"connectionstate": "ConnectionState"
+		},
+		"stale_timeout": 900,
+		"metrics": [
+			"ls_events"
+		]
+	},
+	{
+		"object_type": "check",
 		"name": "ctx_machinefail",
 		"alias": "ctx_machinefail",
 		"command": "odata_ctx_director",
