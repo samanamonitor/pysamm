@@ -31,9 +31,9 @@ class Attempt:
 		self.tag_properties = config.get(("checks", check_name, "tag_properties"), \
 					resolve_vars=True, default=[])
 		self.base_tags = {}
-		self.base_tags.update(config.get(("tags"), default={}))
-		self.base_tags.update(config.get(("instances", instance_name, "tags"), default={}))
-		self.base_tags.update(config.get(("checks", check_name, "tags"), default={}))
+		self.base_tags.update(config.get(("tags"), default={}, resolve_vars=True))
+		self.base_tags.update(config.get(("instances", instance_name, "tags"), default={}, resolve_vars=True))
+		self.base_tags.update(config.get(("checks", check_name, "tags"), default={}, resolve_vars=True))
 		self.base_tags['instance'] = self.instance_name
 		self.value_mappings = self.check.get('value_mappings', {})
 		self.instance_metric_data = instance_metric_data
