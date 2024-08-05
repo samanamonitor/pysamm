@@ -117,9 +117,7 @@
 		"checks": [
 			"ctx_machines",
 			"ctx_sessions",
-			"ctx_login",
-			"ctx_loginfail",
-			"ctx_logoff",
+			"ctx_sessionevent",
 			"ctx_machinefail",
 			"ctx_machinefaillog",
 			"ctx_machineinfail"
