@@ -23,6 +23,8 @@ class LokiStream:
 			'ls_events': 0,
 			'ls_pull_process_time': 0,
 			'ls_push_process_time': 0,
+			'ls_push_last_timestamp': 0,
+			'ls_push_status_code': 0
 		}
 
 	def pull(self):
@@ -55,7 +57,11 @@ class LokiStream:
 		log.debug(p)
 		self.answer = requests.post(self.loki_url, data=p, headers=headers)
 		log.debug(self.answer.text)
+
 		self.metrics['ls_push_process_time'] = process_time() - s
+		self.metrics['ls_push_status_code'] = self.answer.status_code
+		self.metrics['ls_push_last_timestamp'] = time.time() * 1000
+
 
 	def __iter__(self):
 		self.pull()
