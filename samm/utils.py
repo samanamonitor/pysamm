@@ -60,7 +60,7 @@ class LokiStream:
 
 		self.metrics['ls_push_process_time'] = process_time() - s
 		self.metrics['ls_push_status_code'] = self.answer.status_code
-		self.metrics['ls_push_last_timestamp'] = time.time() * 1000
+		self.metrics['ls_push_last_timestamp'] = time() * 1000
 
 
 	def __iter__(self):
