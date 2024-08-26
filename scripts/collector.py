@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from samm.config import Config
 from samm.otlpattempt import start_exporter, collecting
 import logging
