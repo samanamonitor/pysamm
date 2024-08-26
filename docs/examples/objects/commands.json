@@ -1,6 +1,18 @@
 [
 	{
 		"object_type": "command",
+		"name": "dummy_up",
+		"type": "samm.dummymodule.DummyModuleUp",
+		"args": {}
+	},
+	{
+		"object_type": "command",
+		"name": "dummy_down",
+		"type": "samm.dummymodule.DummyModuleDown",
+		"args": {}
+	},
+	{
+		"object_type": "command",
 		"name": "ping",
 		"type": "samm.pingmodule.PingModule",
 		"args": {
