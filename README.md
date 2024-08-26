@@ -65,3 +65,9 @@ nmcli connection modify docker-local +ipv4.address "100.100.200.200/32"
 nmcli con modify docker-local ipv4.method 'manual'
 nmcli connection up docker-local
 `
+
+# Developer environment
+`docker build --tag sammdev --no-cache .
+docker run -idt --name sammdev -v $(pwd):/usr/src/pysamm sammdev
+
+`
