@@ -18,7 +18,8 @@ if __name__ == "__main__":
         packages=find_packages(include=['samm', 'samm.*']),
         scripts=[
             'scripts/server.py',
-            'scripts/scheduler.py'
+            'scripts/scheduler.py',
+            'scripts/collector.py'
             ],
         data_files=[
             ('/usr/local/samm/etc', [
