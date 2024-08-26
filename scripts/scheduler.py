@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+from samm.scheduler import Scheduler
 import sys
 import os
 import logging
