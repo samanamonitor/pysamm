@@ -3,9 +3,9 @@ requires = [ "setuptools>=40.8.0" ]
 
 [project]
 dependencies = [
-	"flask"
-	"icmplib"
-	"python-ldap"
+	"flask",
+	"icmplib",
+	"python-ldap",
 	"requests"
 	]
 
