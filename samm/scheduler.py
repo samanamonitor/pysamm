@@ -4,6 +4,7 @@ import pika
 import json
 import time
 import logging
+import sys
 
 log = logging.getLogger(__name__)
 
@@ -72,7 +73,7 @@ class Scheduler:
 			log.debug(" [x] Queued attempt(%s)'" % (attempt.name))
 
 	def run(self):
-		scheduler.reload_config()
-		scheduler.init_attempts()
-		scheduler.process_loop()
+		self.reload_config()
+		self.init_attempts()
+		self.process_loop()
 
