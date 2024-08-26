@@ -16,7 +16,10 @@ if __name__ == "__main__":
         name='samm',
         version=__version__,
         packages=find_packages(include=['samm', 'samm.*']),
-        scripts=['scripts/server.py'],
+        scripts=[
+            'scripts/server.py',
+            'scripts/scheduler.py'
+            ],
         data_files=[
             ('/usr/local/samm/etc', [
                 'docs/examples/conf.json.example',
