@@ -3,6 +3,7 @@ requires = [ "setuptools>=40.8.0" ]
 
 [project]
 name = "samm"
+dynamic = ["version"]
 dependencies = [
 	"flask",
 	"icmplib",
