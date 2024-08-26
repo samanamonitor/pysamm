@@ -40,6 +40,7 @@
 	"name": "template_other",
 	"object_type": "instance",
 	"register": false,
+	"stale_timeout": 60,
 	"tags": {},
 	"up_check": null,
 	"up_check_name": null,
