@@ -9,8 +9,13 @@ class Check(SammObject):
 		self._config_section = "checks"
 		self._command = None
 
+	def _set_defaults(self):
+		_ = self._attributes.setdefault("stale_timeout", self._config.get("default_stale_timeout"))
+		_ = self._attributes.setdefault("check_interval", self._config.get("default_check_interval"))
+
 	def post_process(self):
 		super(Check, self).post_process()
+		self._set_defaults()
 		command_name = self._attributes['command']
 		command = self._config.get(("commands", command_name))
 		if command is None:
