@@ -27,6 +27,7 @@ class Instance(SammObject):
 		_ = self._attributes.setdefault("checks", [])
 		_ = self._attributes.setdefault("check_if_down", True)
 		_ = self._attributes.setdefault("up_check", None)
+		_ = self._attributes.setdefault("stale_timeout", self._config.get("default_stale_timeout"))
 
 	def post_process(self):
 		'''
