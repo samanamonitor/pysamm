@@ -82,6 +82,7 @@
 					"up_check": null,
 					"name": "template_windows",
 					"register": false,
+					"stale_timeout": 60,
 					"tags": {},
 					"_checks": {
 						"windows_check": {
