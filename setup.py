@@ -17,9 +17,15 @@ if __name__ == "__main__":
         version=__version__,
         packages=find_packages(include=['samm', 'samm.*']),
         scripts=['scripts/server.py'],
-        data_files=[('/usr/local/samm/etc', ['docs/examples/conf.json.example', 'docs/examples/resources.json.example']),
+        data_files=[
+            ('/usr/local/samm/etc', [
+                'docs/examples/conf.json.example',
+                'docs/examples/resources.json.example']
+            ),
             ('/usr/local/samm/etc/objects', 
                 list(map(lambda x: 'docs/examples/objects/' + x, os.listdir('docs/examples/objects/')))
-)],
+            ),
+            ('/usr/share/samm', [ 'requirements.txt' ] )
+        ],
         install_requires=[ ]
     )
