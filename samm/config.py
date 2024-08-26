@@ -58,6 +58,8 @@ class Config():
 		if not isinstance(self._config.get('object_files'), list):
 			raise TypeError("Parameter object_files must be a list.")
 		_ = self._config.setdefault("tags", {}).setdefault("job", "samm")
+		_ = self._config.setdefault("default_stale_timeout", 60)
+		_ = self._config.setdefault("default_check_interval", 60)
 
 	def load_objects(self):
 		object_definition_list = []
