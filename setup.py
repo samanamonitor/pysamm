@@ -30,5 +30,10 @@ if __name__ == "__main__":
             ),
             ('/usr/share/samm', [ 'requirements.txt' ] )
         ],
-        install_requires=[ ]
+        install_requires=[ 
+            "flask"
+            "icmplib"
+            "python-ldap"
+            "requests"
+        ]
     )
