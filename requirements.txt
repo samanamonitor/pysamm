@@ -2,3 +2,4 @@ flask
 icmplib
 python-ldap
 requests
+opentelemetry-exporter-prometheus-remote-write

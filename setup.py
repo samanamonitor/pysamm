@@ -36,6 +36,7 @@ if __name__ == "__main__":
             "icmplib",
             "python-ldap",
             "requests",
-            "pika"
+            "pika",
+            "opentelemetry-exporter-prometheus-remote-write"
         ]
     )

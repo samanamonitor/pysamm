@@ -9,6 +9,7 @@ dependencies = [
 	"icmplib",
 	"python-ldap",
 	"requests",
-	"pika"
+	"pika",
+	"opentelemetry-exporter-prometheus-remote-write"
 	]
 
