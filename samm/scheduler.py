@@ -71,7 +71,7 @@ class Scheduler:
 			if attempt is None:
 				log.error(f"Attempt {attempt_name} is not defined")
 				return
-			if value == 0:
+			if value == 0 and attempt.instance.is_alive == INSTANCE_UP:
 				attempt.instance.is_alive = INSTANCE_DOWN
 				for check_name in attempt.instance.checks:
 					attempt = self.attempt_dict.get(f"{attempt.instance.name}.{check_name}")
@@ -79,7 +79,7 @@ class Scheduler:
 						if attempt.instance.up_check_name == attempt.check.name:
 							continue
 						attempt.schedule(math.inf)
-			else:
+			elif value == 1 and attempt.instance.is_alive != INSTANCE_UP:
 				attempt.instance.is_alive = INSTANCE_UP
 				for check_name in attempt.instance.checks:
 					attempt = self.attempt_dict.get(f"{attempt.instance.name}.{check_name}")
