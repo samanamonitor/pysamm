@@ -1,8 +1,10 @@
-from .attempt import Attempt
-from samm.config import Config
-from samm.utils import FilterFunction
+from .objecttype.instance import INSTANCE_UP, INSTANCE_DOWN, INSTANCE_PENDING
+from .utils import FilterFunction
+from .config import Config
+from .attempt import Attempt, log as attempt_log
 import math
 import logging
+import time
 from opentelemetry import metrics
 from opentelemetry.exporter.prometheus_remote_write import (
 	PrometheusRemoteWriteMetricsExporter,
@@ -11,21 +13,23 @@ from opentelemetry.metrics import Observation
 from opentelemetry.sdk.metrics import MeterProvider
 from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
 
-poll_interval = 5000
 log = logging.getLogger(__name__)
-collecting=False
 
 class OTLPAttempt(Attempt):
-	def __init__(self, *args, external_scheduler=False, **kwargs):
+	def __init__(self, *args, external_scheduler=False, up_check_callback=None, done_callback=None, collector=None, **kwargs):
+		self._collector = collector
+		self._external_scheduler = external_scheduler
+		self._pending_metrics = []
+		self.up_check_callback = up_check_callback
+		self.done_callback = done_callback
+		self.collecting = False
+
 		super(OTLPAttempt, self).__init__(*args, **kwargs)
-		self._external_scheduler = external_scheduler
 		meter = metrics.get_meter(f"{self.name}")
-		self._external_scheduler = external_scheduler
 		if self._external_scheduler:
 			self.schedule(math.inf)
 		else:
 			self.schedule(0)
-		self._pending_metrics = []
 
 		for metric_name in self.check.metrics:
 			name = f"{self.check.name}_{metric_name.lower()}"
@@ -38,9 +42,20 @@ class OTLPAttempt(Attempt):
 				description=description)
 			log.debug(f"Created counter for {self.name}.{metric_name}")
 
-
 	def collect(self):
+		if self._collector is None:
+			log.debug(f"Collector not defined")
+			return False
+		if self._collector.collecting:
+			log.debug(f"This collector is busy collecting. Rejecting request.")
+			return False
+		if self.next_run - time.time() < 0:
+			log.debug(f"Attempt {self.name} is already due or collecting.")
+			return False
+		self.collecting = True
+		self._collector.collecting = True
 		self.schedule(0)
+		return True
 
 	def create_metric_tags(self, metric_data):
 		metric_tags = self.base_tags.copy()
@@ -69,19 +84,16 @@ class OTLPAttempt(Attempt):
 		return value
 
 	def observable_callback(self, metric_name, options):
-		global collecting
 		observations = []
 
 		if len(self._pending_metrics) == 0:
 			if not self.due():
-				collecting = False
 				return []
 			if self._external_scheduler:
 				self.schedule(math.inf)
 			else:
 				self.schedule_next()
 			log.debug(f"Importing metrics from {self.name}")
-			collecting = True
 			self._cache = list(self.iterator)
 			self._pending_metrics = set(self.check.metrics)
 
@@ -97,30 +109,69 @@ class OTLPAttempt(Attempt):
 				log.error("An error occurred processing %s.instance_metric_data. %s", self.name, e)
 				log.exception(e)
 
+		if self.check.name == self.instance.up_check_name and \
+				metric_name == self.instance.up_metric_name:
+			value = self._cache[0].get(metric_name, 0)
+			if callable(self.up_check_callback):
+				self.up_check_callback(self.name, value)
+			if value == 0:
+				self.instance.is_alive = INSTANCE_DOWN
+			else:
+				self.instance.is_alive = INSTANCE_UP
+
 		log.debug("Exported attempt %s.%s %d observations." % (self.name, metric_name, len(observations)))
 		self._pending_metrics.remove(metric_name)
+		if len(self._pending_metrics) == 0 and self.collecting:
+			self.collecting = False
+			self._collector.collecting = False
+			if callable(self.done_callback):
+				self.done_callback(self.name)
 		return observations
 
-def start_exporter(config, attempt_dict, external_scheduler=False):
-	if not isinstance(config, Config):
-		raise TypeError("Config has not been initialized")
-	log.setLevel(config.get("debug"))
+def start_exporter(collector, up_check_callback=None, done_callback=None, external_scheduler=False):
+	config = collector.config
+	attempt_dict = collector.attempt_dict
+	#log.setLevel(config.get("debug"))
+	#attempt_log.setLevel(config.get("debug"))
 
 	instance_metric_data = {}
 	for _, instance in config.get("instances").items():
 		if not instance.register:
 			continue
+		meter = metrics.get_meter(instance.name)
+
+
+		metric_tags = {}
+		metric_tags.update(config.get(("tags"), default={}, resolve_vars=True))
+		metric_tags.update(config.get(("instances", instance.name, "tags"), default={}, resolve_vars=True))
+		metric_tags['instance'] = instance.name
+
+		def info_callback(metric_tags, options):
+			log.debug("host_info %s" % metric_tags)
+			return [Observation(1, metric_tags)]
+
+		callback_func=lambda x, metric_tags=metric_tags: \
+			info_callback(metric_tags, x)
+		description = f"This is a counter for {instance.name}"
+		meter.create_observable_counter(
+			"instance_info",
+			callbacks=[callback_func],
+			description=description)
 		for check_name in instance.checks:
 			a = OTLPAttempt(config, 
 					instance.name, 
 					check_name, 
 					instance_metric_data, 
-					external_scheduler=external_scheduler
+					external_scheduler=external_scheduler,
+					up_check_callback=up_check_callback,
+					done_callback=done_callback,
+					collector=collector
 					)
 			_ = attempt_dict.setdefault(a.name, a)
 
 	_exporter_url = config.get("resources.prometheus_remote_write.url")
 	_org_id = config.get("resources.prometheus_remote_write.org_id")
+	_export_interval = config.get("resources.prometheus_remote_write.export_interval", default=5000)
 	if _exporter_url is None:
 		raise TypeError("Parameter prometheus_remote_write in resources file is not defined")
 	exporter = PrometheusRemoteWriteMetricsExporter(
@@ -129,6 +180,6 @@ def start_exporter(config, attempt_dict, external_scheduler=False):
 			'X-Scope-OrgID': _org_id
 		},
 	)
-	reader = PeriodicExportingMetricReader(exporter, poll_interval)
+	reader = PeriodicExportingMetricReader(exporter, _export_interval)
 	provider = MeterProvider(metric_readers=[reader])
 	metrics.set_meter_provider(provider)
