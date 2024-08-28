@@ -10,3 +10,5 @@ test1/*
 support/prometheus.yml
 samm1
 sammdisc
+.DS_Store
+python3.*
