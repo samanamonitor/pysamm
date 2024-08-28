@@ -149,7 +149,7 @@ class Attempt:
 		else:
 			r = 0
 		self.next_run = time.time() + seconds + r
-		log.debug("Scheduling %s in %ss", self.name, str(int(self.next_run - time.time())))
+		log.debug("Scheduling %s in %ss", self.name, str(self.next_run - time.time()))
 
 	def __repr__(self):
 		run_in_seconds = self.next_run - time.time()
