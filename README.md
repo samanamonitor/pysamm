@@ -68,6 +68,6 @@ nmcli connection up docker-local
 
 # Developer environment
 `docker build --tag sammdev --no-cache .
-docker run -idt --name sammdev -v $(pwd):/usr/src/pysamm sammdev
-
+docker run -it --rm -v $(pwd):/usr/src/pysamm sammdev
+python3 -m pytest
 `
