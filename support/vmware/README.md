@@ -1,0 +1,1 @@
+`docker run -idt --rm  -p 9272:9272 -v $(pwd):/samm -e VSPHERE_IGNORE_SSL=True -e VSPHERE_SPECS_SIZE=2000 --name vmware_exporter pryorda/vmware_exporter -c /samm/config.yml`
