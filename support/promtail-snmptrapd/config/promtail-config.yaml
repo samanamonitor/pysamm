@@ -1,0 +1,32 @@
+clients:
+  - url: http://192.168.69.11:3100/loki/api/v1/push
+scrape_configs:
+  - job_name: snmptrapd
+    pipeline_stages:
+      - regex:
+          expression: "(?s)(?P<snmptrap>SNMPTRAP) "
+      - labels:
+          snmptrap:
+      - match:
+          selector: '{snmptrap="SNMPTRAP"}'
+          stages:
+          - regex:
+              expression: '^SNMPTRAP (?P<timestamp>\S+) RFC1213-MIB::sysUpTime.0 = (?P<uptime>\S+)\tSNMPv2-MIB::snmpTrapOID.0 = (?P<trapoid>\S+)\t'
+          - timestamp:
+              source: timestamp
+              format: Unix
+          - labels:
+              trapoid:
+          - replace:
+              expression: '( = )'
+              replace: '='
+          - replace:
+              expression: '(\t+)'
+              replace: " "
+
+
+    static_configs: 
+      - targets:
+        - localhost
+        labels:
+          __path__: /mnt/logs/*.log
