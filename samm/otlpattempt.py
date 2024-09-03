@@ -31,6 +31,32 @@ class OTLPAttempt(Attempt):
 		else:
 			self.schedule(0)
 
+		# Info observable counters
+		def info_callback(metric_tags, options):
+			if not self.due():
+				return []
+			log.debug(f"   -- Sending info {self.name}.")
+			return [Observation(1, metric_tags)]
+
+		callback_func=lambda x, metric_tags=self.base_tags: \
+			info_callback(metric_tags, x)
+		description = f"This is an info counter for {self.name}"
+		meter.create_observable_counter(
+			f"{self.check.name}_info",
+			callbacks=[callback_func],
+			description=description)
+
+		# UP observable counter
+		if self.check.name == self.instance.up_check_name:
+			callback_func=lambda x, metric_name="up": \
+				self.observable_callback(metric_name, x)
+			description = "Instance reachable"
+			meter.create_observable_counter(
+				f"up",
+				callbacks=[callback_func],
+				description=description)
+
+		# All other observable counters
 		for metric_name in self.check.metrics:
 			name = f"{self.check.name}_{metric_name.lower()}"
 			callback_func=lambda x, metric_name=metric_name: \
@@ -94,8 +120,22 @@ class OTLPAttempt(Attempt):
 			else:
 				self.schedule_next()
 			log.debug(f"Importing metrics from {self.name}")
-			self._cache = list(self.iterator)
-			self._pending_metrics = set(self.check.metrics)
+			try:
+				self._cache = list(self.iterator)
+				self._pending_metrics = set(self.check.metrics)
+				if self.instance.up_check_name == self.check.name:
+					self._pending_metrics.add("up")
+					for i in self._cache:
+						i["up"] = i[self.instance.up_metric_name]
+			except Exception as e:
+				log.error("An error occurred processing %s.instance_metric_data. %s", self.name, e)
+				#log.exception(e)
+				if self.collecting:
+					self.collecting = False
+					self._collector.collecting = False
+					if callable(self.done_callback):
+						self.done_callback(self.name)
+				return []
 
 		for metric_data in self._cache:
 
@@ -107,7 +147,7 @@ class OTLPAttempt(Attempt):
 
 			except Exception as e:
 				log.error("An error occurred processing %s.instance_metric_data. %s", self.name, e)
-				log.exception(e)
+				#log.exception(e)
 
 		if self.check.name == self.instance.up_check_name and \
 				metric_name == self.instance.up_metric_name:
@@ -183,3 +223,89 @@ def start_exporter(collector, up_check_callback=None, done_callback=None, extern
 	reader = PeriodicExportingMetricReader(exporter, _export_interval)
 	provider = MeterProvider(metric_readers=[reader])
 	metrics.set_meter_provider(provider)
+
+#### This code will replace the previous code eventually
+class OTLPExporter:
+	def __init__(self, collector, up_check_callback=None, done_callback=None, external_scheduler=False):
+		self.collector = collector
+		self.config = self.collector.config
+		log.setLevel(config.get("debug"))
+		#attempt_log.setLevel(config.get("debug"))
+		self._exporter_url = config.get("resources.prometheus_remote_write.url")
+		self._org_id = config.get("resources.prometheus_remote_write.org_id")
+		self._export_interval = config.get("resources.prometheus_remote_write.export_interval", default=5000)
+		self._up_check_callback = up_check_callback
+		self._done_callback = done_callback
+		self._external_scheduler = external_scheduler
+		if self._exporter_url is None:
+			raise TypeError("Parameter prometheus_remote_write in resources file is not defined")
+		exporter = PrometheusRemoteWriteMetricsExporter(
+			endpoint=self._exporter_url,
+			headers={
+				'X-Scope-OrgID': _org_id
+			},
+		)
+		reader = PeriodicExportingMetricReader(exporter, self._export_interval)
+		self._provider = MeterProvider(metric_readers=[reader])
+
+	def start(self):
+		metrics.set_meter_provider(self._provider)
+		instance_metric_data = {}
+		for _, instance in self.config.get("instances").items():
+			if not instance.register:
+				continue
+			for check_name in instance.checks:
+
+				a = OTLPAttempt(config, 
+						instance.name, 
+						check_name, 
+						instance_metric_data, 
+						external_scheduler=self._external_scheduler,
+						up_check_callback=self._up_check_callback,
+						done_callback=self._done_callback,
+						collector=self.collector
+						)
+				if a._external_scheduler:
+					a.schedule(math.inf)
+				else:
+					a.schedule(0)
+				_ = self.collector.attempt_dict.setdefault(a.name, a)
+
+				meter = metrics.get_meter(f"{a.name}")
+				# Info observable counters
+				def info_callback(attempt, options):
+					if not attempt.due():
+						return []
+					log.debug(f"   -- Sending info {attempt.name}.")
+					return [Observation(1, attempt.base_tags)]
+
+				callback_func=lambda x, attempt=a: \
+					info_callback(attempt, x)
+				description = f"This is an info counter for {a.name}"
+				meter.create_observable_counter(
+					f"{a.check.name}_info",
+					callbacks=[callback_func],
+					description=description)
+
+				# UP observable counter
+				if a.check.name == a.instance.up_check_name:
+					callback_func=lambda x, metric_name="up": \
+						a.observable_callback(metric_name, x)
+					description = "Instance reachable"
+					meter.create_observable_counter(
+						f"up",
+						callbacks=[callback_func],
+						description=description)
+
+				# All other observable counters
+				for metric_name in a.check.metrics:
+					name = f"{a.check.name}_{metric_name.lower()}"
+					callback_func=lambda x, metric_name=metric_name: \
+						a.observable_callback(metric_name, x)
+					description = f"This is a counter for {a.name}.{metric_name}"
+					meter.create_observable_counter(
+						name,
+						callbacks=[callback_func],
+						description=description)
+					log.debug(f"Created counter for {a.name}.{metric_name}")
+
