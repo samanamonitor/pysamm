@@ -22,22 +22,33 @@ class Collector:
 		self.attempt_dict = {}
 		self.collecting = False
 		self.connection = None
+		self._delivery_tag = None
 
 	def on_open(self, connection):
 		connection.channel(on_open_callback=self.on_channel_open)
+
+	def on_open_error_callback(self, connection, err):
+		log.exception(err)
+		connectin.close()
+		sys.exit(1)
+
+	def on_close_callback(self, connectin, err):
+		log.exception(err)
+		connection.close()
+		sys.exit(0)
 
 	def on_channel_open(self, channel):
 
 		def message_callback(ch, method, properties, body):
 			key = json.loads(body)
 			log.debug(f" [x] Received {body} {method.delivery_tag}")
+
 			if not self.attempt_dict[key].collect():
 				log.debug(f" [x] Rejected message {body} {method.delivery_tag}")
 				ch.basic_reject(delivery_tag = method.delivery_tag)
 				return
 			log.debug(f" [x] Accepted {body} {method.delivery_tag}")
-			ch.basic_ack(delivery_tag = method.delivery_tag)
-			self.connection.ioloop.add_callback(self.connection.ioloop.stop)
+			self._delivery_tag = method.delivery_tag
 
 		def up_check_callback(instance_name, value):
 			channel.basic_publish(exchange='', 
@@ -49,12 +60,14 @@ class Collector:
 			log.debug(" [x] Queued instance_up(%s=%s)'" % (instance_name, str(value)))
 
 		def done_callback(data):
+			channel.basic_ack(delivery_tag = self._delivery_tag)
 			channel.basic_publish(exchange='', 
 					routing_key=self._mq_queue_report_done, 
 					body=json.dumps({
 						"attempt_name": data
 						}))
 			log.debug(f" [v] Collecting done by {str(data)}")
+
 
 		channel.queue_declare(queue=self._mq_queue_name,
 			arguments={'x-message-ttl' : self._mq_queue_ttl})
@@ -65,20 +78,21 @@ class Collector:
 		channel.queue_declare(queue=self._mq_queue_report_done,
 			arguments={'x-message-ttl' : self._mq_queue_ttl})
 
+		channel.basic_qos(prefetch_count=1)
 		channel.basic_consume(queue=self._mq_queue_name, on_message_callback=message_callback, auto_ack=False)
 		start_exporter(self, up_check_callback=up_check_callback, done_callback=done_callback, external_scheduler=True)
 
 	def run(self):
 		self.connection = pika.SelectConnection(
 			pika.ConnectionParameters(host=self._mq_server), 
-			on_open_callback=self.on_open)
+			on_open_callback=self.on_open, on_open_error_callback=self.on_open_error_callback, 
+			on_close_callback=self.on_close_callback)
 		log.info(' [*] Waiting for messages. To exit press CTRL+C')
 		try:
-			while True:
-				if not self.collecting:
-					self.connection.ioloop.start()
-				time.sleep(0.5)
+			self.connection.ioloop.start()
 		except KeyboardInterrupt:
-			connection.close()
+			self.connection.close()
 			log.info(' [*] Consumer shutdown')
+		except Exception as e:
+			log.exception(e)
 
