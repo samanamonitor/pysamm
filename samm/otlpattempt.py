@@ -5,6 +5,9 @@ from .attempt import Attempt, log as attempt_log
 import math
 import logging
 import time
+import socket
+import os
+import resource
 from opentelemetry import metrics
 from opentelemetry.exporter.prometheus_remote_write import (
 	PrometheusRemoteWriteMetricsExporter,
@@ -173,6 +176,51 @@ def start_exporter(collector, up_check_callback=None, done_callback=None, extern
 	attempt_dict = collector.attempt_dict
 	#log.setLevel(config.get("debug"))
 	#attempt_log.setLevel(config.get("debug"))
+
+
+	meter = metrics.get_meter("collector")
+	exporter_tags = config.get("tags").copy()
+	exporter_tags['pid'] = os.getpid()
+	exporter_tags['instance'] = socket.gethostname()
+
+	def exporter_process_time_callback(options):
+		return [Observation(time.process_time(), exporter_tags)]
+	description = f"Collector cpu time"
+	meter.create_observable_counter(
+		"collector_cpu_total",
+		callbacks=[exporter_process_time_callback],
+		description=description)
+
+	def collection_count_callback(options):
+		return [Observation(collector.collection_count, exporter_tags)]
+	description = f"Collector collections count"
+	meter.create_observable_counter(
+		"collector_collections_total",
+		callbacks=[collection_count_callback],
+		description=description)
+
+	def process_memory_callback(options):
+		return [Observation(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss, exporter_tags)]
+	description = f"Collector memory total"
+	meter.create_observable_counter(
+		"collector_memory_total",
+		callbacks=[process_memory_callback],
+		description=description)
+
+	def process_memory_callback(options):
+		u = exporter_tags.copy()
+		u['type'] = 'user'
+		s = exporter_tags.copy()
+		s['type'] = 'system'
+		return [
+			Observation(resource.getrusage(resource.RUSAGE_SELF).ru_utime, u),
+			Observation(resource.getrusage(resource.RUSAGE_SELF).ru_stime, s)
+			]
+	description = f"Collector cpu time"
+	meter.create_observable_counter(
+		"collector_cpu_time",
+		callbacks=[process_memory_callback],
+		description=description)
 
 	instance_metric_data = {}
 	for _, instance in config.get("instances").items():
