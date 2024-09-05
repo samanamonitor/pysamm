@@ -11,7 +11,12 @@ class Config():
 		self.config_file = config_file
 		self.modules = {}
 		self._config = None
+		self._config_id = 0
 		log.debug("Config object created with file %s", config_file)
+
+	@property
+	def id(self):
+		return self._config_id
 
 	def reload(self):
 		object_definition_list = []
@@ -24,6 +29,8 @@ class Config():
 		return self._valid_config
 
 	def load_base(self):
+		self._config_id = 0
+		self._config_id += os.path.getmtime(self.config_file)
 		with open(self.config_file) as f:
 			log.debug("Config file %s opened for loading.", self.config_file)
 			try:
@@ -48,6 +55,7 @@ class Config():
 			raise KeyError("missing resource_file")
 
 		self.resource_file_path = os.path.join(self._config['config_dir'], self._config['resource_file'])
+		self._config_id += os.path.getmtime(self.resource_file_path)
 		with open(self.resource_file_path) as f:
 			try:
 				self._config["resources"] = json.load(f)
@@ -73,6 +81,7 @@ class Config():
 	def load_object_file(self, filename):
 		c=None
 		object_definition_list = []
+		self._config_id += os.path.getmtime(filename)
 		with open(filename) as f:
 			try:
 				c=json.load(f)
