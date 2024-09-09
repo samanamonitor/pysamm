@@ -45,7 +45,7 @@ class Collector:
 				raise Exception(f"Invalid order. Missing 'type'. {body}")
 			order_type = order.pop('type')
 			config_id = order.pop('config_id', None)
-			if config_id != self.config._config_id:
+			if config_id != str(self.config._config_id):
 				log.warning(f"Version mismatch. scheduler_config_id={config_id} collector_config_id={self.config._config_id}")
 				mismatch_action = self.config.get('config_version_mismatch_action', 'ignore')
 				if mismatch_action == 'ignore':
