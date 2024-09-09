@@ -1,4 +1,5 @@
 import re, os, json, sys
+from glob import glob
 from .utils import FilterFunction
 from . import objecttype
 import logging
@@ -21,7 +22,8 @@ class Config():
 	def reload(self):
 		object_definition_list = []
 		self.load_base()
-		object_definition_list = self.load_objects()
+		object_definition_list = self.load_objects(self.get('object_files', default=[]))
+		object_definition_list += self.load_dirs(self.get('object_dirs', default=[]))
 		self.process_objects(object_definition_list)
 		object_definition_list = self.discover_objects()
 		self.process_objects(object_definition_list)
@@ -69,10 +71,24 @@ class Config():
 		_ = self._config.setdefault("default_stale_timeout", 60)
 		_ = self._config.setdefault("default_check_interval", 60)
 
-	def load_objects(self):
+	def load_dirs(self, object_dirs):
 		object_definition_list = []
-		for c in self._config['object_files']:
-			object_file_path = os.path.join(self._config['config_dir'], c)
+		for d in object_dirs:
+			if os.path.isabs(d):
+				object_dir_path = os.path.join(d, "**/*.json")
+			else:
+				object_dir_path = os.path.join(self.get('config_dir'), d, "**/*.json")
+			object_files = glob(object_dir_path, recursive=True)
+			object_definition_list += self.load_objects(object_files)
+		return object_definition_list
+
+	def load_objects(self, file_list):
+		object_definition_list = []
+		for c in file_list:
+			if os.path.isabs(c):
+				object_file_path = c
+			else:
+				object_file_path = os.path.join(self._config['config_dir'], c)
 			log.debug("Loading config file %s", object_file_path)
 			object_definition_list += self.load_object_file(object_file_path)
 		return object_definition_list
@@ -86,7 +102,7 @@ class Config():
 			try:
 				c=json.load(f)
 			except Exception as e:
-				log.exception("Unable to load config file %s.", filename)
+				log.error("Unable to load config file %s. Possible syntax error", filename)
 				raise
 
 		if not isinstance(c, list):
@@ -154,7 +170,7 @@ class Config():
 	def setdefault(self, key, value):
 		return self._config.setdefault(key, value)
 
-	def get(self, in_data, instance_name=None, check_name=None, discovery_name=None, resolve_vars=False, default=None):
+	def get(self, in_data, default=None, instance_name=None, check_name=None, discovery_name=None, resolve_vars=False):
 		if isinstance(in_data, str):
 			path = tuple(in_data.split("."))
 		elif isinstance(in_data, list):
