@@ -132,6 +132,7 @@ class Scheduler:
 			routing_key=self._mq_queue_orders,
 			body=json.dumps({
 				"type": "collect",
+				"config_id": str(self._config._config_id)
 				"attempt_name": attempt.name
 				}))
 		attempt.schedule_next()

@@ -44,6 +44,15 @@ class Collector:
 			if 'type' not in order:
 				raise Exception(f"Invalid order. Missing 'type'. {body}")
 			order_type = order.pop('type')
+			config_id = order.pop('config_id', None)
+			if config_id != self.config._config_id:
+				log.warning(f"Version mismatch. scheduler_config_id={config_id} collector_config_id={self.config._config_id}")
+				mismatch_action = self.config.get('config_version_mismatch_action', 'ignore')
+				if mismatch_action == 'ignore':
+					log.warning(f"Version mismatch. action=ignore")
+				elif mismatch_action == 'exit':
+					log.warning(f"Version mismatch. action=exit")
+					sys.exit(0)
 			log.debug(f" [x] Received {body} {method.delivery_tag}")
 			if order_type == "collect":
 				result = collect(order)
