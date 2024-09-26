@@ -66,7 +66,7 @@ groups:
             severity: critical
           isPaused: false
           notification_settings:
-            receiver: critical-mmm
+            receiver: samana-slack
         - uid: cdsydrlbaesxsf
           title: Citrix DDC Windows Services
           condition: AVAILABLE
@@ -196,7 +196,7 @@ groups:
           for: 0s
           isPaused: false
           notification_settings:
-            receiver: critical-mmm
+            receiver: samana-slack
         - uid: bdsygcv1bagaod
           title: Citrix PVS Windows Services
           condition: C
@@ -320,7 +320,7 @@ groups:
           for: 0s
           isPaused: false
           notification_settings:
-            receiver: critical-mmm
+            receiver: samana-slack
         - uid: fdt818cnmns3ka
           title: Citrix StoreFront Windows Services
           condition: F
@@ -514,7 +514,7 @@ groups:
           for: 15m
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: bdsx70vrprg8we
           title: Infra_CPU_Alert
           condition: C
@@ -600,7 +600,7 @@ groups:
           for: 15m
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: adsx7ab8phibkc
           title: Infra_RAM_Alert
           condition: C
@@ -685,7 +685,7 @@ groups:
           for: 15m
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: fdsx80x8pkhs0d
           title: Infra_PF_Alert
           condition: C
@@ -770,7 +770,7 @@ groups:
           for: 15m
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: ddsx8jumig3k0b
           title: Infra_Disk_Alert
           condition: C
@@ -826,7 +826,7 @@ groups:
           for: 15m
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: adsxbttasyayob
           title: Infra_Uptime_Alert
           condition: C
@@ -882,7 +882,7 @@ groups:
           for: 0s
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: ddsxccjsywao0a
           title: Infra_Cert_Alert
           condition: C
@@ -938,7 +938,7 @@ groups:
           for: 0s
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: bdsxebcwglon4b
           title: Infra_IOPS_Alert
           condition: C
@@ -1041,7 +1041,7 @@ groups:
           for: 15m
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: ddsxjt43f0wlce
           title: VDA_CPU_Alert
           condition: C
@@ -1127,7 +1127,7 @@ groups:
           for: 15m
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: fdsxk58ufe6m8c
           title: VDA_RAM_Alert
           condition: C
@@ -1212,7 +1212,7 @@ groups:
           for: 15m
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: cdsxkfnckcphce
           title: VDA_Disk_Alert
           condition: C
@@ -1268,7 +1268,7 @@ groups:
           for: 15m
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: fdsxks904hg5cc
           title: VDA_Uptime_Alert
           condition: C
@@ -1324,7 +1324,7 @@ groups:
           for: 0s
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: cdsxl208ghzwgc
           title: VDA_IOPS_Alert
           condition: C
@@ -1427,7 +1427,7 @@ groups:
           for: 15m
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: cdsxl5g2js4cgf
           title: VDA_PF_Alert
           condition: C
@@ -1512,7 +1512,7 @@ groups:
           for: 15m
           isPaused: false
           notification_settings:
-            receiver: SamanaSlack
+            receiver: samana-slack
         - uid: adsxmffx3i800c
           title: VDI_IOPS_Alert
           condition: C
