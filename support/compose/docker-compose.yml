@@ -1,0 +1,144 @@
+version: "3.4"
+services:
+  minio:
+    image: minio/minio
+    entrypoint: [""]
+    command: ["sh", "-c", "mkdir -p /data/mimir && mkdir -p /data/samm-loki && minio server --quiet /data"]
+    env_file:
+      - ./config/env/minio.env
+    volumes:
+      - minio-data:/data
+
+  db:
+    build: ./db
+    restart: always
+    env_file: 
+      - ./config/env/mysql.env
+      - ./config/env/grafana.env
+    healthcheck:
+        test: [ "CMD-SHELL", "mariadb -u $${GF_DATABASE_USER} --password=$${GF_DATABASE_PASSWORD} -e \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '$${GF_DATABASE_NAME}';\" $${GF_DATABASE_NAME}" ]
+        start_period: 10s
+        start_interval: 5s
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  load-balancer:
+    image: nginx:latest
+    volumes:
+      - ./config/nginx:/etc/nginx:ro
+    depends_on:
+      - "grafana"
+    ports:
+      - 80:80
+      - 443:443
+
+  grafana:
+    build: ./grafana
+    restart: always
+    pull_policy: always
+    env_file:
+      - ./config/env/grafana.env
+    depends_on:
+      db:
+        condition: service_healthy
+      mimir:
+        condition: service_started
+      loki:
+        condition: service_started
+    volumes:
+      - ./config/grafana:/etc/grafana
+      - ./config/dashboards:/var/lib/grafana/dashboards
+
+  mimir:
+    image: grafana/mimir:latest
+    command: 
+      - -config.file=/etc/mimir.yaml
+      - -config.expand-env=true
+    hostname: mimir
+    env_file:
+      - ./config/env/minio.env
+    depends_on:
+      - minio
+    volumes:
+      - ./config/mimir/mimir.yaml:/etc/mimir.yaml
+      - mimir-data:/data
+
+  samm-scheduler:
+    build: ./sammbase
+    command: [ "/usr/local/bin/scheduler.py", "/usr/local/samm/etc/conf.json" ]
+    hostname: samm-scheduler
+    depends_on:
+      - mq
+    restart: always
+    volumes:
+      - ./config/samm:/usr/local/samm/etc
+
+  samm-collector:
+    build: ./sammbase
+    command: [ "/usr/local/bin/collector.py", "/usr/local/samm/etc/conf.json" ]
+    deploy:
+      mode: replicated
+      replicas: 2
+    depends_on:
+      - mq
+      - mimir
+      - samm-scheduler
+    restart: always
+    volumes:
+      - ./config/samm:/usr/local/samm/etc
+
+  samm-test:
+    build: ./sammbase
+    command: [ "/bin/bash" ]
+    hostname: samm-test
+    stdin_open: true
+    tty: true
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - /usr/src:/usr/src
+
+  samm-manager:
+    build: ./sammmanager
+    hostname: samm-manager
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - ./config/manager/conf.json:/app/conf.json
+
+  mq:
+    image: rabbitmq:latest
+    hostname: mq
+
+  loki:
+    image: grafana/loki:latest
+    env_file:
+      - ./config/env/minio.env
+    command:
+      - -config.expand-env=true
+      - -config.file=/etc/loki/local-config.yaml
+    depends_on:
+      - minio
+    volumes:
+      - ./config/loki/local-config.yaml:/etc/loki/local-config.yaml
+
+  prometheus:
+    image: prom/prometheus:latest
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --log.level=error
+      - --storage.tsdb.path=/prometheus
+    depends_on:
+      - mimir
+    volumes:
+      - ./config/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+
+volumes:
+  minio-data:
+  mimir-data:
+  mysql-data:
