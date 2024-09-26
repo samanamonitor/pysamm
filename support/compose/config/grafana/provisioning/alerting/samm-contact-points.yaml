@@ -7,5 +7,5 @@ contactPoints:
           type: slack
           settings:
             recipient: alerts-mmm
-            token: xoxb-replacewithtoken
+            token: *********
           disableResolveMessage: false
