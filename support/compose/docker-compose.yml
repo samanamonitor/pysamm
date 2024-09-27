@@ -29,11 +29,28 @@ services:
     image: nginx:latest
     volumes:
       - ./config/nginx:/etc/nginx:ro
-    depends_on:
-      - "grafana"
     ports:
       - 80:80
       - 443:443
+
+  mq:
+    image: rabbitmq:latest
+    hostname: mq
+
+  mimir:
+    image: grafana/mimir:latest
+    command:
+      - -config.file=/etc/mimir.yaml
+      - -config.expand-env=true
+    hostname: mimir
+    env_file:
+      - ./config/env/minio.env
+    depends_on:
+      minio:
+        condition: service_started
+    volumes:
+      - ./config/mimir/mimir.yaml:/etc/mimir.yaml
+      - mimir-data:/data
 
   grafana:
     build: ./grafana
@@ -52,27 +69,37 @@ services:
       - ./config/grafana:/etc/grafana
       - ./config/dashboards:/var/lib/grafana/dashboards
 
-  mimir:
-    image: grafana/mimir:latest
-    command: 
-      - -config.file=/etc/mimir.yaml
-      - -config.expand-env=true
-    hostname: mimir
+  loki:
+    image: grafana/loki:latest
     env_file:
       - ./config/env/minio.env
+    command:
+      - -config.expand-env=true
+      - -config.file=/etc/loki/local-config.yaml
     depends_on:
-      minio:
+      - minio
+    volumes:
+      - ./config/loki/local-config.yaml:/etc/loki/local-config.yaml
+
+  prometheus:
+    image: prom/prometheus:latest
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --log.level=error
+      - --storage.tsdb.path=/prometheus
+    depends_on:
+      mimir:
         condition: service_started
     volumes:
-      - ./config/mimir/mimir.yaml:/etc/mimir.yaml
-      - mimir-data:/data
+      - ./config/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
 
   samm-scheduler:
     build: ./sammbase
     command: [ "/usr/local/bin/scheduler.py", "/usr/local/samm/etc/conf.json" ]
     hostname: samm-scheduler
     depends_on:
-      - mq
+      mq:
+        condition: service_started
     restart: always
     volumes:
       - ./config/samm:/usr/local/samm/etc
@@ -84,24 +111,15 @@ services:
       mode: replicated
       replicas: 2
     depends_on:
-      - mq
-      - mimir
-      - samm-scheduler
+      mq:
+        condition: service_started
+      mimir:
+        condition: service_started
+      samm-scheduler:
+        condition: service_started
     restart: always
     volumes:
       - ./config/samm:/usr/local/samm/etc
-
-  samm-test:
-    build: ./sammbase
-    command: [ "/bin/bash" ]
-    hostname: samm-test
-    stdin_open: true
-    tty: true
-    deploy:
-      mode: replicated
-      replicas: 1
-    volumes:
-      - /usr/src:/usr/src
 
   samm-manager:
     build: ./sammmanager
@@ -112,33 +130,17 @@ services:
     volumes:
       - ./config/manager/conf.json:/app/conf.json
 
-  mq:
-    image: rabbitmq:latest
-    hostname: mq
-
-  loki:
-    image: grafana/loki:latest
-    env_file:
-      - ./config/env/minio.env
-    command:
-      - -config.expand-env=true
-      - -config.file=/etc/loki/local-config.yaml
-    depends_on:
-      minio:
-        condition: service_started
+  samm-test:
+    build: ./sammbase
+    command: [ "/bin/bash" ]
+    hostname: samm-test
+    stdin_open: true
+    tty: true
+    deploy:
+      mode: replicated
+      replicas: 0
     volumes:
-      - ./config/loki/local-config.yaml:/etc/loki/local-config.yaml
-
-  prometheus:
-    image: prom/prometheus:latest
-    command:
-      - --config.file=/etc/prometheus/prometheus.yml
-      - --log.level=error
-      - --storage.tsdb.path=/prometheus
-    depends_on:
-      - mimir
-    volumes:
-      - ./config/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - /usr/src:/usr/src
 
 volumes:
   minio-data:
