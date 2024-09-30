@@ -130,6 +130,18 @@ services:
     volumes:
       - ./config/manager/conf.json:/app/conf.json
 
+  vmware-collector:
+    image: pryorda/vmware_exporter
+    hostname: vmware-collector
+    environment:
+      VSPHERE_IGNORE_SSL: True
+      VSPHERE_SPECS_SIZE: 2000
+    deploy:
+      mode: replicated
+      replicas: 0
+    volumes:
+      - ./config/vmware-collector/config.yml:/samm/config.yml
+
   samm-test:
     build: ./sammbase
     command: [ "/bin/bash" ]
