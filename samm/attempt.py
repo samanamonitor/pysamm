@@ -41,6 +41,7 @@ class Attempt:
 		log.debug("Attempt created. %s:%s", instance_name, check_name)
 		self.rand = Random(time.time())
 		self.pending_retry = pending_retry
+		log.setLevel(self.config.get(("log_level", __name__), "WARNING"))
 
 	@property
 	def name(self):
@@ -138,7 +139,7 @@ class Attempt:
 						mt["metric"] = metric_name.lower()
 						mt["check"] = self.alias.lower()
 						im = InstanceMetric("info", value, mt, \
-							stale_timeout=self.check.stale_timeout)
+							prefix=self.alias.lower(), stale_timeout=self.check.stale_timeout)
 
 						self.instance_metric_data[im.key] = im
 					except Exception as e:
