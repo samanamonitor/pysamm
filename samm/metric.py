@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 
 class Tag:
 	def __init__(self, key, value):
@@ -34,6 +35,8 @@ class InstanceMetric:
 			self.value = value
 		elif value is None and self.none_is_zero:
 			self.value = 0
+		elif isinstance(value, datetime):
+			self.value = value.timestamp() * 1000
 		else:
 			raise TypeError("Invalid value")
 
