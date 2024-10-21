@@ -174,7 +174,7 @@ class OTLPAttempt(Attempt):
 def start_exporter(collector, up_check_callback=None, done_callback=None, external_scheduler=False):
 	config = collector.config
 	attempt_dict = collector.attempt_dict
-	#log.setLevel(config.get("debug"))
+	log.setLevel(config.get(("log_level", __name__), "WARNING"))
 	#attempt_log.setLevel(config.get("debug"))
 
 
