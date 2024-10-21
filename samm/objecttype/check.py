@@ -12,6 +12,8 @@ class Check(SammObject):
 	def _set_defaults(self):
 		_ = self._attributes.setdefault("stale_timeout", self._config.get("default_stale_timeout"))
 		_ = self._attributes.setdefault("check_interval", self._config.get("default_check_interval"))
+		_ = self._attributes.setdefault("info_metrics", [])
+		_ = self._attributes.setdefault("metrics", [])
 
 	def post_process(self):
 		super(Check, self).post_process()
