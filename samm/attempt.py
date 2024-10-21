@@ -27,7 +27,6 @@ class Attempt:
 
 		self.next_run = 0
 		self.alias = self.check.get("alias", default=self.check.name)
-		self.metrics = self.check.metrics
 
 		self.thread = None
 		self.tag_properties = config.get(("checks", check_name, "tag_properties"), \
@@ -107,8 +106,8 @@ class Attempt:
 					value = transform(metric_data.get(property_name, "none"))
 					metric_tags[key] = value
 
-				try:
-					for metric_name in self.metrics:
+				for metric_name in self.check.metrics:
+					try:
 						if self.check.name == self.instance.up_check_name and \
 								metric_name == self.instance.up_metric_name:
 							value = metric_data.get(metric_name, 0)
@@ -127,9 +126,27 @@ class Attempt:
 
 						self.instance_metric_data[im.key] = im
 
-				except Exception as e:
-					log.error("An error occurred processing (%s:%s).metrics\nmetric_data=%s. %s",
-						self.instance.name, self.check.name, metric_data, e)
+					except Exception as e:
+						log.error("An error occurred processing (%s:%s).metrics\nmetric_data=%s. %s",
+							self.instance.name, self.check.name, metric_data, e)
+
+				for metric_name in self.check.info_metrics:
+					try:
+						value = 1
+						metric_name.lower()
+						mt = metric_tags.copy()
+						mt["metric"] = metric_name.lower()
+						mt["check"] = self.alias.lower()
+						im = InstanceMetric("info", value, mt, \
+							stale_timeout=self.check.stale_timeout)
+
+						self.instance_metric_data[im.key] = im
+					except Exception as e:
+						log.error("An error occurred processing (%s:%s).metrics\nmetric_data=%s. %s",
+							self.instance.name, self.check.name, metric_data, e)
+
+
+
 
 		except Exception as e:
 			log.error("An error occurred processing (%s:%s).instance_metric_data. %s", self.instance.name, self.check.name, e)
