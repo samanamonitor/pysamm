@@ -12,8 +12,7 @@ class Collector:
 	def __init__(self, config_file):
 		self.config = Config(config_file)
 		self.config.reload()
-		log.setLevel(self.config.get("debug"))
-		logging.basicConfig(stream=sys.stderr)
+		log.setLevel(config.get(("log_level", __name__), "WARNING"))
 		self._mq_server = self.config.get("mq.server", default='mq')
 		self._mq_queue_orders = self.config.get("mq.queue_orders", default="samm_orders")
 		self._mq_queue_reports = self.config.get("mq.queue_reports", default="samm_reports")
@@ -25,6 +24,7 @@ class Collector:
 		self.collection_count = 0
 
 	def on_open(self, connection):
+		log.debug("Connection Open")
 		connection.channel(on_open_callback=self.on_channel_open)
 
 	def on_open_error_callback(self, connection, err):
@@ -103,6 +103,7 @@ class Collector:
 
 		channel.basic_qos(prefetch_count=1)
 		channel.basic_consume(queue=self._mq_queue_orders, on_message_callback=message_callback, auto_ack=False)
+		log.debug("Channel is open")
 		start_exporter(self, up_check_callback=up_check_callback, done_callback=done_callback, external_scheduler=True)
 
 	def run(self):
