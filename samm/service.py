@@ -63,7 +63,7 @@ class Service:
 		self.running_config=Config(self.abs_config_file)
 		self.running_config.reload()
 		self.debug = self.running_config.get("debug", 'WARNING')
-		logging.basicConfig(stream=sys.stdout, level=self.debug, force=True)
+		log.setLevel(self.debug)
 		self._stale_timeout = self.running_config.get("stale_timeout", default=600)
 		self.poll_time = self.running_config.get("poll_time", default=5)
 		self.pending_retry = self.running_config.get("pending_retry", default=60)
@@ -73,19 +73,19 @@ class Service:
 
 	def init_instance_attempts(self, instance):
 		instance_name = instance.name
-		instance_metric_data = self.metric_data.setdefault(instance_name, {})
+		instance_metric_data = self.metric_data.setdefault(instance.name, {})
 		if instance.register:
 			self.host_count.val(self.host_count.val() + 1)
 			for check_name in instance.checks:
 				try:
-					a = Attempt(self.running_config, instance_name, check_name, instance_metric_data,
+					a = Attempt(self.running_config, instance.name, check_name, instance_metric_data,
 						pending_retry=self.pending_retry)
-					log.debug("Created attempt %s:%s", instance_name, check_name)
+					log.debug("Created attempt %s:%s", instance.name, check_name)
 					a.schedule(self.scheduled_attempts.val() * self.initial_spread)
 					self.attempt_list += [ a ]
 					self.scheduled_attempts.val(self.scheduled_attempts.val() + 1)
 				except Exception as e:
-					log.exception("Unable to create attempt for %s-%s. %s", instance_name, check_name, str(e))
+					log.exception("Unable to create attempt for %s-%s. %s", instance.name, check_name, str(e))
 
 	def init_attempts(self):
 		self.attempt_list = []
@@ -121,13 +121,13 @@ class Service:
 				if attempt.process():
 					self.attempts_run_in_loop += 1
 					log.debug("Running attempt alias=%s instance_name=%s check_name=%s.",
-						attempt.alias, attempt.instance_name, attempt.check_name)
+						attempt.alias, attempt.instance.name, attempt.check.name)
 					if self.attempts_run_in_loop > self.max_attempts_per_loop:
 						log.warning("Max number of attempts per loop reached. All other attempts will be tried in the next loop")
 						return
 			except Exception as e:
 				log.exception("Got error from Attempt.run() : %s - instance=%s check=%s",
-					str(e), attempt.instance_name, attempt.check_name)
+					str(e), attempt.instance.name, attempt.check.name)
 
 	def process_loop(self):
 		while self.keep_running:
