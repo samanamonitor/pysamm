@@ -19,9 +19,8 @@ class Scheduler:
 	def reload_config(self):
 		self._config = Config(self._config_path)
 		self._config.reload()
-		self._debug_level = self._config.get("debug", default="INFO")
+		self._debug_level = self._config.get("debug", default="WARNING")
 		log.setLevel(self._debug_level)
-		logging.basicConfig(stream=sys.stderr)
 		self._loop_sleep_s = self._config.get("loop_sleep_s", default=5)
 		self._mq_server = self._config.get("mq.server", default='mq')
 		self._mq_queue_orders = self._config.get("mq.queue_orders", default="samm_orders")
