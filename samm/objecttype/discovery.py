@@ -3,6 +3,7 @@ from samm.utils import FilterFunction
 import samm
 import logging
 import ldap
+from ldap.controls import SimplePagedResultsControl
 import uuid
 import json
 from time import time
@@ -121,15 +122,29 @@ class ActiveDirectoryDiscovery:
 		self._conn.set_option(ldap.OPT_DEBUG_LEVEL, 255)
 		self._conn.simple_bind_s(self.ldap_dn, self.ldap_password)
 		self._conn.set_option(ldap.OPT_REFERRALS, 0)
-		self._search_id = self._conn.search(self.ldap_base, self.ldap_scope, 
-				self.ldap_filter, self.ldap_attrlist)
+		self.page_control = SimplePagedResultsControl(True, size=1000, cookie='')
+		self._search_id = self._conn.search_ext(self.ldap_base, self.ldap_scope,
+			self.ldap_filter, self.ldap_attrlist, serverctrls=[self.page_control])
+		#self._search_id = self._conn.search(self.ldap_base, self.ldap_scope,
+		#	self.ldap_filter, self.ldap_attrlist)
 		return self
 
 	def __next__(self):
 		if isinstance(self._test_data, list):
 			(result_type, items) = next(self._test_iter)
 		else:
-			(result_type, items) = self._conn.result(msgid=self._search_id, all=0)
+			#(result_type, items) = self._conn.result(msgid=self._search_id, all=0)
+			result_type, items, rmsgid, serverctrls = self._conn.result3(msgid=self._search_id, all=0)
+			controls = [control for control in serverctrls
+				if control.controlType == SimplePagedResultsControl.controlType]
+			if len(controls) > 0:
+				if not controls[0].cookie:
+					raise StopIteration
+				self.page_control.cookie = controls[0].cookie
+				self._search_id = self._conn.search_ext(self.ldap_base, self.ldap_scope,
+					self.ldap_filter, self.ldap_attrlist, serverctrls=[self.page_control])
+				result_type, items, rmsgid, serverctrls = self._conn.result3(msgid=self._search_id, all=0)
+
 		if result_type == ldap.RES_SEARCH_RESULT:
 			raise StopIteration
 		if result_type != ldap.RES_SEARCH_ENTRY:
