@@ -100,7 +100,7 @@ class Scheduler:
 
 		def report_done(data):
 			log.debug(" [x] Received done(%s)'" % (str(data)))
-			attempt = self.attempt_dict.get(str(data))
+			attempt = self.attempt_dict.get(data.get("attempt_name", "none"))
 			if attempt is not None:
 				attempt.schedule_next()
 
