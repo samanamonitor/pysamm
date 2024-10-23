@@ -99,10 +99,10 @@ class Scheduler:
 			log.debug(" [x] Received instance_up(%s)" % (str(data)))
 
 		def report_done(data):
-			attempt = self.attempt_dict.get(data)
+			log.debug(" [x] Received done(%s)'" % (str(data)))
+			attempt = self.attempt_dict.get(str(data))
 			if attempt is not None:
 				attempt.schedule_next()
-			log.debug(" [x] Received done(%s)'" % (str(data)))
 
 		channel.queue_declare(queue=self._mq_queue_orders,
 			arguments={'x-message-ttl' : self._mq_queue_ttl})
