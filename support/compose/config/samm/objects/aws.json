@@ -5,6 +5,9 @@
         "type": "sammaws.workspaces.AwsWorkspacesQuery",
         "args": {
             "query_name": { "Fn::ref": [ "check.query" ] },
+            "aws_access_key_id": { "Fn::ref": [ "resources.aws.aws_access_key_id"] } ,
+            "aws_secret_access_key": { "Fn::ref": [ "resources.aws.aws_secret_access_key"] },
+            "aws_session_token": { "Fn::ref": [ "resources.aws.aws_session_token"] },
             "region_name": { "Fn::ref": [ "resources.aws.region_name" ] }
         }
     },
@@ -14,6 +17,9 @@
         "type": "sammaws.appstream.AwsAppstreamQuery",
         "args": {
             "query_name": { "Fn::ref": [ "check.query" ] },
+            "aws_access_key_id": { "Fn::ref": [ "resources.aws.aws_access_key_id"] } ,
+            "aws_secret_access_key": { "Fn::ref": [ "resources.aws.aws_secret_access_key"] },
+            "aws_session_token": { "Fn::ref": [ "resources.aws.aws_session_token"] },
             "region_name": { "Fn::ref": [ "resources.aws.region_name" ] }
         }
     },
@@ -22,6 +28,9 @@
         "name": "aws_appstream_sessions",
         "type": "sammaws.appstream.AwsAppstreamSessions",
         "args": {
+            "aws_access_key_id": { "Fn::ref": [ "resources.aws.aws_access_key_id"] } ,
+            "aws_secret_access_key": { "Fn::ref": [ "resources.aws.aws_secret_access_key"] },
+            "aws_session_token": { "Fn::ref": [ "resources.aws.aws_session_token"] },
             "region_name": { "Fn::ref": [ "resources.aws.region_name" ] }
         }
     },
@@ -30,6 +39,9 @@
         "name": "aws_command_appstream_stack_fleet",
         "type": "sammaws.appstream.AwsAppstreamStackFleet",
         "args": {
+            "aws_access_key_id": { "Fn::ref": [ "resources.aws.aws_access_key_id"] } ,
+            "aws_secret_access_key": { "Fn::ref": [ "resources.aws.aws_secret_access_key"] },
+            "aws_session_token": { "Fn::ref": [ "resources.aws.aws_session_token"] },
             "region_name": { "Fn::ref": [ "resources.aws.region_name" ] }
         }
     },

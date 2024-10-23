@@ -5,6 +5,7 @@ import os
 import logging
 
 log = logging.getLogger(__name__)
+logging.basicConfig(stream=sys.stderr)
 
 if __name__ == '__main__':
 	if len(sys.argv) != 2:
