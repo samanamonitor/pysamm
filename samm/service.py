@@ -63,7 +63,7 @@ class Service:
 		self.running_config=Config(self.abs_config_file)
 		self.running_config.reload()
 		self.debug = self.running_config.get("debug", 'WARNING')
-		log.setLevel(self.debug)
+		log.setLevel(self.running_config.get(("log_level", __name__), "WARNING"))
 		self._stale_timeout = self.running_config.get("stale_timeout", default=600)
 		self.poll_time = self.running_config.get("poll_time", default=5)
 		self.pending_retry = self.running_config.get("pending_retry", default=60)

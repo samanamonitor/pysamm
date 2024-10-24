@@ -6,8 +6,10 @@ import time
 from multiprocessing import Process
 from flask import Flask, make_response
 import socket
+import logging
 
 app = Flask(__name__)
+logging.basicConfig(stream=sys.stderr)
 
 svc = None
 
