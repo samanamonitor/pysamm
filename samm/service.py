@@ -208,7 +208,7 @@ class Service:
 			_c_write[0].close()
 		except Exception as e:
 			log.exception("Error sending data. %s" % str(e))
-			connection.close()
+		connection.close()
 
 	def signal_handler(self, signum, frame):
 		if signum == signal.SIGHUP:

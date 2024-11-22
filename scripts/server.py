@@ -7,6 +7,7 @@ from multiprocessing import Process
 from flask import Flask, make_response
 import socket
 import logging
+import warnings
 
 app = Flask(__name__)
 logging.basicConfig(stream=sys.stderr)
@@ -38,6 +39,7 @@ def web(port=5000):
 def main(config_file):
     global svc
     wait_on_error=0
+    warnings.filterwarnings(action='ignore',module='sammwr.utils')
     try:
         svc = Service(config_file)
         wait_on_error = svc.running_config.get("wait_on_error", 0)

@@ -7,7 +7,7 @@
 		],
 		"up_check": "ping.is_alive",
 		"check_if_down": false,
-		"stale_timeout": 432000,
+		"stale_timeout": 600,
 		"register": false
 	},
 	{
