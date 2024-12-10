@@ -180,21 +180,25 @@ class Service:
 
 	def send_data(self, conn):
 		connection, client_address = conn.accept()
-		_c_read, _, _ = select.select([connection], [], [], 2)
+		try:
+			_c_read, _, _ = select.select([connection], [], [], 2)
 
-		recvdata = _c_read[0].recv(1024).decode('ascii').strip()
-		if len(_c_read) == 0 or len(recvdata) == 0:
-			instance_list = self.metric_data.keys()
-		else:
-			instance_list = recvdata.split(" ")
-			log.info("List of instances requested: %s" % str(instance_list))
+			recvdata = _c_read[0].recv(1024).decode('ascii').strip()
+			if len(_c_read) == 0 or len(recvdata) == 0:
+				instance_list = self.metric_data.keys()
+			else:
+				instance_list = recvdata.split(" ")
+				log.info("List of instances requested: %s" % str(instance_list))
+		except Exception as e:
+			log.exception(e)
 
-		_, _c_write, _ = select.select([], [connection], [], 2)
-		if len(_c_write) < 1:
-			connection.close()
-			return
 
 		try:
+			_, _c_write, _ = select.select([], [connection], [], 2)
+			if len(_c_write) < 1:
+				connection.close()
+				return
+
 			for instance_name in instance_list:
 				if instance_name not in self.metric_data:
 					instance_tags = self.running_config.get("tags").copy()
