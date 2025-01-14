@@ -106,7 +106,7 @@ class Config():
 				raise
 
 		if not isinstance(c, list):
-			raise TypeError("Invalid config type. Must be list")
+			raise TypeError("Invalid config type at file=%s. Must be list" % filename)
 		for o in c:
 			if not isinstance(o, dict):
 				raise TypeError("Invalid config type at file=%s. Expecting dict. data=%s" %
