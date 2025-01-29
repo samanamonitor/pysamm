@@ -208,7 +208,7 @@ class Service:
 					continue
 				metric_keys_list = list(self.metric_data[instance_name].keys())
 				for metric_key in metric_keys_list:
-					_c_write[0].sendall(str(self.metric_data[instance_name].get(metric_key, '')).encode('ascii'))
+					_c_write[0].sendall(str(self.metric_data[instance_name].get(metric_key, '')).encode('ascii', errors="ignore"))
 			_c_write[0].close()
 		except Exception as e:
 			log.exception("Error sending data. %s" % str(e))
