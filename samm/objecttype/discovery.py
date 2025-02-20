@@ -70,6 +70,7 @@ class ActiveDirectoryDiscovery:
 	def __init__(self, /, use=None, configuration=None, **kwargs):
 		self.name = kwargs.get('name', uuid.uuid4())
 		self.ldap_url = kwargs.get('ldap_url')
+		self.ldap_bindmethod = kwargs.get('ldap_bindmethod', 'simple')
 		self.ldap_dn = kwargs.get('ldap_dn')
 		self.ldap_password = kwargs.get('ldap_password')
 		self.ldap_base = kwargs.get('ldap_base')
@@ -120,7 +121,12 @@ class ActiveDirectoryDiscovery:
 		self._conn.set_option(ldap.OPT_X_TLS, ldap.OPT_X_TLS_DEMAND)
 		self._conn.set_option(ldap.OPT_X_TLS_DEMAND, True)
 		self._conn.set_option(ldap.OPT_DEBUG_LEVEL, 255)
-		self._conn.simple_bind_s(self.ldap_dn, self.ldap_password)
+		if self.ldap_bindmethod == 'simple':
+			self._conn.simple_bind_s(self.ldap_dn, self.ldap_password)
+		elif self.ldap_bindmethod == 'gssapi':
+			self._conn.sasl_gssapi_bind_s()
+		else:
+			raise TypeError(f"Invalid bind method ${self.ldap_bindmethod}")
 		self._conn.set_option(ldap.OPT_REFERRALS, 0)
 		self.page_control = SimplePagedResultsControl(True, size=1000, cookie='')
 		self._search_id = self._conn.search_ext(self.ldap_base, self.ldap_scope,
