@@ -32,6 +32,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -88,6 +89,7 @@
 						"windows_check": {
 							"object_type": "check",
 							"command": "windows_command",
+							"info_metrics": [],
 							"alias": "windows_check",
 							"check_interval": 60,
 							"stale_timeout": 180,
@@ -145,6 +147,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -205,6 +208,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -265,6 +269,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -325,6 +330,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -385,6 +391,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -445,6 +452,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -505,6 +513,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -565,6 +574,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -625,6 +635,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -685,6 +696,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -745,6 +757,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -805,6 +818,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -865,6 +879,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -925,6 +940,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -987,6 +1003,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1024,6 +1041,7 @@
 						"windows_check": {
 							"object_type": "check",
 							"command": "windows_command",
+							"info_metrics": [],
 							"alias": "windows_check",
 							"check_interval": 60,
 							"stale_timeout": 180,
@@ -1083,6 +1101,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1120,6 +1139,7 @@
 						"windows_check": {
 							"object_type": "check",
 							"command": "windows_command",
+							"info_metrics": [],
 							"alias": "windows_check",
 							"check_interval": 60,
 							"stale_timeout": 180,
@@ -1179,6 +1199,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1216,6 +1237,7 @@
 						"windows_check": {
 							"object_type": "check",
 							"command": "windows_command",
+							"info_metrics": [],
 							"alias": "windows_check",
 							"check_interval": 60,
 							"stale_timeout": 180,
@@ -1273,6 +1295,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1335,6 +1358,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1372,6 +1396,7 @@
 						"windows_check": {
 							"object_type": "check",
 							"command": "windows_command",
+							"info_metrics": [],
 							"alias": "windows_check",
 							"check_interval": 60,
 							"stale_timeout": 180,
@@ -1431,6 +1456,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1468,6 +1494,7 @@
 						"windows_check": {
 							"object_type": "check",
 							"command": "windows_command",
+							"info_metrics": [],
 							"alias": "windows_check",
 							"check_interval": 60,
 							"stale_timeout": 180,
@@ -1527,6 +1554,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1564,6 +1592,7 @@
 						"windows_check": {
 							"object_type": "check",
 							"command": "windows_command",
+							"info_metrics": [],
 							"alias": "windows_check",
 							"check_interval": 60,
 							"stale_timeout": 180,
@@ -1621,6 +1650,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1681,6 +1711,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1741,6 +1772,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1801,6 +1833,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1861,6 +1894,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1921,6 +1955,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -1981,6 +2016,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -2041,6 +2077,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -2101,6 +2138,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -2161,6 +2199,7 @@
 						"ping": {
 							"object_type": "check",
 							"command": "ping",
+							"info_metrics": [],
 							"tag_properties": [
 								"name"
 							],
@@ -2204,6 +2243,7 @@
 				{
 					"object_type": "check",
 					"command": "ping",
+					"info_metrics": [],
 					"tag_properties": [
 						"name"
 					],
@@ -2241,6 +2281,7 @@
 				{
 					"object_type": "check",
 					"command": "windows_command",
+					"info_metrics": [],
 					"alias": "windows_check",
 					"check_interval": 60,
 					"stale_timeout": 180,

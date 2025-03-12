@@ -35,6 +35,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -105,6 +106,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -175,6 +177,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -245,6 +248,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -315,6 +319,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -385,6 +390,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -455,6 +461,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -525,6 +532,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -595,6 +603,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -665,6 +674,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -735,6 +745,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -805,6 +816,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -875,6 +887,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -945,6 +958,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1015,6 +1029,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1085,6 +1100,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1155,6 +1171,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1225,6 +1242,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1295,6 +1313,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1365,6 +1384,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1435,6 +1455,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1505,6 +1526,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1575,6 +1597,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1645,6 +1668,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1715,6 +1739,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1785,6 +1810,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1855,6 +1881,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1925,6 +1952,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -1995,6 +2023,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -2065,6 +2094,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -2135,6 +2165,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -2205,6 +2236,7 @@
 							"check_interval": 30,
 							"stale_timeout": 45,
 							"count": 2,
+							"info_metrics": [],
 							"timeout": 1,
 							"tag_properties": [
 								"hostaddress",
@@ -2258,6 +2290,7 @@
 					"check_interval": 30,
 					"stale_timeout": 45,
 					"count": 2,
+					"info_metrics": [],
 					"timeout": 1,
 					"tag_properties": [
 						"hostaddress",
