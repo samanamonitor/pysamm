@@ -28,6 +28,10 @@ class Config():
 		object_definition_list = self.discover_objects()
 		self.process_objects(object_definition_list)
 		self._valid_config = True
+		log_levels = self.get("log_level", {})
+		for k, v in log_levels.items():
+			l = logging.getLogger(k)
+			l.setLevel(v)
 		return self._valid_config
 
 	def load_base(self):

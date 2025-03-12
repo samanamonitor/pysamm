@@ -12,7 +12,6 @@ class Collector:
 	def __init__(self, config_file):
 		self.config = Config(config_file)
 		self.config.reload()
-		log.setLevel(self.config.get(("log_level", __name__), "WARNING"))
 		self._mq_server = self.config.get("mq.server", default='mq')
 		self._mq_queue_orders = self.config.get("mq.queue_orders", default="samm_orders")
 		self._mq_queue_reports = self.config.get("mq.queue_reports", default="samm_reports")

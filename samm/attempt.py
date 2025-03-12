@@ -41,7 +41,6 @@ class Attempt:
 		log.debug("Attempt created. %s:%s", instance_name, check_name)
 		self.rand = Random(time.time())
 		self.pending_retry = pending_retry
-		log.setLevel(self.config.get(("log_level", __name__), "WARNING"))
 
 	@property
 	def name(self):
