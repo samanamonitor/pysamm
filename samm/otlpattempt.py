@@ -174,7 +174,6 @@ class OTLPAttempt(Attempt):
 def start_exporter(collector, up_check_callback=None, done_callback=None, external_scheduler=False):
 	config = collector.config
 	attempt_dict = collector.attempt_dict
-	log.setLevel(config.get(("log_level", __name__), "WARNING"))
 	#attempt_log.setLevel(config.get("debug"))
 
 
@@ -277,7 +276,6 @@ class OTLPExporter:
 	def __init__(self, collector, up_check_callback=None, done_callback=None, external_scheduler=False):
 		self.collector = collector
 		self.config = self.collector.config
-		log.setLevel(config.get("debug"))
 		#attempt_log.setLevel(config.get("debug"))
 		self._exporter_url = config.get("resources.prometheus_remote_write.url")
 		self._org_id = config.get("resources.prometheus_remote_write.org_id")
