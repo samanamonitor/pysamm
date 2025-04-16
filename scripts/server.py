@@ -43,11 +43,12 @@ def web(port=5000):
 def main(config_file):
     global svc
     wait_on_error=0
-    samm_debug = os.getenv("SAMM_DEBUG", "")
+    samm_debug = os.getenv("SAMM_DEBUG")
     debug_modules = samm_debug.split(',')
     for module in debug_modules:
-        l = logging.getLogger(module)
-        l.setLevel("DEBUG")
+        if len(module) > 0:
+            l = logging.getLogger(module)
+            l.setLevel("DEBUG")
     warnings.filterwarnings(action='ignore',module='sammwr.utils')
     try:
         svc = Service(config_file)
