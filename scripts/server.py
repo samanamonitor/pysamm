@@ -23,7 +23,7 @@ def metrics():
     else:
         sock_file = conf_sock_file
     s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    s.connect(sockfile)
+    s.connect(sock_file)
     s.send(b'\n')
     data = ""
     while True:
