@@ -10,16 +10,20 @@ import logging
 import warnings
 
 app = Flask(__name__)
-logging.basicConfig(stream=sys.stderr)
+logging.basicConfig(stream=sys.stderr, level="WARNING")
 
 svc = None
 
 @app.route('/metrics')
 def metrics():
     global svc
-    address = os.path.join(svc.running_config.get('base_dir'), svc.running_config.get("sock_file"))
+    conf_sock_file = svc.running_config.get("sock_file")
+    if not os.path.isabs(conf_sock_file):
+        sock_file = os.path.join(svc.running_config.get('base_dir'), conf_sock_file)
+    else:
+        sock_file = conf_sock_file
     s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    s.connect(address)
+    s.connect(sockfile)
     s.send(b'\n')
     data = ""
     while True:
