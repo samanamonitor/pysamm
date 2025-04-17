@@ -212,6 +212,20 @@ class Service:
 			log.exception("Error sending data. %s" % str(e))
 		connection.close()
 
+	def metrics_str(self):
+		out = ""
+		for instance_name in self.metric_data.keys():
+			if instance_name not in self.metric_data:
+				instance_tags = self.running_config.get("tags").copy()
+				instance_tags.update(self.running_config.get(("instances", instance_name, "tags"), default={}))
+				instance_down = InstanceMetric("up", 0, tags=instance_tags)
+				out += str(instance_down)
+				continue
+			metric_keys_list = list(self.metric_data[instance_name].keys())
+			for metric_key in metric_keys_list:
+				out += self.metric_data[instance_name].get(metric_key, '')
+		return out
+
 	def signal_handler(self, signum, frame):
 		if signum == signal.SIGHUP:
 			self.reload_config = True

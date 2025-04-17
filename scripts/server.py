@@ -16,6 +16,10 @@ svc = None
 
 @app.route('/metrics')
 def metrics():
+    data = svc.metrics_str()
+    res = make_response(data, 200)
+    res.mimetype = "text/plain"
+    return res
     global svc
     conf_sock_file = svc.running_config.get("sock_file")
     if not os.path.isabs(conf_sock_file):
