@@ -223,7 +223,7 @@ class Service:
 				continue
 			metric_keys_list = list(self.metric_data[instance_name].keys())
 			for metric_key in metric_keys_list:
-				out += self.metric_data[instance_name].get(metric_key, '')
+				out += str(self.metric_data[instance_name].get(metric_key, ''))
 		return out
 
 	def signal_handler(self, signum, frame):
