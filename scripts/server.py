@@ -4,6 +4,7 @@ from sys import argv
 from samm.service import Service
 import time
 from multiprocessing import Process
+from threading import Thread
 from flask import Flask, make_response
 import socket
 import logging
@@ -59,8 +60,10 @@ def main(config_file):
         wait_on_error = svc.running_config.get("wait_on_error", 0)
         if svc.running_config.get("webserver", False):
             port = svc.running_config.get("webserver_port", 5000)
-            p = Process(target=web, args=(port,))
-            p.start()
+            #p = Process(target=web, args=(port,))
+            #p.start()
+            th = Thread(target=web, args(port,))
+            th.start()
         svc.process_loop()
         p.terminate()
     except Exception as e:
