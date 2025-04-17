@@ -109,6 +109,7 @@ class ActiveDirectoryDiscovery:
 			with open(test_file, "r") as f:
 				data = f.read()
 				self._test_data = eval(data)
+		log.debug(f"New ad discovery object. {self.__dict__}")
 
 
 	def __iter__(self):
