@@ -62,7 +62,7 @@ def main(config_file):
             port = svc.running_config.get("webserver_port", 5000)
             #p = Process(target=web, args=(port,))
             #p.start()
-            th = Thread(target=web, args(port,))
+            th = Thread(target=web, args=(port,))
             th.start()
         svc.process_loop()
         p.terminate()
