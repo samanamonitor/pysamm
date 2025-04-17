@@ -20,7 +20,7 @@ def metrics():
     res = make_response(data, 200)
     res.mimetype = "text/plain"
     return res
-    global svc
+    #global svc
     conf_sock_file = svc.running_config.get("sock_file")
     if not os.path.isabs(conf_sock_file):
         sock_file = os.path.join(svc.running_config.get('base_dir'), conf_sock_file)
