@@ -46,6 +46,7 @@ class Discovery(SammObject):
 			return discovered_objects
 		self.reprocess()
 		try:
+			log.debug(f"Running method: {self.method.__dict__}")
 			discovered_objects = list(self.method)
 			log.info("Refreshing discovered objects. %s Objects discovered=%d" % (
 				self.name,
