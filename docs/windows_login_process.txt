@@ -1,0 +1,350 @@
+Logon Process
+
+Winlogon.exe{pid=0x1a58}
+						-> Microsoft-Windows-Winlogon 
+							-> (1)   Authentication started                                                                          (2025-04-04T13:12:11.7558470Z)
+							-> (2)   Authentication stopped. Result 0 (success)                                                      (2025-04-04T13:12:11.8393438Z)
+							-> Microsoft-Windows-TerminalServices-LocalSessionManager
+								-> (41) Begin session arbitration:                                                                   (2025-04-04T13:12:11.8435284Z)
+									User: samanaaws\fabianb
+									Session ID: 2
+								-> (42) End session arbitration:                                                                     (2025-04-04T13:12:11.8793520Z)
+									User: samanaaws\fabianb
+									Session ID: 2
+							-> (811) The winlogon notification subscriber <SessionEnv> began handling the notification event (2).    (2025-04-04T13:12:11.8856914Z)
+							-> (812) The winlogon notification subscriber <SessionEnv> finished handling the notification event (2). (2025-04-04T13:12:11.8858232Z)
+							-> (811) The winlogon notification subscriber <Profiles> began handling the notification event (2).      (2025-04-04T13:12:11.8872604Z)
+								-> Microsoft-Windows-User Profiles Service
+									-> (1) Recieved user logon notification on session 2.                                            (2025-04-04T13:12:11.8872791Z)
+									-> (5) Registry file D:\Users\fabianb\ntuser.dat is loaded at HKU\S-1-5-21-165157997-2761415458-2656432093-1174.
+									-> (5) Registry file D:\Users\fabianb\AppData\Local\Microsoft\Windows\\UsrClass.dat is loaded at HKU\S-1-5-21-165157997-2761415458-2656432093-1174_Classes.
+									-> (67) Logon type: Regular 
+										Local profile location: D:\Users\fabianb 
+										Profile type: Regular
+								-> Microsoft-Windows-Shell-Core
+									-> (62443) AppDefault Info: AppDefaults-Logon-UserProfileLoaded                                  (2025-04-04T13:12:12.0402177Z)
+								-> Microsoft-Windows-User Profiles Service
+									-> (2) Finished processing user logon notification on session 2.                                 (2025-04-04T13:12:12.0663416Z)
+							-> (812) The winlogon notification subscriber <Profiles> finished handling the notification event (2).   (2025-04-04T13:12:12.0663809Z)
+							-> (811) The winlogon notification subscriber <GPClient> began handling the notification event (2).      (2025-04-04T13:12:12.0676088Z)
+								-> Microsoft-Windows-GroupPolicy
+									-> (5324, 1, 2) Group Policy received the notification Logon from Winlogon for session 2.        (2025-04-04T13:12:12.0792501Z)
+									-> (6338) Group Policy Winlogon status reporting has completed.
+									-> (5351) Group policy session returned to winlogon.
+							-> (812) The winlogon notification subscriber <GPClient> finished handling the notification event (2).   (2025-04-04T13:12:12.0848427Z)
+							-> (811) The winlogon notification subscriber <GPClient> began handling the notification event (2).      (2025-04-04T13:12:12.0919883Z)
+								-> Microsoft-Windows-GroupPolicy
+									-> (5324) (2025-04-04T13:12:12.0920298Z)
+									-> (4117) Group Policy Session started.
+									-> (4001) Starting user logon Policy processing for samanaaws\fabianb. 
+											  Activity id: {41638177-f4fd-43ac-846b-5bd6f9484321}
+									-> (5340) The Group Policy processing mode is Foreground synchronous.
+									-> (5320) Attempting to retrieve the account information.
+										-> (4017) Making system call to get account information. 
+										-> (5017) The system call to get account information completed. 
+												  CN=Fabian Baena,OU=Users,OU=samanaaws,DC=samana,DC=aws
+												  The call completed in 63 milliseconds.
+									-> (5320) Retrieved account information.
+										-> (4326) Group Policy is trying to discover the Domain Controller information.
+									-> (5320) Retrieving Domain Controller details.
+										-> (4017) Making LDAP calls to connect and bind to Active Directory. 
+												  IP-C613021B.samana.aws
+										-> (5017) The LDAP call to connect and bind to Active Directory completed. 
+												  IP-C613021B.samana.aws
+												  The call completed in 0 milliseconds.
+									-> (5308) Domain Controller details: 
+											  Domain Controller Name : IP-C613021B.samana.aws
+											  Domain Controller IP Address : 10.33.130.94
+									-> (5326) Group Policy successfully discovered the Domain Controller in 0 milliseconds.
+									-> (5309) Computer details: 
+											  Computer role : 2
+											  Network name : 
+									-> (5310) Account details: 
+												Account Name : CN=Fabian Baena,OU=Users,OU=samanaaws,DC=samana,DC=aws
+												Account Domain Name : SAMANA.AWS
+												DC Name : \\IP-C613021B.samana.aws
+												DC Domain Name : SAMANA.AWS
+								(in parallel Microsoft-Windows-DeviceSetupManager is running creating all devices for AWS)
+									-> (5311) The loopback policy processing mode is "No loopback mode".
+									-> (4126) Group Policy receiving applicable GPOs from the domain controller.
+										-> (4257) Starting to download policies.
+											-> (6314) Group Policy bandwidth estimation failed. Group Policy processing will continue. Assuming fast link.
+											-> (4017) Making system calls to access specified file. 
+														\\samana.aws\SysVol\samana.aws\Policies\{4D508FAD-B340-4AAF-9D9E-E49B128D95E1}\gpt.ini
+											-> (5017) The system calls to access specified file completed. 
+														\\samana.aws\SysVol\samana.aws\Policies\{4D508FAD-B340-4AAF-9D9E-E49B128D95E1}\gpt.ini
+														The call completed in 93 milliseconds.
+										-> (5257) Successfully completed downloading policies.
+									-> (5126) Group Policy successfully got applicable GPOs from the domain controller.
+									-> (5312) List of applicable Group Policy objects: 
+										SMN_Desktop_Settings
+									-> (5313) The following Group Policy objects were not applicable because they were filtered out : 
+										Local Group Policy
+											Not Applied (Empty)
+									-> (5320) Checking for Group Policy client extensions that are not part of the system.
+									-> (5320) Service configuration update to standalone is not required and will be skipped.
+									-> (5320) Finished checking for non-system extensions.
+									-> (4016) Starting Folder Redirection Extension Processing. 
+										List of applicable Group Policy objects: (No changes were detected.)
+										SMN_Desktop_Settings
+									-> (6338) Group Policy Winlogon status reporting has completed.
+									-> (5351) Group policy session returned to winlogon.
+							-> (812) The winlogon notification subscriber <GPClient> finished handling the notification event (2).   (2025-04-04T13:12:12.3943304Z)
+							-> (811) The winlogon notification subscriber <GPClient> began handling the notification event (2).      (2025-04-04T13:12:12.3952225Z)
+								-> Microsoft-Windows-GroupPolicy
+									-> (5324)                                                                          (2025-04-04T13:12:12.3952491Z)
+										-> Microsoft-Windows-Folder Redirection
+											-> (1000) Folder Redirection Group Policy extension started.               (2025-04-04T13:12:12.4026609Z)
+											-> (1002) Group Policy flags=0x80.
+											-> (1011) Folder Redirection configuration is being controlled by Group Policy.
+											-> (1003) Start Processing Group Policy Objects ...
+											-> (1004) Processing configuration file "\\samana.aws\SysVol\samana.aws\Policies\{4D508FAD-B340-4AAF-9D9E-E49B128D95E1}\User" ...
+											-> (1006) Folder "Downloads" has to be redirected.
+												Redirection options = 0x80001211.
+												Parent folder = "{00000000-0000-0000-0000-000000000000}".
+												Path = "\\amznfsxwdgfeuet.samana.aws\share\DATA\%USERNAME%\Downloads".
+												Group = s-1-1-0.
+											-> (1006) Folder "Documents" has to be redirected.
+												Redirection options = 0x80001211.
+												Parent folder = "{00000000-0000-0000-0000-000000000000}".
+												Path = "\\amznfsxwdgfeuet.samana.aws\share\DATA\%USERNAME%\Documents".
+												Group = s-1-1-0.
+											-> (1006) Folder "Desktop" has to be redirected.
+												Redirection options = 0x80001211.
+												Parent folder = "{00000000-0000-0000-0000-000000000000}".
+												Path = "\\amznfsxwdgfeuet.samana.aws\share\DATA\%USERNAME%\Desktop".
+												Group = s-1-1-0.
+											-> (1005) Folder "Downloads" was previously redirected.
+												Redirection options were = 0x1211
+											-> (1005) Folder "Desktop" was previously redirected.
+												Redirection options were = 0x1211
+											-> (1005) Folder "Documents" was previously redirected.
+												Redirection options were = 0x1211
+											-> (1001) Folder Redirection Group Policy extension finished.           (2025-04-04T13:12:12.4520045Z)
+									-> (5016) Completed Folder Redirection Extension Processing in 63 milliseconds. (2025-04-04T13:12:12.4521519Z)
+									-> (4016) Starting Group Policy Drive Maps Extension Processing. 
+										List of applicable Group Policy objects: (No changes were detected.)
+										SMN_Desktop_Settings
+									-> (6338) Group Policy Winlogon status reporting has completed.
+									-> (5351) Group policy session returned to winlogon.
+							-> (812) The winlogon notification subscriber <GPClient> finished handling the notification event (2).   (2025-04-04T13:12:12.4547022Z)
+							-> (811) The winlogon notification subscriber <GPClient> began handling the notification event (2).      (2025-04-04T13:12:12.4557511Z)
+								-> Microsoft-Windows-GroupPolicy
+									-> (5324)                                                                                        (2025-04-04T13:12:12.4557828Z)
+								-> Microsoft-Windows-SMBClient
+									-> (30827) Could not find a certificate mapping that matches the server name.                    (2025-04-04T13:12:13.4479232Z)
+											Connection type: Quic
+											Server name: IP-C613021B.samana.aws.
+									-> (30827) Could not find a certificate mapping that matches the server name.                    (2025-04-04T13:12:13.6068439Z)
+											Connection type: Quic
+											Server name:  amznfsxwdgfeuet.samana.aws.
+									-> (30827) Could not find a certificate mapping that matches the server name.                    (2025-04-04T13:12:13.6079751Z)
+											Connection type: Quic
+											Server name:  amznfsxwdgfeuet.samana.aws.
+									-> (30803) Failed to establish a network connection....                                          (2025-04-04T13:12:13.6085528Z)
+								-> Microsoft-Windows-GroupPolicy
+									-> (5016) Completed Group Policy Drive Maps Extension Processing in 1219 milliseconds.           (2025-04-04T13:12:13.6856014Z)
+									-> (4016) Starting Group Policy Registry Extension Processing. 
+										List of applicable Group Policy objects: (No changes were detected.)
+										SMN_Desktop_Settings
+									-> (6338) Group Policy Winlogon status reporting has completed.
+									-> (5351) Group policy session returned to winlogon.
+							-> (812) The winlogon notification subscriber <GPClient> finished handling the notification event (2).   (2025-04-04T13:12:13.6899368Z)
+							-> (811) The winlogon notification subscriber <GPClient> began handling the notification event (2).      (2025-04-04T13:12:13.6909562Z)
+								-> Microsoft-Windows-GroupPolicy
+									-> (5324) (2025-04-04T13:12:13.6909837Z)
+									-> (5016) Completed Group Policy Registry Extension Processing in 47 milliseconds.
+									-> (8001) Completed user logon policy processing for samanaaws\fabianb in 1 seconds.
+									-> (5117) Group policy session completed successfully.
+									-> (6338) Group Policy Winlogon status reporting has completed.
+									-> (5351) Group policy session returned to winlogon.
+							-> (812) The winlogon notification subscriber <GPClient> finished handling the notification event (2).   (2025-04-04T13:12:13.7418432Z)
+							-> (811) The winlogon notification subscriber <TermSrv> began handling the notification event (2).       (2025-04-04T13:12:13.7427821Z)
+								-> Microsoft-Windows-TerminalServices-LocalSessionManager
+									-> (21) Remote Desktop Services: Session logon succeeded:                                        (2025-04-04T13:12:13.8940052Z)
+										User: samanaaws\fabianb
+										Session ID: 2
+										Source Network Address: LOCAL
+							-> (812) The winlogon notification subscriber <TermSrv> finished handling the notification event (2).    (2025-04-04T13:12:13.8945960Z)
+							-> (811) The winlogon notification subscriber <Sens> began handling the notification event (2).
+							-> (812) The winlogon notification subscriber <Sens> finished handling the notification event (2).
+
+						-> Microsoft-Windows-TaskScheduler (launch in serial, execution in parallel)
+							-> (119)
+							-> (129)
+							-> (100)
+							-> (200)
+
+
+						-> Microsoft-Windows-Winlogon 
+							-> (811) The winlogon notification subscriber <SessionEnv> began handling the notification event (12).
+							-> (812) The winlogon notification subscriber <SessionEnv> finished handling the notification event (12).
+							-> (811) The winlogon notification subscriber <GPClient> began handling the notification event (12).     (2025-04-04T13:12:14.6354592Z)
+								-> Microsoft-Windows-GroupPolicy
+									-> (5324, 3, 2) Group Policy received the notification StartShell from Winlogon for session 2. (2025-04-04T13:12:14.6355001Z)
+									-> (6339) Group Policy Winlogon Start Shell handling completed.
+							-> (812) The winlogon notification subscriber <GPClient> finished handling the notification event (12).  (2025-04-04T13:12:14.6356752Z)
+							-> (811) The winlogon notification subscriber <Sens> began handling the notification event (12).         (2025-04-04T13:12:13.9378427Z)
+							-> (812) The winlogon notification subscriber <Sens> finished handling the notification event (12).      (2025-04-04T13:12:13.9405819Z)
+							-> (811) The winlogon notification subscriber <TermSrv> began handling the notification event (12).      (2025-04-04T13:12:14.6366979Z)
+								-> Microsoft-Windows-TerminalServices-LocalSessionManager
+									-> (22) Remote Desktop Services: Shell start notification received:                              (2025-04-04T13:12:14.6461936Z)
+										User: samanaaws\fabianb
+										Session ID: 2
+										Source Network Address: LOCAL
+							-> (812) The winlogon notification subscriber <TermSrv> finished handling the notification event (12).   (2025-04-04T13:12:14.6462193Z)
+
+
+						> userinit.exe{pid=0x1f64}                      (2025-04-04T13:12:15.0578379Z)
+						   -> explorer.exe{pid=0x10b8}                  (2025-04-04T13:12:15.1022337Z)
+							-> Microsoft-Windows-Shell-Core
+								-> multiple 
+								-> (62170)                           (2025-04-04T13:12:15.2948853Z)
+									AllLogonTasks
+									PreRoamingTasks
+									UndockedShellUpdate
+									ShellPrep
+									AppReadinessPreRoamingGroup
+									AppReadinessPreShellGroup
+									AppResolver
+									DefaultAssociations
+									SkydrivePrep
+									RunOnce
+									ActiveSetup
+									WaitForMSAConnected
+									PreShellTasks
+									AppResolverUsageReconcilerInit
+									StartLayoutInit
+									UgradeTaskFlowPolicy
+									ShellInitTasks
+									AppReadinessLogonGroup
+									UpdatePCSettingsShellInit
+									PreStartTasks
+									LaunchExperienceHost
+									UpdatePCSettingsPreStart
+									EnterpriseProvisioning
+									PerUserSetup
+									PostStartTasks
+									PerUserSetupPostStart
+									LaunchExperienceHostPostStart
+									LaunchPeopleExperiencePostStart
+									LaunchLockAppHostPostStart
+									LaunchInputDialListenerPostStart
+									NotifyTrayStartIsReady
+									NotifyTrayStartIsReady
+									ARSFirstRunTelemetry
+									OEMFirstRunTelemetry
+								-> (62171) finish step
+							-> Microsoft-Windows-HelloForBusiness ????
+								-> (28017) AppResolver Scan Started.    (2025-04-04T13:12:26.3724436Z)
+								-> (28018) AppResolver Scan Stopped.    (2025-04-04T13:12:26.4018988Z)
+								-> (28019) AppResolver Cache Committed. (2025-04-04T13:12:26.4055233Z)
+							-> eventvwr.exe{pid=0x2510}              (start 2025-04-04T13:12:27.0888557Z)
+							                                         (term  2025-04-04T13:12:27.0943867Z)
+							-> eventvwr.exe{pid=0x1cc8}              (start 2025-04-04T13:12:27.2412175Z)
+							                                         (term  2025-04-04T13:12:27.3747032Z)
+							    -> mmc.exe{pid=0x16ec}               (start 2025-04-04T13:12:27.2763669Z) still open
+
+							-> Microsoft-Windows-Shell-Core
+						    {Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run}
+								-> (9705) Started enumeration of commands for registry key 'Software\Microsoft\Windows\CurrentVersion\Run'.  (2025-04-04T13:12:27.6572283Z)
+								-> (9707) Started execution of command 'SecurityHealthSystray.exe'.                                          (2025-04-04T13:12:27.6575271Z)
+							-> SecurityHealthSystray.exe{pid=0x2138}                                                                   (start 2025-04-04T13:12:27.6772712Z) (term  2025-04-04T13:12:27.7219212Z)
+								-> (9708) Finished execution of command 'SecurityHealthSystray.exe' (PID 8504).                              (2025-04-04T13:12:27.7232917Z)
+
+							{Computer\HKEY_CURRENT_USER\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Run}
+								-> (9706) Finished enumeration of commands for registry key 'Software\Microsoft\Windows\CurrentVersion\Run'. (2025-04-04T13:12:27.7234022Z)
+								-> (9705) Started enumeration of commands for registry key 'Software\Microsoft\Windows\CurrentVersion\Run'.  (2025-04-04T13:12:27.7235222Z)
+								-> (9707) Started execution of command 'OneDrive.exe" /background'.                                          (2025-04-04T13:12:27.7236704Z)
+							-> OneDrive.exe{pid=0x19ac}                                                                                (start 2025-04-04T13:12:27.7486432Z) still open
+								-> (9708) Finished execution of command 'OneDrive.exe" /background' (PID 6572).                              (2025-04-04T13:12:28.4930470Z)
+
+								-> (9707) Started execution of command 'GoogleDriveFS.exe --startup_mode'.                                   (2025-04-04T13:12:28.4932197Z)
+							-> GoogleDriveFS.exe{pid=0x18b4}                                                                           (start 2025-04-04T13:12:28.5089432Z) (term  2025-04-04T13:12:34.3219879Z)
+								-> (9708) Finished execution of command 'GoogleDriveFS.exe --startup_mode' (PID 6324).                       (2025-04-04T13:12:32.3759308Z)
+								-> (9706) Finished enumeration of commands for registry key 'Software\Microsoft\Windows\CurrentVersion\Run'. (2025-04-04T13:12:32.3759441Z)
+
+							-> runonce.exe{pid=0x260c}                                                                                    (start 2025-04-04T13:12:32.4679259Z)
+								-> (9705) Started enumeration of commands for registry key 'Software\Microsoft\Windows\CurrentVersion\RunOnce'. (2025-04-04T13:12:32.4845009Z)
+								-> (9706) Finished enumeration of commands for registry key 'Software\Microsoft\Windows\CurrentVersion\RunOnce'.(2025-04-04T13:12:32.4845108Z)
+						    {Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Run}
+								-> (9705) Started enumeration of commands for registry key 'Software\Microsoft\Windows\CurrentVersion\Run'.     (2025-04-04T13:12:32.6228042Z)
+								-> (9707) Started execution of command 'concentr.exe" /startup'.                                                (2025-04-04T13:12:32.6299998Z)
+								-> concentr.exe                                                                                           (start 2025-04-04T13:12:33.8615293Z) still open
+								-> (9708) Finished execution of command 'concentr.exe" /startup' (PID 9788).                                    (2025-04-04T13:12:34.5447311Z)
+								-> (9707) Started execution of command 'redirector.exe" /startup'.                                              (2025-04-04T13:12:34.5448838Z)
+								-> redirector.exe                                                                                         (start 2025-04-04T13:12:34.5745558Z) still open
+								-> (9708) Finished execution of command 'redirector.exe" /startup' (PID 9044).                                  (2025-04-04T13:12:35.2561865Z)
+								-> (9706) Finished enumeration of commands for registry key 'Software\Microsoft\Windows\CurrentVersion\Run'.    (2025-04-04T13:12:35.2562037Z)
+							                                                                                                   (termrunonce.exe  2025-04-04T13:12:35.5736838Z)
+
+						   -> [terminates]                (2025-04-04T13:12:38.5731233Z)
+						-> wlrmdr.exe{pid=0x1b84}         (2025-04-04T13:12:45.0680570Z)
+						   -> [terminates]                (2025-04-04T13:12:45.0881077Z)
+
+
+Step 1:
+<QueryList>
+	<Query Id="0" Path="Security">
+		<Select Path="Security">*[
+			EventData[
+				Data[@Name="NewProcessName"]="C:\Windows\System32\userinit.exe"
+			]
+		]</Select>
+	</Query>
+</QueryList>
+
+	Parent   : Winlogon.exe
+	Start    : 2025-04-04T13:12:15.0578379Z
+	Terminate: 2025-04-04T13:12:38.5731233Z
+
+	Launches : explorer.exe (workspaces)
+
+
+Step 2:
+<QueryList>
+	<Query Id="0" Path="Security">
+		<Select Path="Security">*[
+			EventData[
+				Data[@Name="NewProcessId"]="0x260c"
+			]
+		]</Select>
+	</Query>
+</QueryList>
+
+	Parent    : userinit.exe
+	Start     : 2025-04-04T13:12:15.1022337Z
+
+	Launches  : C:\Windows\System32\SecurityHealthSystray.exe
+	            C:\Program Files\Microsoft OneDrive\OneDrive.exe
+	            C:\Program Files\Google\Drive File Stream\106.0.4.0\GoogleDriveFS.exe
+	            C:\Windows\SysWOW64\runonce.exe /Run6432
+
+
+C:\Windows\SysWOW64\runonce.exe /Run6432 start     : 
+                                         terminate : 2025-04-04T13:12:35.5736838Z
+
+
+<QueryList>
+	<Query Id="0" Path="Security">
+		<Select Path="Security">*[
+			EventData[
+				Data[@Name="NewProcessName"]="C:\Windows\System32\mpnotify.exe"
+			]
+		]</Select>
+	</Query>
+</QueryList>
+
+
+
+
+
+<QueryList>
+	<Query Id="0" Path="Security">
+		<Select Path="Security">*[
+			EventData[
+				Data[@Name="ProcessId"]="0x1a58"
+			]
+		]</Select>
+	</Query>
+</QueryList>

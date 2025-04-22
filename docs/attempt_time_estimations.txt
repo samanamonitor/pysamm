@@ -1,0 +1,46 @@
+cim_os -> 300                   2
+cim_disk -> 300                 2
+cim_pagefile -> 600             1
+cim_perfdisk -> 60             10
+cim_perfnic -> 60              10
+cim_perfcpu -> 60              10
+cim_certificates -> 600         1
+cim_computer -> 300             2
+cim_system_events -> 600        1
+cim_application_events -> 600   1
+cim_service -> 300              2
+
+42 checs per 10 min per host ==> 4.2 checks per min per host => 0.07 checks per second per host
+
+
+1070 hosts * 0.07 checks per second per host =  74.9 checks per sec
+
+
+
+check time => 0.070 s
+
+
+checktime * checkspersec = 74.9 C/s * 0.070s = 5.243 C
+
+
+
+cim_computer -> 1200            0.5
+cim_os -> 600                   1
+cim_disk -> 600                 1
+cim_pagefile -> 600             1
+cim_perfdisk -> 600             1
+cim_perfnic -> 600              1
+cim_perfcpu -> 120              5
+cim_certificates -> 1200        0.5
+cim_system_events -> 600        1
+cim_application_events -> 600   1
+cim_service -> 600              1
+
+14 checs per 10 min per host ==> 1.4 checks per min per host => 0.0234 checks per second per host
+
+
+1070 hosts
+
+1070 hosts * 0.0234 checks per second per host =  24.97 checks per sec
+
+checktime * checkspersec = 24.97 C/s * 0.070s = 1. C
