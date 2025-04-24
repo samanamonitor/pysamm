@@ -3,7 +3,7 @@ import sys, os
 from sys import argv
 from samm.service import Service
 import time
-from multiprocessing import Process
+from threading import Thread
 from flask import Flask, make_response
 import socket
 import logging
@@ -16,23 +16,7 @@ svc = None
 
 @app.route('/metrics')
 def metrics():
-    global svc
-    conf_sock_file = svc.running_config.get("sock_file")
-    if not os.path.isabs(conf_sock_file):
-        sock_file = os.path.join(svc.running_config.get('base_dir'), conf_sock_file)
-    else:
-        sock_file = conf_sock_file
-    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    s.connect(sock_file)
-    s.send(b'\n')
-    data = ""
-    while True:
-        newdata = s.recv(1024).decode('ascii')
-        if len(newdata) == 0:
-            break
-        data += newdata
-
-    s.close()
+    data = svc.metrics_str()
     res = make_response(data, 200)
     res.mimetype = "text/plain"
     return res
@@ -55,10 +39,10 @@ def main(config_file):
         wait_on_error = svc.running_config.get("wait_on_error", 0)
         if svc.running_config.get("webserver", False):
             port = svc.running_config.get("webserver_port", 5000)
-            p = Process(target=web, args=(port,))
-            p.start()
+            th = Thread(target=web, args=(port,))
+            th.start()
         svc.process_loop()
-        p.terminate()
+
     except Exception as e:
         print(e)
         time.sleep(wait_on_error)

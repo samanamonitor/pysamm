@@ -2,7 +2,7 @@ from .config import Config
 from .attempt import Attempt
 from .metric import InstanceMetric
 from time import sleep, process_time, time
-import socket, select, os, signal, sys
+import os, signal, sys
 import threading
 import logging
 
@@ -33,7 +33,6 @@ class Service:
 
 		self.init_local_metrics()
 		self.init_attempts()
-		self.init_sock()
 		signal.signal(signal.SIGHUP, self.signal_handler)
 		signal.signal(signal.SIGINT, self.signal_handler)
 
@@ -99,19 +98,6 @@ class Service:
 		for obj in dobj:
 			self.init_instance_attempts(obj)
 
-	def init_sock(self):
-		self.sock=socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-		conf_sock_file = self.running_config.get("sock_file")
-		if not os.path.isabs(self.running_config.get("sock_file")):
-			sock_file = os.path.join(self.running_config.get('base_dir'), conf_sock_file)
-		else:
-			sock_file = conf_sock_file
-		if os.path.exists(sock_file):
-			os.unlink(sock_file)
-		self.sock.bind(sock_file)
-		os.chmod(sock_file, 0x0777)
-		self.sock.listen(1)
-
 	def process_attempts(self):
 		self.attempts_run_in_loop = 0
 		for attempt in self.attempt_list:
@@ -131,12 +117,17 @@ class Service:
 		while self.keep_running:
 			self.process_attempts()
 			self.maintain_metric_data()
-			self.process_prompt_request()
 			self.discover()
 			if self.reload_config:
 				self.load_config()
 				self.reload_config = False
 				self.init_attempts()
+			log.info("Sleeping... process_time=%f " +
+				"attempt_count=%d host_count=%d " +
+				"attempts_run_in_loop=%d",
+				self.loop_time, len(self.attempt_list),
+				self.host_count.val(), self.attempts_run_in_loop)
+			sleep(self.poll_time)
 		self.keep_running = True
 
 	def maintain_metric_data(self):
@@ -160,6 +151,7 @@ class Service:
 					stale_list += [(instance_name, metric_key)]
 					continue
 				mc += 1
+		log.info("Cleaning up %d stale metrics", len(stale_list))
 		for s in stale_list:
 			self.metric_data[s[0]].pop(s[1])
 			log.debug("Cleanup metric %s.%s", *s)
@@ -167,50 +159,19 @@ class Service:
 		self.metric_count.val(mc)
 		return len(stale_list)
 
-	def process_prompt_request(self):
-		log.info("Sleeping... process_time=%f attempt_count=%d host_count=%d attempts_run_in_loop=%d",
-			self.loop_time, len(self.attempt_list), self.host_count.val(), self.attempts_run_in_loop)
-		c_read, _, _ = select.select([self.sock], [], [], self.poll_time)
-		for _sock in c_read:
-			log.debug("Connection received. Sending data.")
-			if _sock == self.sock:
-				self.send_data(_sock)
-
-	def send_data(self, conn):
-		connection, client_address = conn.accept()
-		try:
-			_c_read, _, _ = select.select([connection], [], [], 2)
-
-			recvdata = _c_read[0].recv(1024).decode('ascii').strip()
-			if len(_c_read) == 0 or len(recvdata) == 0:
-				instance_list = self.metric_data.keys()
-			else:
-				instance_list = recvdata.split(" ")
-				log.info("List of instances requested: %s" % str(instance_list))
-		except Exception as e:
-			log.exception(e)
-
-
-		try:
-			_, _c_write, _ = select.select([], [connection], [], 2)
-			if len(_c_write) < 1:
-				connection.close()
-				return
-
-			for instance_name in instance_list:
-				if instance_name not in self.metric_data:
-					instance_tags = self.running_config.get("tags").copy()
-					instance_tags.update(self.running_config.get(("instances", instance_name, "tags"), default={}))
-					instance_down = InstanceMetric("up", 0, tags=instance_tags)
-					_c_write[0].sendall(str(instance_down).encode('ascii'))
-					continue
-				metric_keys_list = list(self.metric_data[instance_name].keys())
-				for metric_key in metric_keys_list:
-					_c_write[0].sendall(str(self.metric_data[instance_name].get(metric_key, '')).encode('ascii', errors="ignore"))
-			_c_write[0].close()
-		except Exception as e:
-			log.exception("Error sending data. %s" % str(e))
-		connection.close()
+	def metrics_str(self):
+		out = ""
+		for instance_name in self.metric_data.keys():
+			if instance_name not in self.metric_data:
+				instance_tags = self.running_config.get("tags").copy()
+				instance_tags.update(self.running_config.get(("instances", instance_name, "tags"), default={}))
+				instance_down = InstanceMetric("up", 0, tags=instance_tags)
+				out += str(instance_down)
+				continue
+			metric_keys_list = list(self.metric_data[instance_name].keys())
+			for metric_key in metric_keys_list:
+				out += str(self.metric_data[instance_name].get(metric_key, ''))
+		return out
 
 	def signal_handler(self, signum, frame):
 		if signum == signal.SIGHUP:
@@ -220,6 +181,7 @@ class Service:
 			return
 		if signum == signal.SIGINT:
 			self.keep_running = False
+			signal.signal(signal.SIGINT, signal.SIG_DFL)
 			log.info("INT signal received. Stopping process")
 			return
 
