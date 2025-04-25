@@ -1,10 +1,13 @@
 from .config import Config
 from .attempt import Attempt
 from .metric import InstanceMetric
+from .instanceexporter import InstanceExporter
 from time import sleep, process_time, time
 import socket, select, os, signal, sys
 import threading
 import logging
+from .sd_config import SdConfigHttpRequestHandler
+from http.server import HTTPServer
 
 log = logging.getLogger(__name__)
 
@@ -30,12 +33,25 @@ class Service:
 		self.attempts_run_in_loop = 0
 		self.loop_time = 0
 		self.max_attempts_per_loop = self.running_config.get("max_attempts_per_loop", 1000)
+		self._port = self.running_config.get("webserver_port", 5000)
+
+		self.sd_config = {}
+		server_address = ('', self._port)
+		self.httpd = HTTPServer(server_address, SdConfigHttpRequestHandler)
+		self.httpd.sd_config = self.sd_config
+		httpdthread = threading.Thread(target=self.httpd.serve_forever)
+		httpdthread.start()
 
 		self.init_local_metrics()
 		self.init_attempts()
-		self.init_sock()
 		signal.signal(signal.SIGHUP, self.signal_handler)
 		signal.signal(signal.SIGINT, self.signal_handler)
+
+
+	@property
+	def available_port(self):
+		self._port += 1
+		return self._port
 
 	def init_local_metrics(self):
 		self.startup_time = InstanceMetric("samm_startup_time", time(), self.tags)
@@ -46,18 +62,19 @@ class Service:
 		self.metric_data_bytes = InstanceMetric("samm_metric_data_bytes", 0, self.tags)
 		self.thread_count = InstanceMetric("samm_thread_count", 0, self.tags)
 		self.pt = InstanceMetric("samm_process_time_seconds_count", 0, self.tags)
-		self.metric_data = { 
-			self.tags.get('instance', 'samm'): {
-				self.startup_time.key: self.startup_time,
-				self.metric_count.key: self.metric_count,
-				self.host_count.key: self.host_count,
-				self.scheduled_attempts.key: self.scheduled_attempts,
-				self.running_time.key: self.running_time,
-				self.pt.key: self.pt,
-				self.metric_data_bytes.key: self.metric_data_bytes,
-				self.thread_count.key: self.thread_count
-			}
-		}
+		self.metric_data = {}
+		instance_name = self.tags.get('instance', "samm")
+		instance_metric_data = self.metric_data.setdefault(instance_name,
+			InstanceExporter(instance_name, self.available_port))
+		_ = self.sd_config.setdefault(instance_name, instance_metric_data.sd_config())
+		instance_metric_data[self.startup_time.key]       = self.startup_time
+		instance_metric_data[self.metric_count.key]       = self.metric_count
+		instance_metric_data[self.host_count.key]         = self.host_count
+		instance_metric_data[self.scheduled_attempts.key] = self.scheduled_attempts
+		instance_metric_data[self.running_time.key]       = self.running_time
+		instance_metric_data[self.pt.key]                 = self.pt
+		instance_metric_data[self.metric_data_bytes.key]  = self.metric_data_bytes
+		instance_metric_data[self.thread_count.key]       = self.thread_count
 
 	def load_config(self):
 		self.running_config=Config(self.abs_config_file)
@@ -68,22 +85,26 @@ class Service:
 		self.tags = self.running_config.get('service_tags', default={}).copy()
 		self.tags.update(self.running_config.get('tags'))
 		self.initial_spread = self.running_config.get("initial_spread", 1.0)
+		self.sd_config = {}
 
 	def init_instance_attempts(self, instance):
+		if not instance.register:
+			return
 		instance_name = instance.name
-		instance_metric_data = self.metric_data.setdefault(instance.name, {})
-		if instance.register:
-			self.host_count.val(self.host_count.val() + 1)
-			for check_name in instance.checks:
-				try:
-					a = Attempt(self.running_config, instance.name, check_name, instance_metric_data,
-						pending_retry=self.pending_retry)
-					log.debug("Created attempt %s:%s", instance.name, check_name)
-					a.schedule(self.scheduled_attempts.val() * self.initial_spread)
-					self.attempt_list += [ a ]
-					self.scheduled_attempts.val(self.scheduled_attempts.val() + 1)
-				except Exception as e:
-					log.exception("Unable to create attempt for %s-%s. %s", instance.name, check_name, str(e))
+		instance_metric_data = self.metric_data.setdefault(instance.name,
+			InstanceExporter(instance.name, self.available_port))
+		_ = self.sd_config.setdefault(instance.name, instance_metric_data.sd_config())
+		self.host_count.val(self.host_count.val() + 1)
+		for check_name in instance.checks:
+			try:
+				a = Attempt(self.running_config, instance.name, check_name, instance_metric_data,
+					pending_retry=self.pending_retry)
+				log.debug("Created attempt %s:%s", instance.name, check_name)
+				a.schedule(self.scheduled_attempts.val() * self.initial_spread)
+				self.attempt_list += [ a ]
+				self.scheduled_attempts.val(self.scheduled_attempts.val() + 1)
+			except Exception as e:
+				log.exception("Unable to create attempt for %s-%s. %s", instance.name, check_name, str(e))
 
 	def init_attempts(self):
 		self.attempt_list = []
@@ -98,19 +119,6 @@ class Service:
 		dobj=self.running_config.process_objects(do)
 		for obj in dobj:
 			self.init_instance_attempts(obj)
-
-	def init_sock(self):
-		self.sock=socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-		conf_sock_file = self.running_config.get("sock_file")
-		if not os.path.isabs(self.running_config.get("sock_file")):
-			sock_file = os.path.join(self.running_config.get('base_dir'), conf_sock_file)
-		else:
-			sock_file = conf_sock_file
-		if os.path.exists(sock_file):
-			os.unlink(sock_file)
-		self.sock.bind(sock_file)
-		os.chmod(sock_file, 0x0777)
-		self.sock.listen(1)
 
 	def process_attempts(self):
 		self.attempts_run_in_loop = 0
@@ -131,12 +139,16 @@ class Service:
 		while self.keep_running:
 			self.process_attempts()
 			self.maintain_metric_data()
-			self.process_prompt_request()
 			self.discover()
 			if self.reload_config:
 				self.load_config()
 				self.reload_config = False
 				self.init_attempts()
+			log.info("Sleeping... process_time=%f attempt_count=%d " +
+				"host_count=%d attempts_run_in_loop=%d",
+				self.loop_time, len(self.attempt_list), 
+				self.host_count.val(), self.attempts_run_in_loop)
+			sleep(self.poll_time)
 		self.keep_running = True
 
 	def maintain_metric_data(self):
@@ -167,51 +179,6 @@ class Service:
 		self.metric_count.val(mc)
 		return len(stale_list)
 
-	def process_prompt_request(self):
-		log.info("Sleeping... process_time=%f attempt_count=%d host_count=%d attempts_run_in_loop=%d",
-			self.loop_time, len(self.attempt_list), self.host_count.val(), self.attempts_run_in_loop)
-		c_read, _, _ = select.select([self.sock], [], [], self.poll_time)
-		for _sock in c_read:
-			log.debug("Connection received. Sending data.")
-			if _sock == self.sock:
-				self.send_data(_sock)
-
-	def send_data(self, conn):
-		connection, client_address = conn.accept()
-		try:
-			_c_read, _, _ = select.select([connection], [], [], 2)
-
-			recvdata = _c_read[0].recv(1024).decode('ascii').strip()
-			if len(_c_read) == 0 or len(recvdata) == 0:
-				instance_list = self.metric_data.keys()
-			else:
-				instance_list = recvdata.split(" ")
-				log.info("List of instances requested: %s" % str(instance_list))
-		except Exception as e:
-			log.exception(e)
-
-
-		try:
-			_, _c_write, _ = select.select([], [connection], [], 2)
-			if len(_c_write) < 1:
-				connection.close()
-				return
-
-			for instance_name in instance_list:
-				if instance_name not in self.metric_data:
-					instance_tags = self.running_config.get("tags").copy()
-					instance_tags.update(self.running_config.get(("instances", instance_name, "tags"), default={}))
-					instance_down = InstanceMetric("up", 0, tags=instance_tags)
-					_c_write[0].sendall(str(instance_down).encode('ascii'))
-					continue
-				metric_keys_list = list(self.metric_data[instance_name].keys())
-				for metric_key in metric_keys_list:
-					_c_write[0].sendall(str(self.metric_data[instance_name].get(metric_key, '')).encode('ascii', errors="ignore"))
-			_c_write[0].close()
-		except Exception as e:
-			log.exception("Error sending data. %s" % str(e))
-		connection.close()
-
 	def signal_handler(self, signum, frame):
 		if signum == signal.SIGHUP:
 			self.reload_config = True
@@ -220,6 +187,10 @@ class Service:
 			return
 		if signum == signal.SIGINT:
 			self.keep_running = False
+			self.httpd.shutdown()
+			for _, exporter in self.metric_data.items():
+				exporter.httpd.shutdown()
+			signal.signal(signal.SIGINT, signal.SIG_DFL)
 			log.info("INT signal received. Stopping process")
 			return
 
