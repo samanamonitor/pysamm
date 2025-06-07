@@ -169,10 +169,10 @@ class ActiveDirectoryDiscovery:
 			raise StopIteration
 		ldap_instance_dict.update({"dn": item[0]})
 		for object_attr, ldap_attr in self.ldap_attribute_object_map.items():
-			value = ldap_list_bytes_to_string(ldap_instance_dict[ldap_attr]).lower()
+			value = ldap_list_bytes_to_string(ldap_instance_dict.get(ldap_attr, b'(invalid)')).lower()
 			object_definition[object_attr] = value
 		for tag_name, ldap_attribute_name in self.ldap_attribute_tags.items():
-			value = ldap_list_bytes_to_string(ldap_instance_dict[ldap_attribute_name]).lower()
+			value = ldap_list_bytes_to_string(ldap_instance_dict.get(ldap_attribute_name, b'(invalid)')).lower()
 			object_definition['tags'][tag_name] = value
 		object_definition['use'] = self.object_use.copy()
 
